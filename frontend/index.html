@@ -1590,6 +1590,7 @@
                                 <button class="action-btn" onclick="devHelpers.testFHIRFlow()" style="margin-top: 10px; font-size: 0.9em; background-color: #dc2626;">🚀 Test FHIR Flow</button>
                                 <button class="action-btn" onclick="devHelpers.forceReloadConfigs()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔄 Reload Configs</button>
                                 <button class="action-btn" onclick="window.debugConnectedProviders()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">🔍 Debug Providers</button>
+                                <button class="action-btn" onclick="window.debugProviderNameElements()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔍 Debug Provider Names</button>
                             </div>
                         </div>
                     </div>
@@ -2050,7 +2051,18 @@
                     connectedProviderName.textContent = 'your selected provider';
                 }
                 
-                // 5. Reset Provider Display Elements
+                // 5. Reset Main Success Message Banner
+                const providerNameElement = document.getElementById('providerName');
+                if (providerNameElement) {
+                    providerNameElement.textContent = '';
+                }
+                
+                const successMessage = document.getElementById('successMessage');
+                if (successMessage) {
+                    successMessage.classList.add('hidden');
+                }
+                
+                // 6. Reset Provider Display Elements
                 const providerLogo = document.getElementById('providerLogo');
                 const providerDisplayName = document.getElementById('providerDisplayName');
                 
@@ -2500,8 +2512,15 @@
                     
                     // Show success message in main interface
                     const successMessage = document.getElementById('successMessage');
+                    const providerNameElement = document.getElementById('providerName');
+                    
                     if (successMessage) {
                         successMessage.classList.remove('hidden');
+                    }
+                    
+                    if (providerNameElement) {
+                        providerNameElement.textContent = providerName;
+                        console.log('✅ Provider name updated in success banner:', providerName);
                     }
                     
                     // Hide pre-authentication message
@@ -3515,6 +3534,39 @@
                     statusDiv.parentNode.removeChild(statusDiv);
                 }
             }, 5000);
+        };
+        
+        // Debug function for provider name elements
+        window.debugProviderNameElements = () => {
+            console.log('🔍 Provider Name Elements Debug:');
+            
+            const providerNameElement = document.getElementById('providerName');
+            const successMessage = document.getElementById('successMessage');
+            const connectedProviderName = document.getElementById('connectedProviderName');
+            
+            console.log('Provider Name Element:', {
+                element: !!providerNameElement,
+                textContent: providerNameElement?.textContent,
+                innerHTML: providerNameElement?.innerHTML,
+                visible: !successMessage?.classList?.contains('hidden')
+            });
+            
+            console.log('Success Message:', {
+                element: !!successMessage,
+                hidden: successMessage?.classList?.contains('hidden'),
+                display: successMessage?.style?.display
+            });
+            
+            console.log('Connected Provider Name:', {
+                element: !!connectedProviderName,
+                textContent: connectedProviderName?.textContent
+            });
+            
+            // Show current provider workflow state
+            console.log('Current Workflow State:', {
+                selectedProviderForWorkflow: window.selectedProviderForWorkflow,
+                providerConfig: window.selectedProviderForWorkflow ? getProviderConfig(window.selectedProviderForWorkflow) : null
+            });
         };
 
         // Debug function for the transaction system
