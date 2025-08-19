@@ -1995,6 +1995,93 @@
             alert(`🚧 ${feature} - Coming Soon!\n\nThis feature is part of the full WEX BENEFITS portal. For this demo, please use the "Connect My Provider" functionality.`);
         }
 
+        // Function to comprehensively reset all modals for a new provider
+        function resetAllModalsForNewProvider() {
+            try {
+                console.log('🧹 Resetting all modals for new provider...');
+                
+                // 1. Reset Terms Modal
+                const termsSection = document.getElementById('termsSection');
+                if (termsSection) {
+                    termsSection.style.display = 'none';
+                }
+                
+                // 2. Reset Authentication Modal
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+                const authForm = document.getElementById('authForm');
+                
+                if (usernameInput) {
+                    usernameInput.value = '';
+                    usernameInput.classList.remove('error', 'loading');
+                }
+                
+                if (passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.classList.remove('error', 'loading');
+                }
+                
+                if (authForm) {
+                    // Reset any loading states on the form
+                    const submitButton = authForm.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.textContent = 'Sign In';
+                        submitButton.disabled = false;
+                        submitButton.classList.remove('loading');
+                    }
+                }
+                
+                // 3. Reset Progress Modal
+                const oauthSteps = document.getElementById('oauthSteps');
+                if (oauthSteps) {
+                    // Reset all OAuth steps to initial state
+                    const steps = oauthSteps.querySelectorAll('.oauth-step');
+                    steps.forEach((step, index) => {
+                        step.innerHTML = `<span style="color: #6b7280;">⏳ Step ${index + 1}: ${getOAuthStepDescription(index + 1)}</span>`;
+                        step.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
+                        step.style.border = '1px solid rgba(209, 213, 219, 0.5)';
+                        step.classList.remove('active', 'completed');
+                    });
+                }
+                
+                // 4. Reset Success Modal
+                const connectedProviderName = document.getElementById('connectedProviderName');
+                if (connectedProviderName) {
+                    connectedProviderName.textContent = 'your selected provider';
+                }
+                
+                // 5. Reset Provider Display Elements
+                const providerLogo = document.getElementById('providerLogo');
+                const providerDisplayName = document.getElementById('providerDisplayName');
+                
+                if (providerLogo) {
+                    // Reset to default logo
+                    providerLogo.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjYMMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=";
+                    providerLogo.alt = "Provider Logo";
+                }
+                
+                if (providerDisplayName) {
+                    providerDisplayName.textContent = 'trellishealth';
+                }
+                
+                console.log('✅ All modals reset successfully for new provider');
+                
+            } catch (error) {
+                console.error('❌ Error resetting modals:', error);
+            }
+        }
+        
+        // Helper function to get OAuth step descriptions
+        function getOAuthStepDescription(stepNumber) {
+            const descriptions = {
+                1: 'Authorization Request',
+                2: 'User Consent & Redirect',
+                3: 'Token Exchange',
+                4: 'FHIR Resource Access'
+            };
+            return descriptions[stepNumber] || 'Unknown Step';
+        }
+
         // Function to handle adding another provider
         async function handleAddAnotherProvider() {
             try {
@@ -2130,10 +2217,13 @@
                 
                 console.log('✅ Terms modal found');
                 
-                            // Reset workflow state
-            window.selectedProviderForWorkflow = null; // Reset to no selection
+                                            // Reset workflow state
+                window.selectedProviderForWorkflow = null; // Reset to no selection
                 
                 console.log('✅ Workflow state reset');
+                
+                // Reset all modals for clean start
+                resetAllModalsForNewProvider();
                 
                 // Reset form elements with error checking
                 const providerSelect = document.getElementById('providerSelect');
@@ -2294,6 +2384,10 @@
                     // Close terms modal and show authentication modal
                     console.log('✅ Closing terms modal and showing auth modal');
                     modalManager.hide('termsModal');
+                    
+                    // Reset authentication form before showing
+                    resetAuthenticationForm();
+                    
                     modalManager.show('authModal');
                     
                     console.log('✅ Modal transition should be complete');
@@ -2341,6 +2435,9 @@
                     alert('No provider selected. Please start the workflow again.');
                     return;
                 }
+                
+                // Reset OAuth steps to ensure clean start
+                resetOAuthSteps();
                 
                 console.log('🔐 Mock OAuth: Starting FHIR OAuth flow simulation for provider:', window.selectedProviderForWorkflow);
                 
@@ -2741,6 +2838,57 @@
                 
                 // Add smooth transition
                 stepElement.style.transition = 'all 0.5s ease';
+            }
+        }
+        
+        // Function to reset OAuth steps to initial state
+        function resetOAuthSteps() {
+            const oauthSteps = document.getElementById('oauthSteps');
+            if (oauthSteps) {
+                const steps = oauthSteps.querySelectorAll('.oauth-step');
+                steps.forEach((step, index) => {
+                    step.innerHTML = `<span style="color: #6b7280;">⏳ Step ${index + 1}: ${getOAuthStepDescription(index + 1)}</span>`;
+                    step.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
+                    step.style.border = '1px solid rgba(209, 213, 219, 0.5)';
+                    step.classList.remove('active', 'completed');
+                });
+                console.log('✅ OAuth steps reset to initial state');
+            }
+        }
+        
+        // Function to reset authentication form
+        function resetAuthenticationForm() {
+            try {
+                console.log('🧹 Resetting authentication form...');
+                
+                // Reset username and password inputs
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+                const authForm = document.getElementById('authForm');
+                
+                if (usernameInput) {
+                    usernameInput.value = '';
+                    usernameInput.classList.remove('error', 'loading');
+                }
+                
+                if (passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.classList.remove('error', 'loading');
+                }
+                
+                if (authForm) {
+                    // Reset submit button to initial state
+                    const submitButton = authForm.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.textContent = 'Sign In';
+                        submitButton.classList.remove('loading');
+                    }
+                }
+                
+                console.log('✅ Authentication form reset successfully');
+                
+            } catch (error) {
+                console.error('❌ Error resetting authentication form:', error);
             }
         }
 
