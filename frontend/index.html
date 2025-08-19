@@ -2442,8 +2442,12 @@
         function handleAuthSubmit(event) {
             event.preventDefault();
             
+            console.log('🔐 Debug: handleAuthSubmit called');
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            
+            console.log('🔐 Debug: Username:', username, 'Password length:', password.length);
             
             if (!username || !password) {
                 alert('Please enter both username and password.');
@@ -2453,9 +2457,20 @@
             console.log('🔐 Mock OAuth: Starting FHIR OAuth flow simulation');
             console.log('🔐 Mock OAuth: Username:', username, 'Provider:', window.selectedProviderForWorkflow);
             
+            // Validate workflow state before proceeding
+            if (!window.selectedProviderForWorkflow) {
+                console.error('❌ No provider selected for workflow in handleAuthSubmit');
+                alert('No provider selected. Please start the workflow again.');
+                return;
+            }
+            
+            console.log('✅ Workflow state validated, proceeding with OAuth simulation');
+            
             // Close auth modal and show progress modal
             modalManager.hide('authModal');
             modalManager.show('progressModal');
+            
+            console.log('✅ Progress modal shown, calling simulateFHIRConnection');
             
             // Simulate FHIR OAuth authentication and connection process
             simulateFHIRConnection();
@@ -2463,6 +2478,8 @@
 
         async function simulateFHIRConnection() {
             try {
+                console.log('🔐 Debug: simulateFHIRConnection called');
+                
                 // Validate that we have a provider selected before starting
                 if (!window.selectedProviderForWorkflow) {
                     console.error('❌ No provider selected for workflow');
@@ -2470,8 +2487,11 @@
                     return;
                 }
                 
+                console.log('✅ Provider validation passed:', window.selectedProviderForWorkflow);
+                
                 // Reset OAuth steps to ensure clean start
                 resetOAuthSteps();
+                console.log('✅ OAuth steps reset');
                 
                 console.log('🔐 Mock OAuth: Starting FHIR OAuth flow simulation for provider:', window.selectedProviderForWorkflow);
                 
@@ -2532,6 +2552,22 @@
                     console.log('🔐 Mock OAuth: Auto-closing success modal after 3 seconds');
                     modalManager.hide('successModal');
                     
+                    // Get provider info for success message and transactions
+                    const selectedProvider = window.selectedProviderForWorkflow;
+                    if (!selectedProvider) {
+                        console.error('❌ No provider selected for workflow, cannot create transactions');
+                        return;
+                    }
+                    
+                    const providerConfig = getProviderConfig(selectedProvider);
+                    if (!providerConfig) {
+                        console.error('❌ Provider config not found for:', selectedProvider);
+                        return;
+                    }
+                    
+                    const providerName = providerConfig.name;
+                    console.log('✅ Using provider for success message and transactions:', providerName);
+                    
                     // Show success message in main interface
                     const successMessage = document.getElementById('successMessage');
                     const providerNameElement = document.getElementById('providerName');
@@ -2556,21 +2592,6 @@
                     if (providerClaimsSection) {
                         providerClaimsSection.classList.remove('hidden');
                     }
-                    
-                    // Add sample transaction with provider-specific data
-                    const selectedProvider = window.selectedProviderForWorkflow;
-                    if (!selectedProvider) {
-                        console.error('❌ No provider selected for workflow, cannot create transactions');
-                        return;
-                    }
-                    
-                    const providerConfig = getProviderConfig(selectedProvider);
-                    if (!providerConfig) {
-                        console.error('❌ Provider config not found for:', selectedProvider);
-                        return;
-                    }
-                    
-                    const providerName = providerConfig.name;
                     
                     // Create mock transaction using safety function
                     const baseTransaction = getDefaultTransaction();
