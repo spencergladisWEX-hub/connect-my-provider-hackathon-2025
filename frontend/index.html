@@ -1824,6 +1824,12 @@
             75% { transform: translateX(5px); }
         }
 
+        @keyframes stepComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         /* Enhanced Loading States */
         .loading {
             position: relative;
@@ -2079,8 +2085,8 @@
             padding: 20px 28px 28px 28px;
             border-top: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
-            justify-content: flex-end;
-            gap: 16px;
+            flex-direction: column;
+            align-items: stretch;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 0 0 20px 20px;
         }
@@ -2245,6 +2251,123 @@
             line-height: 1.6;
             margin-bottom: 12px;
         }
+
+        /* Enhanced Button States for Modal Workflow */
+        .btn-enabled {
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
+            color: white;
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-enabled:hover {
+            background: linear-gradient(135deg, #a30d25 0%, #C8102E 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
+        }
+
+        .btn-disabled {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            color: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+        }
+
+        /* Smooth state transitions */
+        .btn-primary {
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:not(.btn-disabled):not(.btn-enabled) {
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Stable button layout */
+        .button-container {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            align-items: center;
+            min-height: 44px; /* Ensure consistent height */
+        }
+
+        .help-text-container {
+            margin-top: 12px;
+            min-height: 20px; /* Reserve space for help text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .help-text-container .form-help {
+            margin: 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .help-text-container .form-help.updating {
+            opacity: 0.7;
+            transform: translateY(-2px);
+        }
+
+        /* Smooth terms section transitions */
+        #termsSection {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        #termsSection.hidden {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #termsSection:not(.hidden) {
+            opacity: 1;
+            max-height: 80px;
+            margin-bottom: 20px;
+        }
+
+        /* Subtle state indicators */
+        .btn-enabled::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            border-radius: 4px 4px 0 0;
+            opacity: 0.8;
+        }
+
+        .btn-disabled::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #9ca3af 0%, #6b7280 100%);
+            border-radius: 4px 4px 0 0;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -2316,6 +2439,8 @@
                                 <button class="action-btn" onclick="devHelpers.testModal('termsModal')" style="margin-top: 10px; font-size: 0.9em; background-color: #6b7280;">🧪 Test Modal</button>
                                 <button class="action-btn" onclick="devHelpers.showFHIRDocs()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">📚 FHIR OAuth Docs</button>
                                 <button class="action-btn" onclick="devHelpers.testFHIRFlow()" style="margin-top: 10px; font-size: 0.9em; background-color: #dc2626;">🚀 Test FHIR Flow</button>
+                                <button class="action-btn" onclick="devHelpers.testAccessibility()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">♿ Test Accessibility</button>
+                                <button class="action-btn" onclick="devHelpers.testFormValidation()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">✅ Test Validation</button>
                                 <button class="action-btn" onclick="devHelpers.forceReloadConfigs()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔄 Reload Configs</button>
                                 <button class="action-btn" onclick="window.debugConnectedProviders()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">🔍 Debug Providers</button>
                                 <button class="action-btn" onclick="window.debugProviderNameElements()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔍 Debug Provider Names</button>
@@ -2437,24 +2562,24 @@
         <!-- Connect My Provider Workflow Modals -->
         
         <!-- Step 1: Terms and Conditions Modal -->
-        <div id="termsModal" class="workflow-modal hidden">
+        <div id="termsModal" class="workflow-modal hidden" role="dialog" aria-labelledby="termsModalTitle" aria-describedby="termsModalDescription">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Connect My Provider</h3>
-                    <button class="modal-close" onclick="modalManager.hide('termsModal')">×</button>
+                    <h3 id="termsModalTitle">Connect My Provider</h3>
+                    <button class="modal-close" onclick="modalManager.hide('termsModal')" aria-label="Close modal">×</button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="termsModalDescription">
                     <div class="form-group">
                         <label for="providerSelect">Select Provider:</label>
-                        <select id="providerSelect" class="form-select">
+                        <select id="providerSelect" class="form-select" aria-describedby="providerSelectHelp">
                             <option value="">Select My Provider</option>
                             <option value="trellis">Trellis Healthcare</option>
                             <option value="epic">Epic Systems</option>
                             <option value="cerner">Cerner Corporation</option>
                         </select>
-                        <small class="form-help">Selected provider will determine the terms and conditions you agree to.</small>
+                        <small class="form-help" id="providerSelectHelp">Selected provider will determine the terms and conditions you agree to.</small>
                     </div>
-                    <div class="form-group" id="termsSection" style="display: none;">
+                    <div class="form-group" id="termsSection" style="display: none; min-height: 60px;">
                         <label class="checkbox-label">
                             <input type="checkbox" id="termsCheckbox" required>
                             <span class="checkmark"></span>
@@ -2463,8 +2588,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-secondary" onclick="modalManager.hide('termsModal')">Close</button>
-                    <button class="btn-primary" id="submitTermsBtn" onclick="submitTerms()" disabled>Submit</button>
+                    <div class="button-container">
+                        <button class="btn-secondary" onclick="modalManager.hide('termsModal')">Close</button>
+                        <button class="btn-primary" id="submitTermsBtn" onclick="submitTerms()" disabled>Submit</button>
+                    </div>
+                    <div class="help-text-container">
+                        <small class="form-help" id="submitReadyHelp" style="display: block; color: #6b7280;">
+                            Please select a provider to continue
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3512,6 +3644,7 @@
                     if (providerConfig) {
                         // Show terms section and populate with provider-specific terms
                         termsSection.style.display = 'block';
+                        termsSection.classList.remove('hidden');
                         termsLink.textContent = `${providerConfig.name} Terms and Conditions`;
                         
                         // Update provider display throughout the workflow
@@ -3520,12 +3653,18 @@
                         console.log('✅ Terms display updated for provider:', providerConfig.name);
                     } else {
                         // Hide terms section if provider config not found
-                        termsSection.style.display = 'none';
+                        termsSection.classList.add('hidden');
+                        setTimeout(() => {
+                            termsSection.style.display = 'none';
+                        }, 300);
                         console.log('ℹ️ No provider selected, terms section hidden');
                     }
                 } else {
                     // Hide terms section if no provider selected
-                    termsSection.style.display = 'none';
+                    termsSection.classList.add('hidden');
+                    setTimeout(() => {
+                        termsSection.style.display = 'none';
+                    }, 300);
                     console.log('ℹ️ No provider selected, terms section hidden');
                 }
                 
@@ -3629,7 +3768,7 @@
             return appConfig.DEFAULT_TRANSACTION;
         }
 
-        // Update OAuth progress step visualization
+        // Enhanced OAuth progress step visualization with better UX
         function updateOAuthStep(stepNumber, status) {
             const oauthSteps = document.getElementById('oauthSteps');
             if (oauthSteps && oauthSteps.children[stepNumber - 1]) {
@@ -3638,16 +3777,30 @@
                 // Remove existing classes
                 stepElement.classList.remove('active', 'completed');
                 
-                if (status === 'completed') {
+                if (status.includes('Complete') || status.includes('✅')) {
                     stepElement.classList.add('completed');
                     stepElement.innerHTML = `<span style="color: #059669; font-weight: 600;">✅ ${status}</span>`;
                     stepElement.style.background = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
                     stepElement.style.border = '1px solid #10b981';
-                } else if (status === 'active') {
+                    
+                    // Announce completion to screen reader
+                    announceToScreenReader(`Step ${stepNumber} completed: ${status}`);
+                    
+                    // Add completion animation
+                    stepElement.style.animation = 'stepComplete 0.6s ease-out';
+                    setTimeout(() => {
+                        stepElement.style.animation = '';
+                    }, 600);
+                    
+                } else if (status.includes('⏳') || status.includes('active')) {
                     stepElement.classList.add('active');
                     stepElement.innerHTML = `<span style="color: #1e40af; font-weight: 600;">⏳ ${status}</span>`;
                     stepElement.style.background = 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)';
                     stepElement.style.border = '1px solid #3b82f6';
+                    
+                    // Announce active step to screen reader
+                    announceToScreenReader(`Step ${stepNumber} in progress: ${status}`);
+                    
                 } else {
                     stepElement.innerHTML = `<span style="color: #6b7280;">⏳ ${status}</span>`;
                     stepElement.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
@@ -3656,7 +3809,23 @@
                 
                 // Add smooth transition
                 stepElement.style.transition = 'all 0.5s ease';
+                
+                // Update progress indicator
+                updateProgressIndicator(stepNumber, oauthSteps.children.length);
             }
+        }
+
+        // Update progress indicator
+        function updateProgressIndicator(currentStep, totalSteps) {
+            const progressPercentage = (currentStep / totalSteps) * 100;
+            const progressText = document.querySelector('.progress-content h4');
+            
+            if (progressText) {
+                progressText.textContent = `FHIR OAuth Integration in Progress... ${Math.round(progressPercentage)}%`;
+            }
+            
+            // Announce progress to screen reader
+            announceToScreenReader(`Progress: ${Math.round(progressPercentage)}% complete`);
         }
         
         // Function to reset OAuth steps to initial state
@@ -3708,6 +3877,84 @@
             } catch (error) {
                 console.error('❌ Error resetting authentication form:', error);
             }
+        }
+
+        // Accessibility helper function for screen reader announcements
+        function announceToScreenReader(message) {
+            try {
+                // Create or get existing announcement element
+                let announcement = document.getElementById('screen-reader-announcement');
+                if (!announcement) {
+                    announcement = document.createElement('div');
+                    announcement.id = 'screen-reader-announcement';
+                    announcement.setAttribute('aria-live', 'polite');
+                    announcement.setAttribute('aria-atomic', 'true');
+                    announcement.style.position = 'absolute';
+                    announcement.style.left = '-10000px';
+                    announcement.style.width = '1px';
+                    announcement.style.height = '1px';
+                    announcement.style.overflow = 'hidden';
+                    document.body.appendChild(announcement);
+                }
+                
+                // Update the announcement
+                announcement.textContent = message;
+                
+                // Trigger screen reader announcement
+                setTimeout(() => {
+                    announcement.textContent = '';
+                }, 100);
+                
+                console.log('🔊 Screen reader announcement:', message);
+            } catch (error) {
+                console.warn('⚠️ Could not announce to screen reader:', error);
+            }
+        }
+
+        // Show user-friendly notification
+        function showNotification(message, type = 'info') {
+            try {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification-toast notification-${type} show`;
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <span class="notification-icon">${getNotificationIcon(type)}</span>
+                        <span class="notification-message">${message}</span>
+                        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                    </div>
+                `;
+                
+                // Add to page
+                document.body.appendChild(notification);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+                
+                // Announce to screen reader
+                announceToScreenReader(message);
+                
+                console.log(`🔔 Notification shown: ${message} (${type})`);
+            } catch (error) {
+                console.warn('⚠️ Could not show notification:', error);
+                // Fallback to alert
+                alert(message);
+            }
+        }
+
+        // Get notification icon based on type
+        function getNotificationIcon(type) {
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            return icons[type] || icons.info;
         }
 
         // Enhanced error handling with user-friendly messages
@@ -4126,26 +4373,34 @@
             }
         }
 
-        // Enhanced provider selection with visual feedback
+        // Enhanced provider selection with visual feedback and accessibility
         function enhanceProviderSelection() {
             const providerSelect = document.getElementById('providerSelect');
             if (providerSelect) {
-                providerSelect.addEventListener('change', function() {
+                // Remove any existing listeners to prevent duplicates
+                const newProviderSelect = providerSelect.cloneNode(true);
+                providerSelect.parentNode.replaceChild(newProviderSelect, providerSelect);
+                
+                newProviderSelect.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
                     if (selectedOption.value) {
-                        // Add visual feedback
+                        // Gentle visual feedback
                         this.style.borderColor = '#10b981';
                         this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                        this.style.transition = 'all 0.3s ease';
                         
                         // Update terms display and enable submit button
                         updateTermsDisplay();
                         updateSubmitButtonState();
                         
-                        // Remove feedback after animation
+                        // Announce selection to screen readers
+                        announceToScreenReader(`Provider ${selectedOption.textContent} selected`);
+                        
+                        // Remove feedback gently
                         setTimeout(() => {
                             this.style.borderColor = '';
                             this.style.boxShadow = '';
-                        }, 1000);
+                        }, 2000);
                     } else {
                         // Hide terms section and disable submit button if no provider selected
                         const termsSection = document.getElementById('termsSection');
@@ -4153,12 +4408,22 @@
                             termsSection.style.display = 'none';
                         }
                         updateSubmitButtonState();
+                        
+                        // Announce reset to screen readers
+                        announceToScreenReader('No provider selected');
                     }
                 });
+                
+                // Add focus management for accessibility
+                newProviderSelect.addEventListener('focus', function() {
+                    this.setAttribute('aria-describedby', 'providerSelectHelp');
+                });
+                
+                console.log('✅ Enhanced provider selection configured');
             }
         }
 
-        // Function to update submit button state based on form completion
+        // Enhanced function to update submit button state with stable UX
         function updateSubmitButtonState() {
             const providerSelect = document.getElementById('providerSelect');
             const termsCheckbox = document.getElementById('termsCheckbox');
@@ -4169,17 +4434,74 @@
                 const hasAcceptedTerms = termsCheckbox.checked;
                 
                 // Enable submit button only if provider is selected AND terms are accepted
-                submitBtn.disabled = !(hasProvider && hasAcceptedTerms);
+                const shouldEnable = hasProvider && hasAcceptedTerms;
+                submitBtn.disabled = !shouldEnable;
+                
+                // Visual feedback for button state - keep button text stable
+                if (shouldEnable) {
+                    submitBtn.classList.remove('btn-disabled');
+                    submitBtn.classList.add('btn-enabled');
+                    submitBtn.setAttribute('aria-describedby', 'submitReadyHelp');
+                    submitBtn.textContent = 'Submit'; // Keep text stable
+                    
+                    // Show help text
+                    const helpText = document.getElementById('submitReadyHelp');
+                    if (helpText) {
+                        helpText.style.display = 'block';
+                    }
+                } else {
+                    submitBtn.classList.remove('btn-enabled');
+                    submitBtn.classList.add('btn-disabled');
+                    submitBtn.removeAttribute('aria-describedby');
+                    submitBtn.textContent = 'Submit'; // Keep text stable
+                    
+                    // Hide help text
+                    const helpText = document.getElementById('submitReadyHelp');
+                    if (helpText) {
+                        helpText.style.display = 'none';
+                    }
+                }
+                
+                        // Update help text to guide user instead of changing button text
+                const helpText = document.getElementById('submitReadyHelp');
+                if (helpText) {
+                    // Add smooth transition class
+                    helpText.classList.add('updating');
+                    
+                    // Update content after a brief delay for smooth transition
+                    setTimeout(() => {
+                        if (!hasProvider) {
+                            helpText.textContent = 'Please select a provider to continue';
+                            helpText.style.color = '#6b7280';
+                            helpText.style.fontWeight = '400';
+                        } else if (!hasAcceptedTerms) {
+                            helpText.textContent = 'Please accept the terms and conditions to continue';
+                            helpText.style.color = '#6b7280';
+                            helpText.style.fontWeight = '400';
+                        } else {
+                            helpText.textContent = 'Ready to proceed with provider connection';
+                            helpText.style.color = '#10b981';
+                            helpText.style.fontWeight = '600';
+                        }
+                        
+                        // Remove transition class
+                        helpText.classList.remove('updating');
+                    }, 150);
+                    
+                    // Ensure help text is always visible to prevent layout shifts
+                    helpText.style.display = 'block';
+                }
                 
                 console.log('🔍 Submit button state updated:', {
                     hasProvider,
                     hasAcceptedTerms,
-                    buttonEnabled: !submitBtn.disabled
+                    buttonEnabled: !shouldEnable,
+                    buttonText: submitBtn.textContent
                 });
             }
         }
 
-        // Enhanced form submission with better UX
+        // Enhanced form submission with better UX and validation
         function enhanceFormSubmission() {
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
@@ -4213,6 +4535,111 @@
             }
         }
 
+        // Enhanced form validation with real-time feedback
+        function validateForm(form) {
+            let isValid = true;
+            const errors = [];
+            
+            // Clear previous error states
+            form.querySelectorAll('.form-input, .form-select').forEach(input => {
+                input.classList.remove('error');
+                const errorMessage = input.parentNode.querySelector('.error-message');
+                if (errorMessage) {
+                    errorMessage.remove();
+                }
+            });
+            
+            // Validate required fields
+            form.querySelectorAll('[required]').forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('error');
+                    showFieldError(field, 'This field is required');
+                    errors.push(`${field.name || field.id} is required`);
+                }
+            });
+            
+            // Validate provider selection specifically
+            const providerSelect = form.querySelector('#providerSelect');
+            if (providerSelect && providerSelect.value === '') {
+                isValid = false;
+                providerSelect.classList.add('error');
+                showFieldError(providerSelect, 'Please select a provider to continue');
+                errors.push('Provider selection is required');
+            }
+            
+            // Validate terms acceptance
+            const termsCheckbox = form.querySelector('#termsCheckbox');
+            if (termsCheckbox && !termsCheckbox.checked) {
+                isValid = false;
+                termsCheckbox.classList.add('error');
+                showFieldError(termsCheckbox, 'You must accept the terms and conditions');
+                errors.push('Terms and conditions must be accepted');
+            }
+            
+            if (!isValid) {
+                console.log('❌ Form validation failed:', errors);
+                announceToScreenReader(`Form validation failed. ${errors.join('. ')}`);
+            }
+            
+            return isValid;
+        }
+
+        // Show field-specific error messages with gentle feedback
+        function showFieldError(field, message) {
+            // Remove existing error message
+            const existingError = field.parentNode.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Create new error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            errorDiv.style.color = '#e53e3e';
+            errorDiv.style.fontSize = '0.875rem';
+            errorDiv.style.marginTop = '4px';
+            errorDiv.style.fontWeight = '500';
+            errorDiv.style.opacity = '0';
+            errorDiv.style.transform = 'translateY(-5px)';
+            errorDiv.style.transition = 'all 0.3s ease';
+            
+            // Insert after the field
+            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+            
+            // Gentle fade-in animation
+            setTimeout(() => {
+                errorDiv.style.opacity = '1';
+                errorDiv.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // Gentle border highlight instead of shake
+            field.style.borderColor = '#e53e3e';
+            field.style.boxShadow = '0 0 0 3px rgba(229, 62, 62, 0.1)';
+            
+            // Remove error styling after a delay
+            setTimeout(() => {
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
+            }, 3000);
+        }
+
+        // Set loading state for buttons
+        function setLoadingState(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.classList.add('loading');
+                button.textContent = 'Processing...';
+                button.setAttribute('aria-busy', 'true');
+            } else {
+                button.disabled = false;
+                button.classList.remove('loading');
+                button.textContent = button.getAttribute('data-original-text') || 'Submit';
+                button.removeAttribute('aria-busy');
+            }
+        }
+
         // Initialize enhanced form features
         document.addEventListener('DOMContentLoaded', function() {
             enhanceProviderSelection();
@@ -4223,6 +4650,9 @@
             
             // Initialize Add Another Provider button state
             updateAddAnotherProviderButton();
+            
+            // Setup workflow event listeners
+            setupWorkflowEventListeners();
         });
 
         // ========================================
@@ -4386,27 +4816,89 @@
                 console.log('');
             },
             
-            // Test the complete FHIR OAuth flow
-            testFHIRFlow: () => {
-                console.log('🧪 Testing Complete FHIR OAuth Flow...');
-                console.log('This will simulate the entire OAuth process');
+                    // Test the complete FHIR OAuth flow
+        testFHIRFlow: () => {
+            console.log('🧪 Testing Complete FHIR OAuth Flow...');
+            console.log('This will simulate the entire OAuth process');
+            
+            // Start the workflow
+            handleConnectProvider();
+            
+            // Auto-advance through steps for demo
+            setTimeout(() => {
+                const checkbox = document.getElementById('termsCheckbox');
+                if (checkbox) {
+                    checkbox.checked = true;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
                 
-                // Start the workflow
-                handleConnectProvider();
-                
-                // Auto-advance through steps for demo
                 setTimeout(() => {
-                    const checkbox = document.getElementById('termsCheckbox');
-                    if (checkbox) {
-                        checkbox.checked = true;
-                        checkbox.dispatchEvent(new Event('change'));
-                    }
+                    submitTerms();
+                }, 500);
+            }, 1000);
+        },
+
+        // Test modal accessibility features
+        testAccessibility: () => {
+            console.log('🧪 Testing Modal Accessibility Features...');
+            
+            // Test screen reader announcements
+            announceToScreenReader('Testing accessibility features');
+            
+            // Test keyboard navigation
+            console.log('✅ Press Escape key to test modal closing');
+            console.log('✅ Use Tab key to navigate between form elements');
+            console.log('✅ Use Enter/Space to interact with buttons');
+            
+            // Check ARIA attributes
+            const modals = document.querySelectorAll('.workflow-modal');
+            modals.forEach(modal => {
+                const hasAriaLabel = modal.getAttribute('aria-label') || modal.getAttribute('aria-labelledby');
+                const hasRole = modal.getAttribute('role');
+                console.log(`Modal ${modal.id}:`, {
+                    hasAriaLabel: !!hasAriaLabel,
+                    hasRole: !!hasRole,
+                    ariaLabel: hasAriaLabel,
+                    role: hasRole
+                });
+            });
+            
+            console.log('✅ Accessibility test complete');
+        },
+
+        // Test form validation
+        testFormValidation: () => {
+            console.log('🧪 Testing Form Validation...');
+            
+            // Show terms modal
+            modalManager.show('termsModal');
+            
+            // Test validation without provider selection
+            setTimeout(() => {
+                const submitBtn = document.getElementById('submitTermsBtn');
+                if (submitBtn) {
+                    console.log('🔍 Testing submit without provider selection...');
+                    submitBtn.click();
+                }
+            }, 500);
+            
+            // Test validation without terms acceptance
+            setTimeout(() => {
+                const providerSelect = document.getElementById('providerSelect');
+                if (providerSelect) {
+                    providerSelect.value = 'trellis';
+                    providerSelect.dispatchEvent(new Event('change'));
                     
-                    setTimeout(() => {
-                        submitTerms();
-                    }, 500);
-                }, 1000);
-            },
+                    const submitBtn = document.getElementById('submitTermsBtn');
+                    if (submitBtn) {
+                        console.log('🔍 Testing submit without terms acceptance...');
+                        submitBtn.click();
+                    }
+                }
+            }, 1000);
+            
+            console.log('✅ Form validation test initiated');
+        },
             
             // Force reload configurations
             forceReloadConfigs: () => {
@@ -4881,6 +5373,93 @@
                 }
             } catch (error) {
                 console.error('❌ Error clearing transactions:', error);
+            }
+        }
+
+        // Enhanced provider selection with visual feedback
+        function setupWorkflowEventListeners() {
+            try {
+                console.log('🔧 Setting up workflow event listeners...');
+                
+                // 1. Provider selection change handler
+                const providerSelect = document.getElementById('providerSelect');
+                if (providerSelect) {
+                    // Remove any existing listeners to prevent duplicates
+                    const newProviderSelect = providerSelect.cloneNode(true);
+                    providerSelect.parentNode.replaceChild(newProviderSelect, providerSelect);
+                    
+                    newProviderSelect.addEventListener('change', function() {
+                        console.log('🔍 Provider selection changed to:', this.value);
+                        if (this.value) {
+                            window.selectedProviderForWorkflow = this.value;
+                            console.log('✅ Workflow provider set to:', this.value);
+                            updateTermsDisplay();
+                            updateSubmitButtonState();
+                        } else {
+                            // Reset workflow state if no provider selected
+                            window.selectedProviderForWorkflow = null;
+                            console.log('🔄 Workflow provider reset');
+                            updateTermsDisplay();
+                            updateSubmitButtonState();
+                        }
+                    });
+                    console.log('✅ Provider selection event listener configured');
+                }
+                
+                // 2. Terms checkbox change handler
+                const termsCheckbox = document.getElementById('termsCheckbox');
+                if (termsCheckbox) {
+                    termsCheckbox.addEventListener('change', function() {
+                        console.log('🔍 Terms checkbox changed:', this.checked);
+                        updateSubmitButtonState();
+                        
+                        // Visual feedback
+                        if (this.checked) {
+                            this.closest('.checkbox-label').style.color = '#10b981';
+                        } else {
+                            this.closest('.checkbox-label').style.color = '#4a5568';
+                        }
+                    });
+                    console.log('✅ Terms checkbox event listener configured');
+                }
+                
+                // 3. Form submission handlers
+                const authForm = document.getElementById('authForm');
+                if (authForm) {
+                    authForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        handleAuthSubmit(e);
+                    });
+                    console.log('✅ Authentication form event listener configured');
+                }
+                
+                // 4. Modal close button handlers
+                const closeButtons = document.querySelectorAll('.modal-close');
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const modalId = this.closest('.workflow-modal').id;
+                        console.log('🔧 Modal close button clicked for:', modalId);
+                        modalManager.hide(modalId);
+                    });
+                });
+                console.log('✅ Modal close button event listeners configured');
+                
+                // 5. Keyboard navigation support
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        // Close active modal on Escape key
+                        if (window.modalManager && window.modalManager.activeModal) {
+                            console.log('⌨️ Escape key pressed, closing modal:', window.modalManager.activeModal);
+                            window.modalManager.hide(window.modalManager.activeModal);
+                        }
+                    }
+                });
+                console.log('✅ Keyboard navigation event listeners configured');
+                
+                console.log('✅ All workflow event listeners configured successfully');
+                
+            } catch (error) {
+                console.error('❌ Error setting up workflow event listeners:', error);
             }
         }
 
