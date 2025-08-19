@@ -1591,6 +1591,7 @@
                                 <button class="action-btn" onclick="devHelpers.forceReloadConfigs()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔄 Reload Configs</button>
                                 <button class="action-btn" onclick="window.debugConnectedProviders()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">🔍 Debug Providers</button>
                                 <button class="action-btn" onclick="window.debugProviderNameElements()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔍 Debug Provider Names</button>
+                                <button class="action-btn" onclick="window.debugAddAnotherProviderWorkflow()" style="margin-top: 10px; font-size: 0.9em; background-color: #dc2626;">🔍 Debug Add Another Provider</button>
                             </div>
                         </div>
                     </div>
@@ -2178,8 +2179,10 @@
                     console.warn('⚠️ Submit button not found');
                 }
                 
-                // Don't update terms display yet - wait for provider selection
-                console.log('ℹ️ Terms display will update when provider is selected');
+                // Update terms display to show available providers
+                updateTermsDisplay();
+                
+                console.log('✅ Terms display updated for available providers');
                 
                 console.log('✅ About to show terms modal for additional provider');
                 
@@ -2187,6 +2190,25 @@
                 modalManager.show('termsModal');
                 
                 console.log('✅ Modal should be visible now for additional provider');
+                
+                // Ensure provider selection change handler is set up
+                if (providerSelect) {
+                    // Remove any existing change listeners to avoid duplicates
+                    const newProviderSelect = providerSelect.cloneNode(true);
+                    providerSelect.parentNode.replaceChild(newProviderSelect, providerSelect);
+                    
+                    // Add the change event listener to the new element
+                    newProviderSelect.addEventListener('change', function() {
+                        console.log('🔍 Provider selection changed to:', this.value);
+                        if (this.value) {
+                            window.selectedProviderForWorkflow = this.value;
+                            console.log('✅ Workflow provider set to:', this.value);
+                            updateTermsDisplay();
+                        }
+                    });
+                    
+                    console.log('✅ Provider selection change handler configured');
+                }
                 
             } catch (error) {
                 console.error('❌ Error in handleAddAnotherProvider:', error);
@@ -3566,6 +3588,52 @@
             console.log('Current Workflow State:', {
                 selectedProviderForWorkflow: window.selectedProviderForWorkflow,
                 providerConfig: window.selectedProviderForWorkflow ? getProviderConfig(window.selectedProviderForWorkflow) : null
+            });
+        };
+        
+        // Debug function for Add Another Provider workflow
+        window.debugAddAnotherProviderWorkflow = () => {
+            console.log('🔍 Add Another Provider Workflow Debug:');
+            
+            const providerSelect = document.getElementById('providerSelect');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const submitTermsBtn = document.getElementById('submitTermsBtn');
+            const termsSection = document.getElementById('termsSection');
+            
+            console.log('Provider Select:', {
+                element: !!providerSelect,
+                value: providerSelect?.value,
+                options: providerSelect ? Array.from(providerSelect.options).map(opt => ({ value: opt.value, text: opt.textContent })) : [],
+                disabled: providerSelect?.disabled
+            });
+            
+            console.log('Terms Checkbox:', {
+                element: !!termsCheckbox,
+                checked: termsCheckbox?.checked,
+                disabled: termsCheckbox?.disabled
+            });
+            
+            console.log('Submit Terms Button:', {
+                element: !!submitTermsBtn,
+                disabled: submitTermsBtn?.disabled,
+                textContent: submitTermsBtn?.textContent
+            });
+            
+            console.log('Terms Section:', {
+                element: !!termsSection,
+                display: termsSection?.style?.display,
+                visible: termsSection?.style?.display !== 'none'
+            });
+            
+            console.log('Workflow State:', {
+                selectedProviderForWorkflow: window.selectedProviderForWorkflow,
+                connectedProviders: connectedProviders,
+                availableProviders: Object.keys(window.PROVIDER_CONFIG || {}).filter(p => !connectedProviders.includes(p))
+            });
+            
+            console.log('Modal Manager:', {
+                available: !!window.modalManager,
+                currentModal: window.modalManager?.currentModal
             });
         };
 
