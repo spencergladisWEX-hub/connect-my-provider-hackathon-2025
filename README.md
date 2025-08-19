@@ -2,6 +2,28 @@
 
 A working demo of provider-verified substantiation for FSA consumer portal, featuring zero-touch approval with real-time updates.
 
+## 🔒 Security
+
+### **Current Status: SECURE FOR DEVELOPMENT**
+- ✅ **Localhost only** - No external access possible
+- ✅ **Mock data** - No real PII or sensitive information
+- ✅ **Clean architecture** - Ready for security enhancements
+- ✅ **Development environment** - Appropriate security for demo purposes
+
+### **Security Documentation**
+For detailed security considerations, current measures, and future recommendations, see:
+- **`frontend/SECURITY_CONSIDERATIONS.md`** - Comprehensive security analysis
+- **`frontend/CSS_CLEANUP_SUMMARY.md`** - Development best practices
+
+### **Quick Security Check**
+```bash
+# Verify services are running on localhost only
+netstat -an | grep -E "(3000|4000)"
+# Should show 127.0.0.1 (localhost) not 0.0.0.0
+```
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -127,30 +149,185 @@ curl http://localhost:4000/transaction-status/TX-001
 SHARE/
 ├── start_demo.sh                    # Demo startup script
 ├── README.md                        # This file
-├── wex-fsa-provider-substantiation-backend/
+├── backend/                         # Flask API server
 │   ├── requirements.txt             # Python dependencies
-│   └── src/
-│       └── server.py               # Flask API server
-└── wex-fsa-provider-substantiation-frontend/
-    └── index.html                  # Frontend application
+│   └── server.py                   # Flask application
+├── frontend/                        # Frontend application
+│   ├── index.html                  # Main application
+│   ├── config.js                   # Centralized configuration
+│   ├── CSS_CLEANUP_SUMMARY.md      # CSS organization notes
+│   └── SECURITY_CONSIDERATIONS.md  # Security documentation
+└── docs/                           # 📚 Documentation Hub
+    ├── 00-INDEX.md                 # Documentation navigation
+    ├── 01-DEVELOPER_GUIDE.md       # Complete development guide
+    ├── 02-QUICK_REFERENCE.md       # Fast lookup & troubleshooting
+    ├── 03-FHIR_COMPLIANCE.md       # FHIR standards & compliance
+    ├── 04-API_DESIGN.md            # API endpoints & architecture
+    └── 05-DATABASE_SCHEMA.sql      # Database structure
 ```
 
-## 🛠️ Development
+## 📚 Documentation
 
-### Adding New Endpoints
-1. Add route to `src/server.py`
-2. Update mock data as needed
-3. Test with curl or browser
+### **Documentation Hub**
+All developer documentation has been organized in the `docs/` directory for better readability and navigation:
 
-### Modifying UI
-1. Edit `index.html`
-2. Update CSS styles
-3. Modify JavaScript functions
+- **[📚 Documentation Hub](docs/00-INDEX.md)** - Start here for navigation
+- **[🚀 Developer Guide](docs/01-DEVELOPER_GUIDE.md)** - Complete development guide
+- **[⚡ Quick Reference](docs/02-QUICK_REFERENCE.md)** - Fast lookup & troubleshooting
+- **[🏥 FHIR Compliance](docs/03-FHIR_COMPLIANCE.md)** - Healthcare standards & compliance
+- **[🔌 API Design](docs/04-API_DESIGN.md)** - API endpoints & architecture
+- **[🗄️ Database Schema](docs/05-DATABASE_SCHEMA.sql)** - Database structure
 
-### Changing Mock Data
-1. Update transaction data in `server.py`
-2. Modify FHIR EOB structure
-3. Adjust timing in event endpoints
+### **Key Documentation Features**
+- ✅ **Organized by priority** - Critical information first
+- ✅ **Cross-referenced** - Easy navigation between documents
+- ✅ **Searchable** - Quick topic lookup
+- ✅ **Maintained** - Regular updates and improvements
+
+---
+
+## 🛠️ Development & Best Practices
+
+### Preventing Modal Visibility Issues
+
+Your project now includes a **ModalManager system** that prevents the modal visibility problems you experienced. Here's how to use it for future UX development:
+
+#### **Modal Management System**
+- **Automatic modal registration** on page load
+- **Prevents multiple modals** from showing simultaneously
+- **Protects main content** from being hidden accidentally
+- **Debug logging** for development troubleshooting
+
+#### **Development Helper Functions**
+Access these in browser console for debugging:
+
+```javascript
+// Check modal status
+devHelpers.checkModals()
+
+// Force hide all modals (emergency reset)
+devHelpers.resetModals()
+
+// Test specific modal
+devHelpers.testModal('termsModal')
+
+// Check main content visibility
+devHelpers.checkMainContent()
+
+// Emergency portal reset
+devHelpers.resetPortal()
+```
+
+### **Best Practices for Future UX Development**
+
+#### **1. Always Use ModalManager**
+```javascript
+// ✅ CORRECT - Use ModalManager
+modalManager.show('newModal');
+modalManager.hide('newModal');
+
+// ❌ WRONG - Direct DOM manipulation
+document.getElementById('newModal').classList.remove('hidden');
+```
+
+#### **2. Register New Modals**
+```html
+<!-- Add this class to new modals -->
+<div id="newFeatureModal" class="workflow-modal hidden">
+    <!-- Modal content -->
+</div>
+```
+
+#### **3. Test Modal Interactions**
+```javascript
+// Test in console before implementing
+devHelpers.testModal('newFeatureModal');
+devHelpers.checkModals();
+```
+
+#### **4. Check Main Content Visibility**
+```javascript
+// Always verify main content is visible
+devHelpers.checkMainContent();
+```
+
+### **Troubleshooting Guide**
+
+#### **Problem: Portal Interface Not Visible**
+1. **Check console** for ModalManager logs
+2. **Run emergency reset**: `devHelpers.resetPortal()`
+3. **Check modal status**: `devHelpers.checkModals()`
+4. **Verify main content**: `devHelpers.checkMainContent()`
+
+#### **Problem: Multiple Modals Showing**
+1. **Use ModalManager.hideAll()** to reset
+2. **Check for conflicting show() calls**
+3. **Verify modal IDs are unique**
+
+#### **Problem: Main Content Hidden**
+1. **Check z-index conflicts**
+2. **Verify CSS isn't overriding visibility**
+3. **Use devHelpers.resetPortal()**
+
+### **Adding New Features Safely**
+
+#### **New Modal Workflow**
+1. **Add HTML** with `class="workflow-modal hidden"`
+2. **Use ModalManager** for show/hide operations
+3. **Test visibility** with devHelpers
+4. **Verify main content** remains accessible
+
+#### **New Interactive Elements**
+1. **Add onclick handlers** that call `showComingSoon()`
+2. **Use consistent styling** with existing elements
+3. **Test responsiveness** on different screen sizes
+
+#### **New Portal Sections**
+1. **Follow existing card structure**
+2. **Use consistent spacing** and colors
+3. **Test with ModalManager** to ensure no conflicts
+
+### **CSS Guidelines**
+
+#### **Modal Styling**
+```css
+.new-modal {
+    /* Always include these properties */
+    position: fixed;
+    z-index: 1000;
+    /* Add your custom styles */
+}
+
+.new-modal.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+```
+
+#### **Main Content Protection**
+```css
+.main-content {
+    /* These ensure visibility */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+```
+
+### **Testing Checklist**
+
+Before deploying any UX changes:
+- [ ] **All modals hidden** by default
+- [ ] **Main content visible** on page load
+- [ ] **ModalManager logs** show correct status
+- [ ] **No CSS conflicts** with visibility
+- [ ] **Responsive design** works on all screen sizes
+- [ ] **Console errors** resolved
+- [ ] **Portal feels live** and interactive
+
+This system will prevent the modal visibility issues you experienced and make future UX development much more reliable!
 
 ## 🎉 Success!
 

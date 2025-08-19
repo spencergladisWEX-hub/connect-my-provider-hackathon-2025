@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEX BENEFITS - Consumer Portal</title>
+    <style>
+        /* ========================================
+           WEX BENEFITS PORTAL - CSS ORGANIZATION
+           ========================================
+           
+           This CSS is organized into clear sections:
+           1. RESET & BASE STYLES (lines ~10-20)
+           2. NAVIGATION & HEADER (lines ~25-100)
+           3. ALERTS & NOTIFICATIONS (lines ~105-160)
+           4. MAIN CONTENT & LAYOUT (lines ~165-250)
+           5. ACTION BUTTONS & INTERACTIVE (lines ~255-300)
+           6. TABLES & DATA DISPLAY (lines ~305-400)
+           7. WORKFLOW MODAL SYSTEM (lines ~405-500)
+           8. RESPONSIVE DESIGN (lines ~505-520)
+           
+           IMPORTANT: Workflow modals are completely separate from portal elements
+           to prevent CSS conflicts and visibility issues.
+           ======================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Styles */
+        .main-header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0;
+            margin-bottom: 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #4a5568;
+            padding: 10px 0;
+            border-bottom: 3px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .nav-link.active {
+            border-bottom-color: #f56565;
+            color: #2d3748;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-badge {
+            background: #e53e3e;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu:hover {
+            background-color: #f7fafc;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .cart-icon:hover {
+            background-color: #f7fafc;
+        }
+
+        .logout-link {
+            color: #4a5568;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .logout-link:hover {
+            background-color: #f7fafc;
+        }
+
+        /* Alert Styles */
+        .alerts-section {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .alert-warning {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .alert-info {
+            background: #bee3f8;
+            color: #2a4365;
+            border-left: 4px solid #3182ce;
+        }
+
+        .alert-text {
+            flex: 1;
+        }
+
+        .alert-link {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #742a2a;
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            display: block;
+            visibility: visible;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: #253746; /* WEX Navy (Slate Blue) */
+            border: 1px solid #253746;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: #1a2a38; /* Darker shade of WEX Navy */
+            border-color: #1a2a38;
+        }
+
+        .action-btn.primary {
+            background: #C8102E; /* WEX Red */
+            color: white;
+            border-color: #C8102E;
+        }
+
+        .action-btn.primary:hover {
+            background: #a30d25; /* Darker shade of WEX Red */
+            border-color: #a30d25;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Table Styles - Consolidated */
+        .claims-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .claims-table th,
+        .claims-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .claims-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .claims-table tr:hover {
+            background-color: #f7fafc;
+        }
+
+        /* Status colors for transactions */
+        .status-pending {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .status-error {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        /* Task Styles */
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #fed7d7;
+            border-radius: 8px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .task-text {
+            flex: 1;
+            color: #742a2a;
+        }
+
+        .help-icon {
+            cursor: pointer;
+            color: #d69e2e;
+        }
+
+        /* HSA Planner Styles */
+        .goal-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .goal-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .goal-tag.primary {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .goal-tag.secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .goal-amount {
+            margin-bottom: 15px;
+        }
+
+        .amount-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .goal-status {
+            margin-bottom: 15px;
+        }
+
+        .status-text {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .goal-message {
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .expenses-text {
+            color: #718096;
+            margin-bottom: 20px;
+        }
+
+        .goal-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #e53e3e;
+            transition: width 0.3s ease;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-secondary {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Overlay Styles - REMOVED: No longer used */
+        /* These styles were for the old authOverlay system that has been replaced */
+
+        .hidden {
+            display: none;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #38a169;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-center {
+                display: none;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* ========================================
+           WORKFLOW MODAL SYSTEM - SPLASH SCREENS
+           ======================================== */
+        /* These styles ONLY affect the 4-step workflow modals */
+        /* They are completely separate from the portal interface */
+        
+        .workflow-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .workflow-modal.hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -1 !important;
+        }
+
+        /* Ensure workflow modals don't affect portal elements */
+        /* Note: Using z-index management instead of sibling selectors */
+        .workflow-modal:not(.hidden) {
+            z-index: 1000;
+        }
+        
+        /* Ensure main content stays visible behind modals */
+        .main-content,
+        header,
+        .alerts-section {
+            z-index: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            /* Animation removed for immediate visibility */
+        }
+
+        /* Animation keyframes removed for immediate visibility */
+
+        .modal-header {
+            padding: 24px 24px 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px 24px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .form-help {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #253746;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #253746;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
+        }
+
+        /* Checkbox Styles */
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            accent-color: #253746;
+        }
+
+        .checkbox-label a {
+            color: #253746;
+            text-decoration: underline;
+        }
+
+        /* Auth Header Styles */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .provider-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+        }
+
+        .auth-header h4 {
+            margin: 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .forgot-password {
+            color: #253746;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        /* Progress Modal Styles */
+        .progress-content {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .progress-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #253746;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-content h4 {
+            margin: 0 0 12px 0;
+            color: #2d3748;
+        }
+
+        .progress-content p {
+            margin: 0;
+            color: #718096;
+        }
+
+        /* Success Modal Styles */
+        .success-content {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .success-content h4 {
+            margin: 0 0 16px 0;
+            color: #2d3748;
+        }
+
+        .success-content p {
+            margin: 0 0 12px 0;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .success-content strong {
+            color: #253746;
+        }
+
+        /* Demo Section Styles */
+        .demo-section {
+            text-align: center;
+            padding: 40px 25px;
+        }
+
+        .demo-description {
+            color: #718096;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demo-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Demo Info Section */
+        .demo-info-section {
+            padding: 30px 25px;
+        }
+
+        .demo-features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #253746;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            margin: 0 0 8px 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+        }
+
+        .feature-content p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Portal Elements - Always Visible */
+        .action-buttons-section,
+        .provider-claims-section,
+        .tasks-section,
+        .hsa-planner-section {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: #253746; /* WEX Navy (Slate Blue) */
+            border: 1px solid #253746;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: inline-block;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .action-btn:hover {
+            background: #1a2a38; /* Darker shade of WEX Navy */
+            border-color: #1a2a38;
+        }
+
+        .action-btn.primary {
+            background: #C8102E; /* WEX Red */
+            color: white;
+            border-color: #C8102E;
+        }
+
+        .action-btn.primary:hover {
+            background: #a30d25; /* Darker shade of WEX Red */
+            border-color: #a30d25;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Pre-Authentication Message Styles */
+        .pre-auth-message {
+            text-align: center;
+            padding: 40px 25px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px dashed #cbd5e0;
+        }
+
+        .pre-auth-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .pre-auth-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .pre-auth-content h3 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.5rem;
+        }
+
+        .pre-auth-content p {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .pre-auth-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .benefit-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Provider Claims Section - Initially Hidden */
+        .provider-claims-section.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script type="module" src="./config.js"></script>
+    <div class="app">
+        <header class="main-header">
+            <div class="nav-container">
+                <div class="nav-left">
+                    <h1 class="logo">wex BENEFITS</h1>
+                </div>
+                <nav class="nav-center">
+                    <a href="#" class="nav-link active" onclick="showComingSoon('Home')">Home</a>
+                    <a href="#" class="nav-link" onclick="showComingSoon('Accounts')">Accounts</a>
+                    <a href="#" class="nav-link" onclick="showComingSoon('Videos & Forms')">Videos & Forms</a>
+                    <a href="#" class="nav-link" onclick="showComingSoon('Message Center')">
+                        Message Center
+                        <span class="notification-badge">2</span>
+                    </a>
+                </nav>
+                <div class="nav-right">
+                    <div class="user-menu" onclick="showComingSoon('User Profile')">
+                        <span class="user-icon">👤</span>
+                        <span>Olivia Brown</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="cart-icon" onclick="showComingSoon('Shopping Cart')">
+                        🛒
+                        <span class="notification-badge">0</span>
+                    </div>
+                    <a href="#" class="logout-link" onclick="showComingSoon('Logout')">Logout</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="alerts-section">
+            <div class="alert alert-warning">
+                <span class="alert-icon">⚠️</span>
+                <span class="alert-text" id="receiptsAlertText">2 receipt(s) needed to approve your debit card transaction(s) or claim(s)</span>
+                <a href="#" class="alert-link" onclick="showComingSoon('View More')">View More</a>
+                <button class="alert-close" onclick="closeAlert(this)">×</button>
+            </div>
+            
+            <div class="alert alert-info">
+                <span class="alert-icon">📱</span>
+                <span class="alert-text">Download our mobile app. An easy way to get reimbursed, upload documents, and scan items for eligibility on the go.</span>
+                <button class="btn-primary" onclick="showComingSoon('Download Mobile App')">Download now</button>
+                <span class="arrow-right">→</span>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- I Want To Section -->
+                    <div class="card action-buttons-section">
+                        <h2>I Want To:</h2>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="showComingSoon('Get Help')">Get Help</button>
+                            <button class="action-btn" onclick="showComingSoon('Reimburse Myself')">Reimburse Myself</button>
+                            <button class="action-btn" onclick="showComingSoon('Send Payment')">Send Payment</button>
+                            <button class="action-btn" onclick="showComingSoon('Manage My Expenses')">Manage My Expenses</button>
+                            <button class="action-btn primary" id="connectProviderBtn" onclick="handleConnectProvider()" onmouseover="this.style.cursor='pointer'" onmouseout="this.style.cursor='default'">Connect My Provider</button>
+                            
+                            <!-- Development/Test buttons - hidden in production -->
+                            <div class="dev-buttons" style="display: none;">
+                                <button class="action-btn" onclick="devHelpers.testConnectProvider()" style="margin-top: 10px; font-size: 0.9em; background-color: #6b7280;">🧪 Test Connect</button>
+                                <button class="action-btn" onclick="devHelpers.testSubmitTerms()" style="margin-top: 10px; font-size: 0.9em; background-color: #6b7280;">🧪 Test Submit</button>
+                                <button class="action-btn" onclick="devHelpers.testModal('termsModal')" style="margin-top: 10px; font-size: 0.9em; background-color: #6b7280;">🧪 Test Modal</button>
+                                <button class="action-btn" onclick="devHelpers.showFHIRDocs()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">📚 FHIR OAuth Docs</button>
+                                <button class="action-btn" onclick="devHelpers.testFHIRFlow()" style="margin-top: 10px; font-size: 0.9em; background-color: #dc2626;">🚀 Test FHIR Flow</button>
+                                <button class="action-btn" onclick="devHelpers.forceReloadConfigs()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔄 Reload Configs</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pre-Authentication Message -->
+                    <div class="card pre-auth-message" id="preAuthMessage">
+                        <div class="pre-auth-content">
+                            <div class="pre-auth-icon">🏥</div>
+                            <h3>Connect Your Provider to Get Started</h3>
+                            <p>To view your provider claims and enable automatic verification, you'll need to connect your healthcare provider first.</p>
+                            <div class="pre-auth-benefits">
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">⚡</span>
+                                    <span>Real-time claim updates</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">✅</span>
+                                    <span>Automatic verification</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">💰</span>
+                                    <span>Zero-touch approval</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Provider Claims Section -->
+                    <div class="card provider-claims-section hidden" id="providerClaimsSection">
+                        <h2>My Provider Claims</h2>
+                        <div id="successMessage" class="success-message hidden">
+                            ✅ Successfully connected to <span id="providerName"></span>
+                        </div>
+                        <div id="errorMessage" class="error-message hidden">
+                            ❌ Connection failed. Please try again.
+                        </div>
+                        <table class="claims-table">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Date of Service</th>
+                                    <th>Patient Responsibility</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="claimsTableBody">
+                                <!-- Claims will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div class="card tasks-section">
+                        <h2>Tasks <span class="notification-badge">1</span></h2>
+                        <div class="task-item">
+                            <span class="task-icon">⚠️</span>
+                            <span class="task-text">2 receipt(s) needed to approve your debit card transaction(s) or claim(s)</span>
+                            <span class="help-icon" onclick="showComingSoon('Help')">❓</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- HSA Planner Section -->
+                    <div class="card hsa-planner-section">
+                        <h2>My HSA Planner</h2>
+                        <div class="goal-tags">
+                            <span class="goal-tag primary">2025 Goal</span>
+                            <span class="goal-tag secondary">Long Term Goal</span>
+                        </div>
+                        <div class="goal-amount">
+                            <span class="amount-text">$1,905.00 of $4,792.00</span>
+                        </div>
+                        <div class="goal-status">
+                            <span class="status-text">Goal Status: Off Track</span>
+                        </div>
+                        <p class="goal-message">To meet your goal, you need to contribute a bit more each week. You can do it!</p>
+                        <p class="expenses-text">Estimated out of pocket expenses: $4,791.97</p>
+                        <div class="goal-actions">
+                            <button class="btn-secondary" onclick="showComingSoon('Update My Goal')">Update My Goal</button>
+                            <div class="progress-info">
+                                <span>40% to your goal</span>
+                                <div class="progress-circle">
+                                    <div class="progress-fill" style="width: 40%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Connect My Provider Workflow Modals -->
+        
+        <!-- Step 1: Terms and Conditions Modal -->
+        <div id="termsModal" class="workflow-modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Connect My Provider</h3>
+                    <button class="modal-close" onclick="closeModal('termsModal')">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="providerSelect">Select Provider:</label>
+                        <select id="providerSelect" class="form-select">
+                            <option value="">Select My Provider</option>
+                            <option value="trellis">Trellis Healthcare</option>
+                            <option value="epic">Epic Systems</option>
+                            <option value="cerner">Cerner Corporation</option>
+                        </select>
+                        <small class="form-help">Selected provider will determine the terms and conditions you agree to.</small>
+                    </div>
+                    <div class="form-group" id="termsSection" style="display: none;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <span class="checkmark"></span>
+                            I agree to <a href="#" onclick="showTerms()" id="termsLink">Terms and Conditions</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('termsModal')">Close</button>
+                    <button class="btn-primary" id="submitTermsBtn" onclick="submitTerms()" disabled>Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: External Authentication Modal -->
+        <div id="authModal" class="workflow-modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Connect My Provider</h3>
+                    <button class="modal-close" onclick="closeModal('authModal')">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-header">
+                        <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjZMMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
+                        <h4 id="providerDisplayName">trellishealth</h4>
+                    </div>
+                    <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-input" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Sign In</button>
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Connection Progress Modal -->
+        <div id="progressModal" class="workflow-modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Connect My Provider</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="progress-content">
+                        <div class="progress-spinner"></div>
+                        <h4>FHIR OAuth Integration in Progress...</h4>
+                        <div id="oauthSteps" style="text-align: left; margin-top: 20px;">
+                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
+                                <span style="color: #6b7280;">⏳ Step 1: Authorization Request</span>
+                            </div>
+                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
+                                <span style="color: #6b7280;">⏳ Step 2: User Consent & Redirect</span>
+                            </div>
+                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
+                                <span style="color: #6b7280;">⏳ Step 3: Token Exchange</span>
+                            </div>
+                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
+                                <span style="color: #6b7280;">⏳ Step 4: FHIR Resource Access</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 20px; font-size: 0.9em; color: #6b7280;">
+                            <strong>Demo Mode:</strong> This simulates the complete FHIR OAuth 2.0 flow
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Success Confirmation Modal -->
+        <div id="successModal" class="workflow-modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Connect My Provider</h3>
+                    <button class="modal-close" onclick="closeModal('successModal')">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="success-content">
+                        <div class="success-icon">✅</div>
+                        <h4>Connection Successful!</h4>
+                        <p>You have successfully connected to <strong id="connectedProviderName">your selected provider</strong>.</p>
+                        <p>Your provider claims will now be automatically verified.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="completeConnection()">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authentication Overlay (Legacy - keeping for fallback) -->
+        <!-- REMOVED: This overlay system is no longer used and could cause conflicts -->
+    </div>
+
+    <script>
+        /* ========================================
+           MODAL MANAGEMENT SYSTEM
+           ========================================
+           
+           PURPOSE: This system ONLY manages the 4-step workflow modals
+           (Terms, Auth, Progress, Success). It does NOT affect portal elements.
+           
+           WHY: Prevents the "black screen" issue where modals cover everything.
+           
+           HOW: 
+           - Only registers elements with class 'workflow-modal'
+           - Ensures only one modal is active at a time
+           - Protects main content visibility during modal display
+           
+           FUTURE DEVELOPMENT: 
+           - Add new modals by giving them class 'workflow-modal'
+           - Don't modify portal element visibility here
+           - Use devHelpers for debugging if issues arise
+           ======================================== */
+        
+        // Modal Management System - Prevents visibility issues
+        class ModalManager {
+            constructor() {
+                this.modals = new Map();
+                this.activeModal = null;
+                this.init();
+            }
+
+            init() {
+                // Only register workflow modals, not portal elements
+                const modalElements = document.querySelectorAll('.workflow-modal');
+                modalElements.forEach(modal => {
+                    this.modals.set(modal.id, modal);
+                    this.hide(modal.id);
+                });
+                console.log('🔧 ModalManager: Registered', modalElements.length, 'workflow modals');
+            }
+
+            show(modalId) {
+                // Hide any currently active modal first
+                if (this.activeModal) {
+                    this.hide(this.activeModal);
+                }
+
+                const modal = this.modals.get(modalId);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    this.activeModal = modalId;
+                    console.log('🔧 ModalManager: Showing modal', modalId);
+                    
+                    // Ensure main content is not interfered with
+                    this.protectMainContent();
+                } else {
+                    console.error(`ModalManager: Workflow modal ${modalId} not found`);
+                }
+            }
+
+            hide(modalId) {
+                const modal = this.modals.get(modalId);
+                if (modal) {
+                    modal.classList.add('hidden');
+                    if (this.activeModal === modalId) {
+                        this.activeModal = null;
+                    }
+                    console.log('🔧 ModalManager: Hiding modal', modalId);
+                    
+                    // Restore main content visibility
+                    this.restoreMainContent();
+                }
+            }
+
+            hideAll() {
+                this.modals.forEach((modal, id) => {
+                    this.hide(id);
+                });
+                console.log('🔧 ModalManager: All modals hidden');
+            }
+
+            protectMainContent() {
+                // Ensure main content is visible but behind modal
+                // CSS already handles this with z-index: 1
+            }
+
+            restoreMainContent() {
+                // Restore main content to normal state
+                // CSS already handles this with z-index: 1
+            }
+
+            // Debug method for development
+            debug() {
+                console.log('🔧 ModalManager Debug:');
+                console.log('  Active modal:', this.activeModal);
+                console.log('  Total modals:', this.modals.size);
+                this.modals.forEach((modal, id) => {
+                    const isHidden = modal.classList.contains('hidden');
+                    const computedStyle = window.getComputedStyle(modal);
+                    console.log(`  Modal ${id}:`, {
+                        hidden: isHidden,
+                        display: computedStyle.display,
+                        visibility: computedStyle.visibility,
+                        opacity: computedStyle.opacity,
+                        zIndex: computedStyle.zIndex
+                    });
+                });
+            }
+        }
+
+        // Initialize modal manager
+        const modalManager = new ModalManager();
+        
+        // Make modalManager globally accessible for debugging
+        window.modalManager = modalManager;
+        
+        // Debug: Log modal manager status
+        console.log('🔧 ModalManager initialized:', modalManager);
+        console.log('🔧 Available modals:', Array.from(modalManager.modals.keys()));
+        
+        // Alias global configs loaded from config.js
+        const { PROVIDER_CONFIG, APP_CONFIG } = window;
+        
+        // Fallback event listener for Connect My Provider button
+        document.addEventListener('DOMContentLoaded', () => {
+            const connectBtn = document.getElementById('connectProviderBtn');
+            if (connectBtn) {
+                // Remove existing onclick to prevent conflicts
+                connectBtn.removeAttribute('onclick');
+                
+                // Add event listener
+                connectBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('🔍 Connect button clicked via event listener');
+                    
+                    try {
+                        handleConnectProvider();
+                    } catch (error) {
+                        console.error('❌ Error in event listener:', error);
+                        // Emergency fallback - use ModalManager
+                        try {
+                            if (window.modalManager) {
+                                window.modalManager.show('termsModal');
+                                console.log('🚨 Emergency modal show via ModalManager in event listener');
+                            } else {
+                                console.error('❌ ModalManager not available for emergency fallback');
+                            }
+                        } catch (fallbackError) {
+                            console.error('❌ Emergency fallback failed:', fallbackError);
+                        }
+                    }
+                });
+                
+                console.log('✅ Connect button event listener added');
+            } else {
+                console.warn('⚠️ Connect button not found for event listener');
+            }
+        });
+
+        // Provider Configuration - centralized in config.js (loaded as module at top)
+
+        // Global variable to track selected provider
+        let selectedProvider = (APP_CONFIG && APP_CONFIG.DEFAULT_PROVIDER) || 'trellis';
+
+        // Configuration object for the application
+        // App Configuration - centralized in config.js (loaded as module at top)
+
+        let eventSource = null;
+
+        // Workflow Functions - Now using ModalManager
+        function showModal(modalId) {
+            modalManager.show(modalId);
+        }
+
+        function closeModal(modalId) {
+            modalManager.hide(modalId);
+        }
+
+        // Portal interaction functions - make portal feel live
+        function showComingSoon(feature) {
+            // dev: feature requested
+            alert(`🚧 ${feature} - Coming Soon!\n\nThis feature is part of the full WEX BENEFITS portal. For this demo, please use the "Connect My Provider" functionality.`);
+        }
+
+        // Main provider connection function - Updated for workflow with error handling
+        async function handleConnectProvider() {
+            try {
+                console.log('🔍 Debug: handleConnectProvider called');
+                
+                // Check if configs are loaded
+                if (!window.PROVIDER_CONFIG || !window.APP_CONFIG) {
+                    console.error('❌ Config not loaded! PROVIDER_CONFIG:', window.PROVIDER_CONFIG, 'APP_CONFIG:', window.APP_CONFIG);
+                    alert('Configuration not loaded. Please refresh the page and try again.');
+                    return;
+                }
+                
+                console.log('✅ Configs loaded successfully');
+                console.log('PROVIDER_CONFIG keys:', Object.keys(window.PROVIDER_CONFIG));
+                console.log('APP_CONFIG:', window.APP_CONFIG);
+                
+                // Check if ModalManager is available
+                if (!window.modalManager) {
+                    console.error('❌ ModalManager not available!');
+                    alert('Modal system not initialized. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ ModalManager available');
+                
+                // Check if the terms modal exists
+                const termsModal = document.getElementById('termsModal');
+                if (!termsModal) {
+                    console.error('❌ Terms modal not found!');
+                    alert('Modal elements not found. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ Terms modal found');
+                
+                            // Reset workflow state
+            window.selectedProviderForWorkflow = null; // Reset to no selection
+                
+                console.log('✅ Workflow state reset');
+                
+                // Reset form elements with error checking
+                const providerSelect = document.getElementById('providerSelect');
+                const termsCheckbox = document.getElementById('termsCheckbox');
+                const submitTermsBtn = document.getElementById('submitTermsBtn');
+                
+                if (providerSelect) {
+                    providerSelect.value = ''; // Reset to no selection
+                    console.log('✅ Provider select reset to no selection');
+                } else {
+                    console.warn('⚠️ Provider select not found');
+                }
+                
+                if (termsCheckbox) {
+                    termsCheckbox.checked = false;
+                    console.log('✅ Terms checkbox reset');
+                } else {
+                    console.warn('⚠️ Terms checkbox not found');
+                }
+                
+                if (submitTermsBtn) {
+                    submitTermsBtn.disabled = true;
+                    console.log('✅ Submit button reset');
+                } else {
+                    console.warn('⚠️ Submit button not found');
+                }
+                
+                // Reset provider claims section to initial state
+                const preAuthMessage = document.getElementById('preAuthMessage');
+                const providerClaimsSection = document.getElementById('providerClaimsSection');
+                const successMessage = document.getElementById('successMessage');
+                const errorMessage = document.getElementById('errorMessage');
+                
+                if (preAuthMessage) {
+                    preAuthMessage.style.display = 'block';
+                    console.log('✅ Pre-auth message reset');
+                }
+                
+                if (providerClaimsSection) {
+                    providerClaimsSection.classList.add('hidden');
+                    console.log('✅ Provider claims section hidden');
+                }
+                
+                if (successMessage) {
+                    successMessage.classList.add('hidden');
+                    console.log('✅ Success message hidden');
+                }
+                
+                if (errorMessage) {
+                    errorMessage.classList.add('hidden');
+                    console.log('✅ Error message hidden');
+                }
+                
+                // Clear any existing claims data
+                const claimsTableBody = document.getElementById('claimsTableBody');
+                if (claimsTableBody) {
+                    claimsTableBody.innerHTML = '';
+                    console.log('✅ Claims table cleared');
+                }
+                
+                // Don't update terms display yet - wait for provider selection
+                console.log('ℹ️ Terms display will update when provider is selected');
+                
+                console.log('✅ About to show terms modal');
+                
+                // Show the first modal
+                showModal('termsModal');
+                
+                console.log('✅ Modal should be visible now');
+                
+                // Verify modal is visible
+                setTimeout(() => {
+                    const modal = document.getElementById('termsModal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        console.log('✅ Modal is visible and working!');
+                    } else {
+                        console.error('❌ Modal is not visible after showModal call');
+                        // Emergency fallback - use ModalManager
+                        try {
+                            modalManager.show('termsModal');
+                            console.log('🚨 Emergency modal show via ModalManager');
+                        } catch (fallbackError) {
+                            console.error('❌ Emergency fallback failed:', fallbackError);
+                        }
+                    }
+                }, 100);
+                
+            } catch (error) {
+                console.error('❌ Error in handleConnectProvider:', error);
+                alert('An error occurred while opening the provider connection. Check the console for details.');
+                
+                // Emergency fallback - try to show modal via ModalManager
+                try {
+                    if (window.modalManager) {
+                        window.modalManager.show('termsModal');
+                        console.log('🚨 Emergency modal show via ModalManager after error');
+                    } else {
+                        console.error('❌ ModalManager not available for emergency fallback');
+                    }
+                } catch (fallbackError) {
+                    console.error('❌ Emergency fallback also failed:', fallbackError);
+                }
+            }
+        }
+
+        function submitTerms() {
+            try {
+                console.log('🔍 Debug: submitTerms called');
+                console.log('🔍 Debug: PROVIDER_CONFIG available:', !!window.PROVIDER_CONFIG);
+                console.log('🔍 Debug: PROVIDER_CONFIG keys:', Object.keys(window.PROVIDER_CONFIG || {}));
+                
+                const checkbox = document.getElementById('termsCheckbox');
+                if (!checkbox) {
+                    console.error('❌ Terms checkbox not found!');
+                    alert('Terms checkbox not found. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ Terms checkbox found, checked:', checkbox.checked);
+                
+                if (checkbox.checked) {
+                    // Get the current selected provider from the dropdown
+                    const providerSelect = document.getElementById('providerSelect');
+                    if (!providerSelect) {
+                        console.error('❌ Provider select not found!');
+                        alert('Provider selection not found. Please refresh the page.');
+                        return;
+                    }
+                    
+                    const selectedProviderValue = providerSelect.value;
+                    console.log('✅ Selected provider value:', selectedProviderValue);
+                    console.log('🔍 Debug: selectedProviderValue type:', typeof selectedProviderValue);
+                    console.log('🔍 Debug: selectedProviderValue value:', selectedProviderValue);
+                    
+                    // Validate that a provider is actually selected
+                    if (!selectedProviderValue || selectedProviderValue === '') {
+                        console.error('❌ No provider selected!');
+                        alert('Please select a provider before continuing.');
+                        return;
+                    }
+                    
+                    // Store selected provider for use in subsequent steps
+                    window.selectedProviderForWorkflow = selectedProviderValue;
+                    console.log('✅ Stored selectedProviderForWorkflow:', window.selectedProviderForWorkflow);
+                    
+                    // Validate that we have the provider config using safety function
+                    console.log('🔍 Debug: About to check provider config for:', selectedProviderValue);
+                    const providerConfig = getProviderConfig(selectedProviderValue);
+                    
+                    if (!providerConfig) {
+                        console.error('❌ Provider config validation failed');
+                        alert('Provider configuration not available. Please refresh the page.');
+                        return;
+                    }
+                    
+                    console.log('✅ Provider config found:', providerConfig.name);
+                    
+                    // Close terms modal and show authentication modal
+                    console.log('✅ Closing terms modal and showing auth modal');
+                    closeModal('termsModal');
+                    showModal('authModal');
+                    
+                    console.log('✅ Modal transition should be complete');
+                    
+                } else {
+                    console.log('⚠️ Checkbox not checked, showing alert');
+                    alert('Please accept the terms and conditions to continue.');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error in submitTerms:', error);
+                console.error('❌ Error details:', error.stack);
+                console.error('❌ Error location:', error.fileName, 'line:', error.lineNumber);
+                alert('An error occurred while processing your submission. Check the console for details.');
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+            
+            console.log('🔐 Mock OAuth: Starting FHIR OAuth flow simulation');
+            console.log('🔐 Mock OAuth: Username:', username, 'Provider:', window.selectedProviderForWorkflow);
+            
+            // Close auth modal and show progress modal
+            closeModal('authModal');
+            showModal('progressModal');
+            
+            // Simulate FHIR OAuth authentication and connection process
+            simulateFHIRConnection();
+        }
+
+        async function simulateFHIRConnection() {
+            try {
+                // Validate that we have a provider selected before starting
+                if (!window.selectedProviderForWorkflow) {
+                    console.error('❌ No provider selected for workflow');
+                    alert('No provider selected. Please start the workflow again.');
+                    return;
+                }
+                
+                console.log('🔐 Mock OAuth: Starting FHIR OAuth flow simulation for provider:', window.selectedProviderForWorkflow);
+                
+                // Step 1: Simulate OAuth authorization request
+                console.log('🔐 Mock OAuth: Step 1 - Authorization Request');
+                console.log('   - Redirecting to provider OAuth endpoint');
+                console.log('   - Requesting scopes: openid, fhirUser, launch/patient');
+                console.log('   - Using PKCE flow for security');
+                
+                // Update visual progress
+                updateOAuthStep(1, '✅ Authorization Request Complete');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Step 2: Simulate user consent and redirect
+                console.log('🔐 Mock OAuth: Step 2 - User Consent & Redirect');
+                console.log('   - User authorized access to FHIR resources');
+                console.log('   - Provider redirecting with authorization code');
+                console.log('   - State parameter validated for CSRF protection');
+                
+                // Update visual progress
+                updateOAuthStep(2, '✅ User Consent & Redirect Complete');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Step 3: Simulate token exchange
+                console.log('🔐 Mock OAuth: Step 3 - Token Exchange');
+                console.log('   - Exchanging authorization code for access token');
+                console.log('   - Validating JWT token signature');
+                console.log('   - Extracting patient context from token');
+                console.log('   - Setting up SMART launch context');
+                
+                // Update visual progress
+                updateOAuthStep(3, '✅ Token Exchange Complete');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Step 4: Simulate FHIR resource access
+                console.log('🔐 Mock OAuth: Step 4 - FHIR Resource Access');
+                console.log('   - Accessing Patient resource with token');
+                console.log('   - Retrieving ExplanationOfBenefit resources');
+                console.log('   - Parsing FHIR JSON responses');
+                console.log('   - Mapping to internal claim format');
+                
+                // Update visual progress
+                updateOAuthStep(4, '✅ FHIR Resource Access Complete');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                console.log('🔐 Mock OAuth: FHIR OAuth flow simulation complete');
+                
+                // Close progress modal and show success modal
+                closeModal('progressModal');
+                showModal('successModal');
+                
+                // Simulate additional delay before auto-closing (3 seconds as requested)
+                setTimeout(() => {
+                    console.log('🔐 Mock OAuth: Auto-closing success modal after 3 seconds');
+                    closeModal('successModal');
+                    
+                    // Show success message in main interface
+                    const successMessage = document.getElementById('successMessage');
+                    if (successMessage) {
+                        successMessage.classList.remove('hidden');
+                    }
+                    
+                    // Hide pre-authentication message
+                    const preAuthMessage = document.getElementById('preAuthMessage');
+                    if (preAuthMessage) {
+                        preAuthMessage.style.display = 'none';
+                    }
+                    
+                    // Show provider claims section
+                    const providerClaimsSection = document.getElementById('providerClaimsSection');
+                    if (providerClaimsSection) {
+                        providerClaimsSection.classList.remove('hidden');
+                    }
+                    
+                    // Add sample transaction with provider-specific data
+                    const selectedProvider = window.selectedProviderForWorkflow;
+                    if (!selectedProvider) {
+                        console.error('❌ No provider selected for workflow, cannot create transactions');
+                        return;
+                    }
+                    
+                    const providerConfig = getProviderConfig(selectedProvider);
+                    if (!providerConfig) {
+                        console.error('❌ Provider config not found for:', selectedProvider);
+                        return;
+                    }
+                    
+                    const providerName = providerConfig.name;
+                    
+                    // Create mock transaction using safety function
+                    const baseTransaction = getDefaultTransaction();
+                    const mockTransaction = {
+                        ...baseTransaction,
+                        provider: providerName,
+                        source: 'FHIR OAuth Integration',
+                        status: 'Approved',
+                        patientResponsibility: 25.0
+                    };
+                    
+                    addTransaction(mockTransaction);
+                    
+                    // Add additional mock transactions for demo
+                    const additionalTransactions = [
+                        {
+                            id: 'TX-002',
+                            provider: providerName,
+                            dateOfService: '2025-08-18',
+                            patientResponsibility: 15.0,
+                            status: 'Approved',
+                            source: 'FHIR OAuth Integration'
+                        },
+                        {
+                            id: 'TX-003',
+                            provider: providerName,
+                            dateOfService: '2025-08-17',
+                            patientResponsibility: 45.0,
+                            status: 'Approved',
+                            source: 'FHIR OAuth Integration'
+                        }
+                    ];
+                    
+                    additionalTransactions.forEach(tx => addTransaction(tx));
+                    
+                    console.log('✅ FHIR OAuth simulation complete - Claims populated');
+                    console.log('🔐 Mock OAuth: User returned to home screen with populated claims');
+                    
+                }, 3000);
+                
+            } catch (error) {
+                console.error('❌ Error in FHIR OAuth simulation:', error);
+                alert('An error occurred during the FHIR OAuth process. Please try again.');
+            }
+        }
+
+        function completeConnection() {
+            try {
+                // Use the selected provider from the workflow
+                const selectedProvider = window.selectedProviderForWorkflow;
+                if (!selectedProvider) {
+                    console.error('❌ No provider selected for workflow');
+                    alert('No provider selected. Please start the workflow again.');
+                    return;
+                }
+                
+                const providerConfig = getProviderConfig(selectedProvider);
+                if (!providerConfig) {
+                    console.error('❌ Provider config not found for:', selectedProvider);
+                    alert('Provider configuration not available. Please try again.');
+                    return;
+                }
+                
+                // Close success modal
+                closeModal('successModal');
+                
+                // Hide pre-authentication message and show provider claims section
+                const preAuthMessage = document.getElementById('preAuthMessage');
+                const providerClaimsSection = document.getElementById('providerClaimsSection');
+                
+                if (preAuthMessage) {
+                    preAuthMessage.style.display = 'none';
+                }
+                
+                if (providerClaimsSection) {
+                    providerClaimsSection.classList.remove('hidden');
+                }
+                
+                                    // Add pending transaction to consolidated table
+                    const defaultTransaction = getDefaultTransaction();
+                    addTransaction(defaultTransaction);
+                
+                // Show success message in main interface
+                const successMessage = document.getElementById('successMessage');
+                const providerNameElement = document.getElementById('providerName');
+                
+                if (successMessage) {
+                    successMessage.classList.remove('hidden');
+                }
+                
+                if (providerNameElement) {
+                    providerNameElement.textContent = providerConfig.name;
+                }
+                
+                console.log('✅ Connection completed successfully for provider:', providerConfig.name);
+                
+            } catch (error) {
+                console.error('❌ Error in completeConnection:', error);
+                alert('An error occurred while completing the connection. Please try again.');
+            }
+        }
+
+        function showTerms() {
+            try {
+                const providerSelect = document.getElementById('providerSelect');
+                if (!providerSelect || !providerSelect.value || providerSelect.value === '') {
+                    alert('Please select a provider first to view their terms and conditions.');
+                    return;
+                }
+                
+                const providerConfig = getProviderConfig(providerSelect.value);
+                if (providerConfig) {
+                    alert(providerConfig.terms);
+                } else {
+                    alert('Provider terms not available. Please select a provider first.');
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not show terms:', error.message);
+                alert('Terms not available. Please try again.');
+            }
+        }
+
+        function updateTermsDisplay() {
+            try {
+                // Get the current selected provider from the dropdown
+                const providerSelect = document.getElementById('providerSelect');
+                const termsSection = document.getElementById('termsSection');
+                const termsLink = document.getElementById('termsLink');
+                
+                if (!providerSelect || !termsSection || !termsLink) {
+                    console.warn('⚠️ Required elements not found for terms display');
+                    return;
+                }
+                
+                const selectedProviderValue = providerSelect.value;
+                
+                // Only show terms section if a provider is selected
+                if (selectedProviderValue && selectedProviderValue !== '') {
+                    // Validate that we have the provider config
+                    const providerConfig = getProviderConfig(selectedProviderValue);
+                    
+                    if (providerConfig) {
+                        // Show terms section and populate with provider-specific terms
+                        termsSection.style.display = 'block';
+                        termsLink.textContent = `${providerConfig.name} Terms and Conditions`;
+                        
+                        // Update provider display throughout the workflow
+                        updateProviderDisplay(selectedProviderValue);
+                        
+                        console.log('✅ Terms display updated for provider:', providerConfig.name);
+                    } else {
+                        // Hide terms section if provider config not found
+                        termsSection.style.display = 'none';
+                        console.log('ℹ️ No provider selected, terms section hidden');
+                    }
+                } else {
+                    // Hide terms section if no provider selected
+                    termsSection.style.display = 'none';
+                    console.log('ℹ️ No provider selected, terms section hidden');
+                }
+                
+            } catch (error) {
+                console.warn('⚠️ Could not update terms display:', error.message);
+            }
+        }
+
+        function updateProviderDisplay(providerKey = null) {
+            try {
+                // Use provided provider key or fallback to current selection
+                let currentProvider = providerKey || window.selectedProviderForWorkflow;
+                
+                // If no provider is selected, don't update anything
+                if (!currentProvider) {
+                    console.log('ℹ️ No provider selected, skipping provider display update');
+                    return;
+                }
+                
+                const provider = getProviderConfig(currentProvider);
+                if (!provider) {
+                    console.warn('⚠️ Provider config not found for:', currentProvider);
+                    return;
+                }
+                
+                // dev: updating provider display
+            
+                // Update authentication modal
+                const providerLogo = document.getElementById('providerLogo');
+                const providerDisplayName = document.getElementById('providerDisplayName');
+                
+                if (providerLogo) {
+                    providerLogo.src = provider.logo;
+                    providerLogo.alt = `${provider.name} Logo`;
+                    // dev: updated provider logo
+                }
+                
+                if (providerDisplayName) {
+                    providerDisplayName.textContent = provider.displayName;
+                    // dev: updated provider display name
+                }
+                
+                // Update success modal content
+                const connectedProviderName = document.getElementById('connectedProviderName');
+                if (connectedProviderName) {
+                    connectedProviderName.textContent = provider.name;
+                    // dev: updated success modal provider name
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not update provider display:', error.message);
+            }
+        }
+
+        // Safety check for provider config
+        function getProviderConfig(providerKey) {
+            if (!window.PROVIDER_CONFIG) {
+                console.error('❌ PROVIDER_CONFIG not available');
+                return null;
+            }
+            
+            if (!providerKey) {
+                console.error('❌ No provider key provided');
+                return null;
+            }
+            
+            const config = window.PROVIDER_CONFIG[providerKey];
+            if (!config) {
+                console.error('❌ Provider config not found for:', providerKey);
+                return null;
+            }
+            
+            return config;
+        }
+        
+        // Safety check for app config
+        function getAppConfig() {
+            if (!window.APP_CONFIG) {
+                console.error('❌ APP_CONFIG not available');
+                return null;
+            }
+            
+            return window.APP_CONFIG;
+        }
+        
+        // Safety check for default transaction
+        function getDefaultTransaction() {
+            const appConfig = getAppConfig();
+            if (!appConfig || !appConfig.DEFAULT_TRANSACTION) {
+                console.warn('⚠️ DEFAULT_TRANSACTION not available, creating fallback');
+                return {
+                    id: 'TX-FALLBACK',
+                    provider: 'Provider Service',
+                    dateOfService: new Date().toISOString().split('T')[0],
+                    patientResponsibility: 0.0,
+                    currency: 'USD',
+                    status: 'Connected',
+                    source: 'Provider Integration',
+                };
+            }
+            
+            return appConfig.DEFAULT_TRANSACTION;
+        }
+
+        // Update OAuth progress step visualization
+        function updateOAuthStep(stepNumber, status) {
+            const oauthSteps = document.getElementById('oauthSteps');
+            if (oauthSteps && oauthSteps.children[stepNumber - 1]) {
+                const stepElement = oauthSteps.children[stepNumber - 1];
+                stepElement.innerHTML = `<span style="color: #059669; font-weight: 500;">${status}</span>`;
+                stepElement.style.background = '#d1fae5';
+                stepElement.style.border = '1px solid #10b981';
+            }
+        }
+
+        // Consolidated transaction function - Single source of truth
+        function addTransaction(transaction) {
+            const tbody = document.getElementById('claimsTableBody');
+            if (tbody) {
+                const row = document.createElement('tr');
+                row.className = `status-${transaction.status.toLowerCase()}`;
+                row.id = `transaction-${transaction.id}`;
+                
+                row.innerHTML = `
+                    <td>${transaction.provider}</td>
+                    <td>${transaction.dateOfService}</td>
+                    <td>$${transaction.patientResponsibility}</td>
+                    <td class="status-${transaction.status.toLowerCase()}">${transaction.status}</td>
+                    <td><button class="btn-secondary" onclick="showDemoAction()">Pay or Save options ▼</button></td>
+                `;
+                
+                tbody.appendChild(row);
+            }
+        }
+
+        function updateTransaction(transactionId, updates) {
+            const row = document.getElementById(`transaction-${transactionId}`);
+            if (row) {
+                const cells = row.cells;
+                if (updates.status) {
+                    cells[3].textContent = updates.status;
+                    cells[3].className = `status-${updates.status.toLowerCase()}`;
+                }
+                row.className = `status-${updates.status.toLowerCase()}`;
+            }
+        }
+
+        function showDemoAction() {
+            alert('Demo Action: This would show payment or save options for the transaction. In a real application, this would integrate with payment processing systems.');
+        }
+
+        function subscribeToEvents() {
+            eventSource = new EventSource(`${APP_CONFIG.API_BASE}/events`);
+            
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                // dev: received SSE event
+                
+                if (data.type === 'transactionUpdated') {
+                    updateTransaction(data.transaction.id, {
+                        status: data.transaction.status,
+                        source: data.transaction.source
+                    });
+                }
+            };
+            
+            eventSource.onerror = function(error) {
+                console.error('EventSource error:', error);
+                eventSource.close();
+            };
+        }
+
+        function setupWorkflowEventListeners() {
+            // Provider selection change
+            const providerSelect = document.getElementById('providerSelect');
+            if (providerSelect) {
+                providerSelect.addEventListener('change', function() {
+                    console.log('🔍 Provider selection changed to:', this.value);
+                    // Update the global workflow variable instead of local selectedProvider
+                    window.selectedProviderForWorkflow = this.value;
+                    updateTermsDisplay();
+                    console.log('✅ Provider selection updated and terms display refreshed');
+                });
+                console.log('✅ Provider select event listener added');
+            } else {
+                console.warn('⚠️ Provider select not found for event listener');
+            }
+            
+            // Terms checkbox change
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', function() {
+                    console.log('🔍 Checkbox changed, checked:', this.checked);
+                    const submitBtn = document.getElementById('submitTermsBtn');
+                    if (submitBtn) {
+                        submitBtn.disabled = !this.checked;
+                        console.log('✅ Submit button disabled state:', submitBtn.disabled);
+                    } else {
+                        console.warn('⚠️ Submit button not found for checkbox change');
+                    }
+                });
+                console.log('✅ Checkbox event listener added');
+            } else {
+                console.warn('⚠️ Terms checkbox not found for event listener');
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('load', async () => {
+            // dev: page loaded initializing
+            // ModalManager is already initialized and has hidden all modals
+            
+            // Wait for configs to be loaded
+            let configCheckCount = 0;
+            const maxConfigChecks = 50; // 5 seconds max wait
+            
+            const waitForConfigs = async () => {
+                if (window.PROVIDER_CONFIG && window.APP_CONFIG) {
+                    console.log('✅ Configs loaded, initializing page...');
+                    
+                    // Initialize provider selection (no default selected)
+                    window.selectedProviderForWorkflow = null;
+                    // Don't call updateTermsDisplay yet - wait for user selection
+                    
+                    // Set up event listeners for the workflow
+                    setupWorkflowEventListeners();
+                    
+                    // Ensure main content is visible
+                    const mainContent = document.querySelector('.main-content');
+                    if (mainContent) {
+                        console.log('🔧 Main content found and should be visible via CSS');
+                        // dev: main content visibility confirmed
+                    } else {
+                        console.error('Main content not found!');
+                    }
+                    
+                    try {
+                        const response = await fetch(`${window.APP_CONFIG.API_BASE}/health`);
+                        const health = await response.json();
+                        // dev: backend health check
+                    } catch (error) {
+                        console.error('Backend not available:', error);
+                    }
+                } else {
+                    configCheckCount++;
+                    if (configCheckCount < maxConfigChecks) {
+                        console.log(`⏳ Waiting for configs to load... (${configCheckCount}/${maxConfigChecks})`);
+                        setTimeout(waitForConfigs, 100);
+                    } else {
+                        console.error('❌ Configs failed to load after 5 seconds');
+                        alert('Configuration failed to load. Please refresh the page.');
+                    }
+                }
+            };
+            
+            waitForConfigs();
+        });
+
+        // ========================================
+        // DEVELOPMENT HELPER FUNCTIONS
+        // ========================================
+        // These functions help debug and maintain the portal
+        // Access them from browser console: window.devHelpers.functionName()
+        // 
+        // Available functions:
+        // - checkModals(): Show modal status
+        // - resetModals(): Force hide all modals
+        // - testModal(id): Show specific modal for testing
+        // - checkMainContent(): Check main content visibility
+        // - checkPortalElements(): Check portal element visibility
+        // - resetPortal(): Emergency reset if things go wrong
+        // ========================================
+        
+        // Development Helper Functions - Use these for future UX enhancements
+        window.devHelpers = {
+            // Check modal status
+            checkModals: () => modalManager.debug(),
+            
+            // Force hide all modals (emergency reset)
+            resetModals: () => modalManager.hideAll(),
+            
+            // Show specific modal for testing
+            testModal: (modalId) => modalManager.show(modalId),
+            
+            // Check main content visibility
+            checkMainContent: () => {
+                const main = document.querySelector('.main-content');
+                if (main) {
+                    const style = window.getComputedStyle(main);
+                    return {
+                        display: style.display,
+                        visibility: style.visibility,
+                        opacity: style.opacity,
+                        zIndex: style.zIndex
+                    };
+                }
+                return null;
+            },
+            
+            // Check portal elements visibility
+            checkPortalElements: () => {
+                const elements = [
+                    '.action-buttons-section',
+                    '.provider-claims-section', 
+                    '.tasks-section',
+                    '.hsa-planner-section',
+                    '.action-buttons',
+                    '.action-btn'
+                ];
+                
+                const results = elements.map(selector => {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        const style = window.getComputedStyle(element);
+                        return {
+                            selector,
+                            display: style.display,
+                            visibility: style.visibility,
+                            opacity: style.opacity
+                        };
+                    }
+                    return { selector, missing: true };
+                });
+                return results;
+            },
+            
+            // Emergency portal reset
+            resetPortal: () => {
+                modalManager.hideAll();
+                console.log('🔧 Portal reset complete - all modals hidden');
+                // dev: portal reset complete
+            },
+            
+            // Test function for Connect My Provider button
+            testConnectProvider: () => {
+                console.log('🧪 Testing Connect My Provider button...');
+                console.log('ModalManager available:', !!window.modalManager);
+                console.log('PROVIDER_CONFIG loaded:', !!window.PROVIDER_CONFIG);
+                console.log('APP_CONFIG loaded:', !!window.APP_CONFIG);
+                console.log('Terms modal exists:', !!document.getElementById('termsModal'));
+                
+                // Try to call the function
+                try {
+                    handleConnectProvider();
+                    console.log('✅ handleConnectProvider called successfully');
+                } catch (error) {
+                    console.error('❌ Error calling handleConnectProvider:', error);
+                }
+            },
+            
+            // Test function for Submit button
+            testSubmitTerms: () => {
+                console.log('🧪 Testing Submit Terms functionality...');
+                
+                // Check if we're on the terms modal
+                const termsModal = document.getElementById('termsModal');
+                if (!termsModal || termsModal.classList.contains('hidden')) {
+                    console.log('⚠️ Terms modal not visible, opening it first...');
+                    handleConnectProvider();
+                    setTimeout(() => testSubmitTerms(), 500);
+                    return;
+                }
+                
+                // Check checkbox state
+                const checkbox = document.getElementById('termsCheckbox');
+                if (checkbox) {
+                    console.log('✅ Checkbox found, current state:', checkbox.checked);
+                    if (!checkbox.checked) {
+                        console.log('🔧 Checking the checkbox...');
+                        checkbox.checked = true;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                }
+                
+                // Check submit button state
+                const submitBtn = document.getElementById('submitTermsBtn');
+                if (submitBtn) {
+                    console.log('✅ Submit button found, disabled:', submitBtn.disabled);
+                }
+                
+                // Try to submit
+                console.log('🚀 Attempting to submit...');
+                submitTerms();
+            },
+            
+            // FHIR OAuth Developer Documentation
+            showFHIRDocs: () => {
+                console.log('📚 === FHIR OAuth Implementation Guide ===');
+                console.log('');
+                console.log('🔐 OAuth 2.0 Flow for FHIR Integration:');
+                console.log('   1. Authorization Request (PKCE)');
+                console.log('   2. User Consent & Redirect');
+                console.log('   3. Token Exchange');
+                console.log('   4. FHIR Resource Access');
+                console.log('');
+                console.log('🏥 Required FHIR Scopes:');
+                console.log('   - openid: OpenID Connect authentication');
+                console.log('   - fhirUser: Access to user\'s FHIR resources');
+                console.log('   - launch/patient: SMART launch context');
+                console.log('   - patient/*.read: Read access to patient data');
+                console.log('');
+                console.log('🔒 Security Requirements:');
+                console.log('   - PKCE (Proof Key for Code Exchange)');
+                console.log('   - State parameter for CSRF protection');
+                console.log('   - JWT token validation');
+                console.log('   - HTTPS for all communications');
+                console.log('');
+                console.log('📋 Implementation Steps:');
+                console.log('   1. Register app with FHIR provider');
+                console.log('   2. Implement OAuth 2.0 authorization flow');
+                console.log('   3. Handle token exchange and validation');
+                console.log('   4. Make FHIR API calls with access token');
+                console.log('   5. Parse FHIR responses and map to claims');
+                console.log('');
+                console.log('🚀 Demo Mode: This simulation shows the complete flow');
+                console.log('   without requiring actual FHIR provider integration.');
+                console.log('');
+            },
+            
+            // Test the complete FHIR OAuth flow
+            testFHIRFlow: () => {
+                console.log('🧪 Testing Complete FHIR OAuth Flow...');
+                console.log('This will simulate the entire OAuth process');
+                
+                // Start the workflow
+                handleConnectProvider();
+                
+                // Auto-advance through steps for demo
+                setTimeout(() => {
+                    const checkbox = document.getElementById('termsCheckbox');
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                    
+                    setTimeout(() => {
+                        submitTerms();
+                    }, 500);
+                }, 1000);
+            },
+            
+            // Force reload configurations
+            forceReloadConfigs: () => {
+                console.log('🔄 Force reloading configurations...');
+                
+                // Clear existing configs
+                delete window.PROVIDER_CONFIG;
+                delete window.APP_CONFIG;
+                
+                // Reload the config.js file
+                const script = document.createElement('script');
+                script.src = 'config.js?v=' + Date.now(); // Force cache bust
+                script.onload = () => {
+                    console.log('✅ Configs reloaded successfully');
+                    console.log('PROVIDER_CONFIG keys:', Object.keys(window.PROVIDER_CONFIG || {}));
+                    console.log('APP_CONFIG:', window.APP_CONFIG);
+                    
+                    // Reinitialize the page
+                    window.selectedProviderForWorkflow = (window.APP_CONFIG && window.APP_CONFIG.DEFAULT_PROVIDER) || 'trellis';
+                    updateTermsDisplay();
+                    setupWorkflowEventListeners();
+                };
+                script.onerror = () => {
+                    console.error('❌ Failed to reload configs');
+                };
+                document.head.appendChild(script);
+            }
+        };
+
+        // Missing function that's referenced in HTML
+        function closeAlert(button) {
+            const alert = button.closest('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }
+
+        // Feature coming soon function
+        function handleAuthFailure() {
+            // Show error message in main interface
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.classList.remove('hidden');
+            }
+            
+            // Hide success message if it was showing
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.classList.add('hidden');
+            }
+            
+            // Keep provider claims section hidden since authentication failed
+            const providerClaimsSection = document.getElementById('providerClaimsSection');
+            if (providerClaimsSection) {
+                providerClaimsSection.classList.add('hidden');
+            }
+            
+            // Show pre-authentication message again
+            const preAuthMessage = document.getElementById('preAuthMessage');
+            if (preAuthMessage) {
+                preAuthMessage.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

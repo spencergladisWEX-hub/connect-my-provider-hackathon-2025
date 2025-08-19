@@ -11,7 +11,7 @@ fi
 
 # Install Flask dependencies if not already installed
 echo "📦 Installing Python dependencies..."
-pip3 install -r wex-fsa-provider-substantiation-backend/requirements.txt
+pip3 install -r backend/requirements.txt
 
 echo ""
 echo "🌐 Starting Backend Server..."
@@ -19,8 +19,8 @@ echo "📍 Backend will run on: http://localhost:4000"
 echo ""
 
 # Start backend server in background
-cd wex-fsa-provider-substantiation-backend
-python3 src/server.py &
+cd backend
+python3 server.py &
 BACKEND_PID=$!
 
 # Wait a moment for backend to start
@@ -32,7 +32,7 @@ echo "📍 Frontend will run on: http://localhost:3000"
 echo ""
 
 # Start frontend server (simple HTTP server)
-cd ../wex-fsa-provider-substantiation-frontend
+cd ../frontend
 python3 -m http.server 3000 &
 FRONTEND_PID=$!
 
@@ -48,7 +48,7 @@ echo "   Events: http://localhost:4000/events"
 echo ""
 echo "🎬 Demo Flow:"
 echo "   1. Click 'Connect My Provider'"
-echo "   2. Wait for authentication (2 seconds)"
+echo "   2. Complete the 4-step workflow"
 echo "   3. See transaction appear as 'Pending'"
 echo "   4. Watch it auto-approve (3 seconds)"
 echo ""
