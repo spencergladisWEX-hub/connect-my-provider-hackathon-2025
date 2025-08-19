@@ -1743,7 +1743,7 @@
                         <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjYMMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
                         <h4 id="providerDisplayName">trellishealth</h4>
                     </div>
-                    <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                    <form id="authForm" onsubmit="handleAuthSubmit(event)" style="border: 2px solid red;">
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" id="username" class="form-input" required>
@@ -3207,6 +3207,12 @@
         function enhanceFormSubmission() {
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
+                // Skip the authentication form - it has its own handler
+                if (form.id === 'authForm') {
+                    console.log('ℹ️ Skipping generic form handler for authForm');
+                    return;
+                }
+                
                 form.addEventListener('submit', function(e) {
                     if (!validateForm(this)) {
                         e.preventDefault();
