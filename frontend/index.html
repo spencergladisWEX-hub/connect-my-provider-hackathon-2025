@@ -30,22 +30,31 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .app {
             max-width: 1200px;
             margin: 0 auto;
+            min-height: 100vh;
         }
 
         /* Navigation Styles */
         .main-header {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
             padding: 0;
             margin-bottom: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         }
 
         .nav-container {
@@ -59,8 +68,13 @@
 
         .logo {
             font-size: 1.5rem;
-            color: #2d3748;
+            color: #253746;
             margin: 0;
+            font-weight: 700;
+            background: linear-gradient(135deg, #253746 0%, #C8102E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-center {
@@ -73,12 +87,19 @@
             color: #4a5568;
             padding: 10px 0;
             border-bottom: 3px solid transparent;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #253746;
+            transform: translateY(-1px);
         }
 
         .nav-link.active {
-            border-bottom-color: #f56565;
-            color: #2d3748;
+            border-bottom-color: #C8102E;
+            color: #253746;
         }
 
         .nav-right {
@@ -88,12 +109,20 @@
         }
 
         .notification-badge {
-            background: #e53e3e;
+            background: linear-gradient(135deg, #C8102E 0%, #e53e3e 100%);
             color: white;
             border-radius: 50%;
-            padding: 2px 6px;
+            padding: 4px 8px;
             font-size: 0.75rem;
             margin-left: 5px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(200, 16, 46, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .user-menu {
@@ -180,39 +209,64 @@
             color: #742a2a;
         }
 
-        /* Main Content Layout */
+        /* Main Content & Layout */
         .main-content {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 30px;
             display: block;
             visibility: visible;
-            opacity: 1;
         }
 
         .content-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 30px;
+            margin-top: 20px;
         }
 
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             margin-bottom: 25px;
             display: block;
             visibility: visible;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #253746 0%, #C8102E 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .card h2 {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: #2d3748;
+            color: #253746;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
         }
 
         /* Action Buttons */
@@ -224,35 +278,77 @@
         }
 
         .action-btn {
-            background: #253746; /* WEX Navy (Slate Blue) */
+            background: linear-gradient(135deg, #253746 0%, #1a2a38 100%);
             border: 1px solid #253746;
             color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
+            padding: 14px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(37, 55, 70, 0.3);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
         }
 
         .action-btn:hover {
-            background: #1a2a38; /* Darker shade of WEX Navy */
+            background: linear-gradient(135deg, #1a2a38 0%, #253746 100%);
             border-color: #1a2a38;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 55, 70, 0.4);
         }
 
         .action-btn.primary {
-            background: #C8102E; /* WEX Red */
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
             color: white;
             border-color: #C8102E;
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
         }
 
         .action-btn.primary:hover {
-            background: #a30d25; /* Darker shade of WEX Red */
+            background: linear-gradient(135deg, #a30d25 0%, #C8102E 100%);
             border-color: #a30d25;
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            border-color: #4a5568;
+            box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border-color: #2d3748;
+            box-shadow: 0 6px 20px rgba(74, 85, 104, 0.4);
         }
 
         .action-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .action-btn:disabled::before {
+            display: none;
         }
 
         /* Table Styles - Consolidated */
@@ -260,39 +356,70 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         .claims-table th,
         .claims-table td {
-            padding: 12px;
+            padding: 16px;
             text-align: left;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
         }
 
         .claims-table th {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             font-weight: 600;
-            color: #4a5568;
+            color: #253746;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .claims-table tr {
+            transition: all 0.2s ease;
         }
 
         .claims-table tr:hover {
-            background-color: #f7fafc;
+            background: rgba(247, 250, 252, 0.8);
+            transform: scale(1.01);
+        }
+
+        .claims-table tr:last-child td {
+            border-bottom: none;
         }
 
         /* Status colors for transactions */
         .status-pending {
             color: #d69e2e;
             font-weight: 600;
+            background: rgba(254, 243, 199, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
         }
 
         .status-approved {
             color: #38a169;
             font-weight: 600;
+            background: rgba(198, 246, 213, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
         }
 
         .status-error {
             color: #e53e3e;
             font-weight: 600;
+            background: rgba(254, 215, 215, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
         }
 
         /* Task Styles */
@@ -300,20 +427,55 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 15px;
-            background: #fed7d7;
-            border-radius: 8px;
-            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border-radius: 12px;
+            border-left: 4px solid #C8102E;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .task-item:hover::before {
+            left: 100%;
+        }
+
+        .task-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(200, 16, 46, 0.2);
         }
 
         .task-text {
             flex: 1;
             color: #742a2a;
+            font-weight: 500;
         }
 
         .help-icon {
             cursor: pointer;
             color: #d69e2e;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(254, 243, 199, 0.3);
+        }
+
+        .help-icon:hover {
+            color: #b7791f;
+            transform: scale(1.1);
+            background: rgba(254, 243, 199, 0.5);
         }
 
         /* HSA Planner Styles */
@@ -321,101 +483,205 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .goal-tag {
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 25px;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .goal-tag:hover::before {
+            left: 100%;
         }
 
         .goal-tag.primary {
-            background: #c6f6d5;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
             color: #22543d;
+            box-shadow: 0 2px 8px rgba(198, 246, 213, 0.4);
+        }
+
+        .goal-tag.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(198, 246, 213, 0.6);
         }
 
         .goal-tag.secondary {
-            background: #e2e8f0;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
             color: #4a5568;
+            box-shadow: 0 2px 8px rgba(226, 232, 240, 0.4);
+        }
+
+        .goal-tag.secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(226, 232, 240, 0.6);
         }
 
         .goal-amount {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .amount-text {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: #2d3748;
+            color: #253746;
+            background: linear-gradient(135deg, #253746 0%, #C8102E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .goal-status {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .status-text {
-            color: #e53e3e;
+            color: #C8102E;
             font-weight: 600;
+            background: rgba(200, 16, 46, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
         }
 
         .goal-message {
             color: #4a5568;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
 
         .expenses-text {
             color: #718096;
             margin-bottom: 20px;
+            font-size: 0.9rem;
         }
 
         .goal-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .progress-info {
             display: flex;
             align-items: center;
             gap: 15px;
+            color: #4a5568;
+            font-weight: 500;
         }
 
         .progress-circle {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 3px solid #e2e8f0;
+            border: 4px solid #e2e8f0;
             position: relative;
             overflow: hidden;
+            background: conic-gradient(#C8102E 0deg 144deg, #e2e8f0 144deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #253746;
+            font-size: 0.8rem;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: #e53e3e;
-            transition: width 0.3s ease;
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
         }
 
         /* Button Styles */
         .btn-primary {
-            background: #3182ce;
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
         }
 
         .btn-secondary {
-            background: #4a5568;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 85, 104, 0.4);
         }
 
         /* Overlay Styles - REMOVED: No longer used */
@@ -447,6 +713,7 @@
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
             
             .nav-center {
@@ -455,6 +722,520 @@
             
             .action-buttons {
                 flex-direction: column;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: none;
+                margin: 20px;
+                border-radius: 16px;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 20px;
+            }
+
+            .goal-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .progress-info {
+                justify-content: center;
+            }
+
+            .claims-table {
+                font-size: 0.9rem;
+            }
+
+            .claims-table th,
+            .claims-table td {
+                padding: 12px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .action-btn {
+                padding: 12px 20px;
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                margin: 10px;
+                border-radius: 12px;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 15px;
+            }
+        }
+
+        /* Enhanced Checkbox Styles */
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .checkbox-label:hover {
+            color: #253746;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 4px;
+            background: white;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
+            border-color: #C8102E;
+            box-shadow: 0 2px 8px rgba(200, 16, 46, 0.3);
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-label:hover .checkmark {
+            border-color: #253746;
+            transform: scale(1.05);
+        }
+
+        .checkbox-label a {
+            color: #C8102E;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+
+        .checkbox-label a:hover {
+            color: #a30d25;
+        }
+
+        /* Enhanced Form Elements */
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-select:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-help {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #718096;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #253746;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #253746;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Loading States and Animations */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #C8102E;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Enhanced Success and Error Messages */
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            color: #742a2a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e53e3e;
+            box-shadow: 0 4px 16px rgba(229, 62, 62, 0.2);
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Enhanced Focus States for Accessibility */
+        .action-btn:focus,
+        .btn-primary:focus,
+        .btn-secondary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.3);
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.2);
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection Styling */
+        ::selection {
+            background: rgba(200, 16, 46, 0.2);
+            color: #253746;
+        }
+
+        ::-moz-selection {
+            background: rgba(200, 16, 46, 0.2);
+            color: #253746;
+        }
+
+        /* Notification Toast System */
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .notification-message {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .notification-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .notification-error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .notification-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .notification-info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        /* Enhanced Form Error States */
+        .form-select.error,
+        .form-input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Enhanced Loading States */
+        .loading {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #C8102E;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Enhanced Hover Effects */
+        .card:hover .card::before {
+            opacity: 1;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .goal-tag:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-item:hover {
+            transform: translateX(4px);
+        }
+
+        /* Enhanced Focus States */
+        .action-btn:focus,
+        .btn-primary:focus,
+        .btn-secondary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.3);
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.2);
+        }
+
+        /* Enhanced Mobile Experience */
+        @media (max-width: 768px) {
+            .notification-toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                transform: translateY(-100%);
+            }
+
+            .notification-toast.show {
+                transform: translateY(0);
+            }
+
+            .card:hover {
+                transform: none;
+            }
+
+            .action-btn:hover {
+                transform: none;
+            }
+
+            .goal-tag:hover {
+                transform: none;
+            }
+
+            .task-item:hover {
+                transform: none;
+            }
+        }
+
+        /* Enhanced Print Styles */
+        @media print {
+            .workflow-modal,
+            .notification-toast,
+            .action-buttons,
+            .nav-container {
+                display: none !important;
+            }
+
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+
+        /* Enhanced High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .card {
+                border: 2px solid #000;
+            }
+
+            .action-btn {
+                border: 2px solid currentColor;
+            }
+
+            .form-select,
+            .form-input {
+                border: 2px solid #000;
+            }
+        }
+
+        /* Enhanced Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .notification-toast {
+                transition: none;
+            }
+
+            .card:hover {
+                transform: none;
+            }
+
+            .action-btn:hover {
+                transform: none;
             }
         }
 
@@ -470,24 +1251,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .workflow-modal.hidden {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-            z-index: -1 !important;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: -1;
         }
 
-        /* Ensure workflow modals don't affect portal elements */
-        /* Note: Using z-index management instead of sibling selectors */
         .workflow-modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
             z-index: 1000;
         }
         
@@ -499,169 +1283,162 @@
         }
 
         .modal-content {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            max-width: 500px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 550px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            /* Animation removed for immediate visibility */
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Animation keyframes removed for immediate visibility */
+        .workflow-modal:not(.hidden) .modal-content {
+            transform: scale(1) translateY(0);
+        }
 
         .modal-header {
-            padding: 24px 24px 16px 24px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 28px 28px 20px 28px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 20px 20px 0 0;
         }
 
         .modal-header h3 {
             margin: 0;
-            color: #2d3748;
-            font-size: 1.25rem;
+            color: #253746;
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #253746 0%, #C8102E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .modal-close {
-            background: none;
+            background: rgba(241, 245, 249, 0.8);
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #718096;
-            padding: 4px;
-            border-radius: 4px;
-            transition: all 0.2s;
+            color: #64748b;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-close:hover {
-            background: #f7fafc;
-            color: #4a5568;
+            background: rgba(226, 232, 240, 0.9);
+            color: #253746;
+            transform: scale(1.1);
         }
 
         .modal-body {
-            padding: 24px;
+            padding: 28px;
         }
 
         .modal-footer {
-            padding: 16px 24px 24px 24px;
-            border-top: 1px solid #e2e8f0;
+            padding: 20px 28px 28px 28px;
+            border-top: 1px solid rgba(226, 232, 240, 0.6);
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 0 0 20px 20px;
         }
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
+        /* Enhanced Form Elements in Modals */
+        .modal-body .form-group {
+            margin-bottom: 28px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #4a5568;
-            font-weight: 500;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+        .modal-body .form-group label {
+            color: #253746;
+            font-weight: 600;
             font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-body .form-select,
+        .modal-body .form-input {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
             background: white;
         }
 
-        .form-help {
-            display: block;
-            margin-top: 5px;
-            font-size: 0.85rem;
-            color: #718096;
-            font-style: italic;
+        .modal-body .form-select:hover,
+        .modal-body .form-input:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
-        .form-select:focus {
-            outline: none;
+        .modal-body .form-select:focus,
+        .modal-body .form-input:focus {
             border-color: #253746;
-            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
+            box-shadow: 0 0 0 4px rgba(37, 55, 70, 0.1);
+            transform: translateY(-2px);
         }
 
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #253746;
-            box-shadow: 0 0 0 3px rgba(37, 55, 70, 0.1);
-        }
-
-        /* Checkbox Styles */
-        .checkbox-label {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            margin: 0;
-            width: 18px;
-            height: 18px;
-            accent-color: #253746;
-        }
-
-        .checkbox-label a {
-            color: #253746;
-            text-decoration: underline;
-        }
-
-        /* Auth Header Styles */
+        /* Provider Logo and Display Name */
         .auth-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
         }
 
         .provider-logo {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 12px;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
         .auth-header h4 {
             margin: 0;
-            color: #2d3748;
-            font-size: 1.1rem;
+            color: #253746;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
 
         /* Form Actions */
         .form-actions {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            align-items: center;
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .forgot-password {
-            color: #253746;
+            color: #C8102E;
             text-decoration: none;
             font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.2s ease;
         }
 
         .forgot-password:hover {
+            color: #a30d25;
             text-decoration: underline;
         }
 
-        /* Progress Modal Styles */
+        /* Progress Modal Enhancements */
         .progress-content {
             text-align: center;
             padding: 20px 0;
@@ -670,11 +1447,11 @@
         .progress-spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #253746;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #C8102E;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 24px;
         }
 
         @keyframes spin {
@@ -683,209 +1460,62 @@
         }
 
         .progress-content h4 {
-            margin: 0 0 12px 0;
-            color: #2d3748;
+            color: #253746;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
 
-        .progress-content p {
-            margin: 0;
-            color: #718096;
+        .oauth-step {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 1px solid rgba(209, 213, 219, 0.5);
+            transition: all 0.3s ease;
         }
 
-        /* Success Modal Styles */
+        .oauth-step.completed {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .oauth-step.active {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        /* Success Modal Enhancements */
         .success-content {
             text-align: center;
             padding: 20px 0;
         }
 
         .success-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: successBounce 0.6s ease-out;
+        }
+
+        @keyframes successBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         .success-content h4 {
-            margin: 0 0 16px 0;
-            color: #2d3748;
+            color: #253746;
+            font-size: 1.35rem;
+            margin-bottom: 16px;
+            font-weight: 600;
         }
 
         .success-content p {
-            margin: 0 0 12px 0;
             color: #4a5568;
-            line-height: 1.5;
-        }
-
-        .success-content strong {
-            color: #253746;
-        }
-
-        /* Demo Section Styles */
-        .demo-section {
-            text-align: center;
-            padding: 40px 25px;
-        }
-
-        .demo-description {
-            color: #718096;
-            font-size: 1.1rem;
             line-height: 1.6;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .demo-actions {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        /* Demo Info Section */
-        .demo-info-section {
-            padding: 30px 25px;
-        }
-
-        .demo-features {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border-left: 4px solid #253746;
-        }
-
-        .feature-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .feature-content h4 {
-            margin: 0 0 8px 0;
-            color: #2d3748;
-            font-size: 1.1rem;
-        }
-
-        .feature-content p {
-            margin: 0;
-            color: #718096;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        /* Portal Elements - Always Visible */
-        .action-buttons-section,
-        .provider-claims-section,
-        .tasks-section,
-        .hsa-planner-section {
-            display: block;
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            background: #253746; /* WEX Navy (Slate Blue) */
-            border: 1px solid #253746;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-            display: inline-block;
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .action-btn:hover {
-            background: #1a2a38; /* Darker shade of WEX Navy */
-            border-color: #1a2a38;
-        }
-
-        .action-btn.primary {
-            background: #C8102E; /* WEX Red */
-            color: white;
-            border-color: #C8102E;
-        }
-
-        .action-btn.primary:hover {
-            background: #a30d25; /* Darker shade of WEX Red */
-            border-color: #a30d25;
-        }
-
-        .action-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Pre-Authentication Message Styles */
-        .pre-auth-message {
-            text-align: center;
-            padding: 40px 25px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border: 2px dashed #cbd5e0;
-        }
-
-        .pre-auth-content {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .pre-auth-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .pre-auth-content h3 {
-            color: #2d3748;
-            margin-bottom: 16px;
-            font-size: 1.5rem;
-        }
-
-        .pre-auth-content p {
-            color: #718096;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        .pre-auth-benefits {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #4a5568;
-            font-weight: 500;
-        }
-
-        .benefit-icon {
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        /* Provider Claims Section - Initially Hidden */
-        .provider-claims-section.hidden {
-            display: none;
+            margin-bottom: 12px;
         }
     </style>
 </head>
@@ -959,6 +1589,7 @@
                                 <button class="action-btn" onclick="devHelpers.showFHIRDocs()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">📚 FHIR OAuth Docs</button>
                                 <button class="action-btn" onclick="devHelpers.testFHIRFlow()" style="margin-top: 10px; font-size: 0.9em; background-color: #dc2626;">🚀 Test FHIR Flow</button>
                                 <button class="action-btn" onclick="devHelpers.forceReloadConfigs()" style="margin-top: 10px; font-size: 0.9em; background-color: #7c3aed;">🔄 Reload Configs</button>
+                                <button class="action-btn" onclick="window.debugConnectedProviders()" style="margin-top: 10px; font-size: 0.9em; background-color: #059669;">🔍 Debug Providers</button>
                             </div>
                         </div>
                     </div>
@@ -1009,6 +1640,16 @@
                                 <!-- Claims will be populated here -->
                             </tbody>
                         </table>
+                        
+                        <!-- Add Another Provider Button -->
+                        <div class="add-provider-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(226, 232, 240, 0.6);">
+                            <button class="action-btn secondary" id="addAnotherProviderBtn" onclick="handleAddAnotherProvider()">
+                                ➕ Add Another Provider
+                            </button>
+                            <small class="form-help" style="display: block; margin-top: 8px; color: #718096;">
+                                Connect additional healthcare providers to consolidate all your claims in one place
+                            </small>
+                        </div>
                     </div>
 
                     <!-- Tasks Section -->
@@ -1060,7 +1701,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Connect My Provider</h3>
-                    <button class="modal-close" onclick="closeModal('termsModal')">×</button>
+                    <button class="modal-close" onclick="modalManager.hide('termsModal')">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -1082,7 +1723,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-secondary" onclick="closeModal('termsModal')">Close</button>
+                    <button class="btn-secondary" onclick="modalManager.hide('termsModal')">Close</button>
                     <button class="btn-primary" id="submitTermsBtn" onclick="submitTerms()" disabled>Submit</button>
                 </div>
             </div>
@@ -1093,11 +1734,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Connect My Provider</h3>
-                    <button class="modal-close" onclick="closeModal('authModal')">×</button>
+                    <button class="modal-close" onclick="modalManager.hide('authModal')">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="auth-header">
-                        <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjZMMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
+                        <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjYMMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
                         <h4 id="providerDisplayName">trellishealth</h4>
                     </div>
                     <form id="authForm" onsubmit="handleAuthSubmit(event)">
@@ -1155,7 +1796,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Connect My Provider</h3>
-                    <button class="modal-close" onclick="closeModal('successModal')">×</button>
+                    <button class="modal-close" onclick="modalManager.hide('successModal')">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="success-content">
@@ -1336,25 +1977,122 @@
 
         // Global variable to track selected provider
         let selectedProvider = (APP_CONFIG && APP_CONFIG.DEFAULT_PROVIDER) || 'trellis';
+        
+        // Global array to track connected providers
+        let connectedProviders = [];
 
         // Configuration object for the application
         // App Configuration - centralized in config.js (loaded as module at top)
 
         let eventSource = null;
 
-        // Workflow Functions - Now using ModalManager
-        function showModal(modalId) {
-            modalManager.show(modalId);
-        }
-
-        function closeModal(modalId) {
-            modalManager.hide(modalId);
-        }
+        // Workflow Functions - Now using ModalManager directly
+        // Old showModal/closeModal functions removed to prevent conflicts
 
         // Portal interaction functions - make portal feel live
         function showComingSoon(feature) {
             // dev: feature requested
             alert(`🚧 ${feature} - Coming Soon!\n\nThis feature is part of the full WEX BENEFITS portal. For this demo, please use the "Connect My Provider" functionality.`);
+        }
+
+        // Function to handle adding another provider
+        async function handleAddAnotherProvider() {
+            try {
+                console.log('🔍 Debug: handleAddAnotherProvider called');
+                console.log('🔍 Debug: Connected providers:', connectedProviders);
+                
+                // Check if configs are loaded
+                if (!window.PROVIDER_CONFIG || !window.APP_CONFIG) {
+                    console.error('❌ Config not loaded! PROVIDER_CONFIG:', window.PROVIDER_CONFIG, 'APP_CONFIG:', window.APP_CONFIG);
+                    alert('Configuration not loaded. Please refresh the page and try again.');
+                    return;
+                }
+                
+                console.log('✅ Configs loaded successfully');
+                
+                // Check if ModalManager is available
+                if (!window.modalManager) {
+                    console.error('❌ ModalManager not available!');
+                    alert('Modal system not initialized. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ ModalManager available');
+                
+                // Check if the terms modal exists
+                const termsModal = document.getElementById('termsModal');
+                if (!termsModal) {
+                    console.error('❌ Terms modal not found!');
+                    alert('Modal elements not found. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ Terms modal found');
+                
+                // Reset workflow state for new provider
+                window.selectedProviderForWorkflow = null;
+                
+                console.log('✅ Workflow state reset for new provider');
+                
+                // Reset form elements with error checking
+                const providerSelect = document.getElementById('providerSelect');
+                const termsCheckbox = document.getElementById('termsCheckbox');
+                const submitTermsBtn = document.getElementById('submitTermsBtn');
+                
+                if (providerSelect) {
+                    // Filter out already connected providers
+                    const availableProviders = Object.keys(window.PROVIDER_CONFIG).filter(
+                        providerKey => !connectedProviders.includes(providerKey)
+                    );
+                    
+                    if (availableProviders.length === 0) {
+                        alert('All available providers are already connected!');
+                        return;
+                    }
+                    
+                    // Clear existing options and add filtered ones
+                    providerSelect.innerHTML = '<option value="">Select My Provider</option>';
+                    availableProviders.forEach(providerKey => {
+                        const provider = window.PROVIDER_CONFIG[providerKey];
+                        const option = document.createElement('option');
+                        option.value = providerKey;
+                        option.textContent = provider.name;
+                        providerSelect.appendChild(option);
+                    });
+                    
+                    console.log('✅ Provider select filtered to available providers:', availableProviders);
+                } else {
+                    console.warn('⚠️ Provider select not found');
+                }
+                
+                if (termsCheckbox) {
+                    termsCheckbox.checked = false;
+                    console.log('✅ Terms checkbox reset');
+                } else {
+                    console.warn('⚠️ Terms checkbox not found');
+                }
+                
+                if (submitTermsBtn) {
+                    submitTermsBtn.disabled = true;
+                    console.log('✅ Submit button reset');
+                } else {
+                    console.warn('⚠️ Submit button not found');
+                }
+                
+                // Don't update terms display yet - wait for provider selection
+                console.log('ℹ️ Terms display will update when provider is selected');
+                
+                console.log('✅ About to show terms modal for additional provider');
+                
+                // Show the first modal
+                modalManager.show('termsModal');
+                
+                console.log('✅ Modal should be visible now for additional provider');
+                
+            } catch (error) {
+                console.error('❌ Error in handleAddAnotherProvider:', error);
+                alert('An error occurred while opening the additional provider connection. Check the console for details.');
+            }
         }
 
         // Main provider connection function - Updated for workflow with error handling
@@ -1462,7 +2200,7 @@
                 console.log('✅ About to show terms modal');
                 
                 // Show the first modal
-                showModal('termsModal');
+                modalManager.show('termsModal');
                 
                 console.log('✅ Modal should be visible now');
                 
@@ -1472,7 +2210,7 @@
                     if (modal && !modal.classList.contains('hidden')) {
                         console.log('✅ Modal is visible and working!');
                     } else {
-                        console.error('❌ Modal is not visible after showModal call');
+                        console.error('❌ Modal is not visible after modalManager.show call');
                         // Emergency fallback - use ModalManager
                         try {
                             modalManager.show('termsModal');
@@ -1555,8 +2293,8 @@
                     
                     // Close terms modal and show authentication modal
                     console.log('✅ Closing terms modal and showing auth modal');
-                    closeModal('termsModal');
-                    showModal('authModal');
+                    modalManager.hide('termsModal');
+                    modalManager.show('authModal');
                     
                     console.log('✅ Modal transition should be complete');
                     
@@ -1588,8 +2326,8 @@
             console.log('🔐 Mock OAuth: Username:', username, 'Provider:', window.selectedProviderForWorkflow);
             
             // Close auth modal and show progress modal
-            closeModal('authModal');
-            showModal('progressModal');
+            modalManager.hide('authModal');
+            modalManager.show('progressModal');
             
             // Simulate FHIR OAuth authentication and connection process
             simulateFHIRConnection();
@@ -1655,13 +2393,13 @@
                 console.log('🔐 Mock OAuth: FHIR OAuth flow simulation complete');
                 
                 // Close progress modal and show success modal
-                closeModal('progressModal');
-                showModal('successModal');
+                modalManager.hide('progressModal');
+                modalManager.show('successModal');
                 
                 // Simulate additional delay before auto-closing (3 seconds as requested)
                 setTimeout(() => {
                     console.log('🔐 Mock OAuth: Auto-closing success modal after 3 seconds');
-                    closeModal('successModal');
+                    modalManager.hide('successModal');
                     
                     // Show success message in main interface
                     const successMessage = document.getElementById('successMessage');
@@ -1730,6 +2468,16 @@
                     
                     additionalTransactions.forEach(tx => addTransaction(tx));
                     
+                    // Add provider to connected providers list
+                    if (!connectedProviders.includes(selectedProvider)) {
+                        connectedProviders.push(selectedProvider);
+                        console.log('✅ Provider added to connected provider list:', selectedProvider);
+                        console.log('🔗 Connected providers:', connectedProviders);
+                        
+                        // Update the Add Another Provider button state
+                        updateAddAnotherProviderButton();
+                    }
+                    
                     console.log('✅ FHIR OAuth simulation complete - Claims populated');
                     console.log('🔐 Mock OAuth: User returned to home screen with populated claims');
                     
@@ -1759,7 +2507,7 @@
                 }
                 
                 // Close success modal
-                closeModal('successModal');
+                modalManager.hide('successModal');
                 
                 // Hide pre-authentication message and show provider claims section
                 const preAuthMessage = document.getElementById('preAuthMessage');
@@ -1787,6 +2535,16 @@
                 
                 if (providerNameElement) {
                     providerNameElement.textContent = providerConfig.name;
+                }
+                
+                // Add provider to connected providers list
+                if (!connectedProviders.includes(selectedProvider)) {
+                    connectedProviders.push(selectedProvider);
+                    console.log('✅ Provider added to connected providers list:', selectedProvider);
+                    console.log('🔗 Connected providers:', connectedProviders);
+                    
+                    // Update the Add Another Provider button state
+                    updateAddAnotherProviderButton();
                 }
                 
                 console.log('✅ Connection completed successfully for provider:', providerConfig.name);
@@ -1961,153 +2719,318 @@
             const oauthSteps = document.getElementById('oauthSteps');
             if (oauthSteps && oauthSteps.children[stepNumber - 1]) {
                 const stepElement = oauthSteps.children[stepNumber - 1];
-                stepElement.innerHTML = `<span style="color: #059669; font-weight: 500;">${status}</span>`;
-                stepElement.style.background = '#d1fae5';
-                stepElement.style.border = '1px solid #10b981';
-            }
-        }
-
-        // Consolidated transaction function - Single source of truth
-        function addTransaction(transaction) {
-            const tbody = document.getElementById('claimsTableBody');
-            if (tbody) {
-                const row = document.createElement('tr');
-                row.className = `status-${transaction.status.toLowerCase()}`;
-                row.id = `transaction-${transaction.id}`;
                 
-                row.innerHTML = `
-                    <td>${transaction.provider}</td>
-                    <td>${transaction.dateOfService}</td>
-                    <td>$${transaction.patientResponsibility}</td>
-                    <td class="status-${transaction.status.toLowerCase()}">${transaction.status}</td>
-                    <td><button class="btn-secondary" onclick="showDemoAction()">Pay or Save options ▼</button></td>
-                `;
+                // Remove existing classes
+                stepElement.classList.remove('active', 'completed');
                 
-                tbody.appendChild(row);
-            }
-        }
-
-        function updateTransaction(transactionId, updates) {
-            const row = document.getElementById(`transaction-${transactionId}`);
-            if (row) {
-                const cells = row.cells;
-                if (updates.status) {
-                    cells[3].textContent = updates.status;
-                    cells[3].className = `status-${updates.status.toLowerCase()}`;
+                if (status === 'completed') {
+                    stepElement.classList.add('completed');
+                    stepElement.innerHTML = `<span style="color: #059669; font-weight: 600;">✅ ${status}</span>`;
+                    stepElement.style.background = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
+                    stepElement.style.border = '1px solid #10b981';
+                } else if (status === 'active') {
+                    stepElement.classList.add('active');
+                    stepElement.innerHTML = `<span style="color: #1e40af; font-weight: 600;">⏳ ${status}</span>`;
+                    stepElement.style.background = 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)';
+                    stepElement.style.border = '1px solid #3b82f6';
+                } else {
+                    stepElement.innerHTML = `<span style="color: #6b7280;">⏳ ${status}</span>`;
+                    stepElement.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
+                    stepElement.style.border = '1px solid rgba(209, 213, 219, 0.5)';
                 }
-                row.className = `status-${updates.status.toLowerCase()}`;
+                
+                // Add smooth transition
+                stepElement.style.transition = 'all 0.5s ease';
             }
         }
 
-        function showDemoAction() {
-            alert('Demo Action: This would show payment or save options for the transaction. In a real application, this would integrate with payment processing systems.');
+        // Enhanced error handling with user-friendly messages
+        function showUserFriendlyError(error, context = '') {
+            console.error(`❌ Error in ${context}:`, error);
+            
+            let userMessage = 'An unexpected error occurred. Please try again.';
+            
+            if (error.message) {
+                if (error.message.includes('network') || error.message.includes('fetch')) {
+                    userMessage = 'Network connection issue. Please check your internet connection and try again.';
+                } else if (error.message.includes('timeout')) {
+                    userMessage = 'Request timed out. Please try again.';
+                } else if (error.message.includes('provider')) {
+                    userMessage = 'Provider configuration issue. Please refresh the page and try again.';
+                }
+            }
+            
+            // Show error message in a user-friendly way
+            showNotification(userMessage, 'error');
         }
 
-        function subscribeToEvents() {
-            eventSource = new EventSource(`${APP_CONFIG.API_BASE}/events`);
+        // Enhanced notification system
+        function showNotification(message, type = 'info', duration = 5000) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification-toast');
+            existingNotifications.forEach(notification => notification.remove());
             
-            eventSource.onmessage = function(event) {
-                const data = JSON.parse(event.data);
-                // dev: received SSE event
+            const notification = document.createElement('div');
+            notification.className = `notification-toast notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">${getNotificationIcon(type)}</span>
+                    <span class="notification-message">${message}</span>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto-remove after duration
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, duration);
+            }
+        }
+
+        // Get notification icon based on type
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'warning': return '⚠️';
+                case 'info': return 'ℹ️';
+                default: return 'ℹ️';
+            }
+        }
+
+        // Enhanced form validation
+        function validateForm(formElement) {
+            const inputs = formElement.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            let firstInvalidInput = null;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('error');
+                    
+                    if (!firstInvalidInput) {
+                        firstInvalidInput = input;
+                    }
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+            
+            if (!isValid && firstInvalidInput) {
+                firstInvalidInput.focus();
+                showNotification('Please fill in all required fields.', 'warning');
+            }
+            
+            return isValid;
+        }
+
+        // Enhanced loading states
+        function setLoadingState(element, isLoading) {
+            if (isLoading) {
+                element.classList.add('loading');
+                element.disabled = true;
+                element.dataset.originalText = element.textContent;
+                element.textContent = 'Loading...';
+            } else {
+                element.classList.remove('loading');
+                element.disabled = false;
+                if (element.dataset.originalText) {
+                    element.textContent = element.dataset.originalText;
+                }
+            }
+        }
+
+        // Enhanced modal transitions - Now handled by ModalManager
+        // These functions are deprecated and replaced by ModalManager.show() and ModalManager.hide()
+
+        // Enhanced accessibility
+        function enhanceAccessibility() {
+            // Add ARIA labels to interactive elements
+            const actionButtons = document.querySelectorAll('.action-btn, .btn-primary, .btn-secondary');
+            actionButtons.forEach(button => {
+                if (!button.getAttribute('aria-label')) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                }
+            });
+            
+            // Add keyboard navigation to modals
+            const modals = document.querySelectorAll('.workflow-modal');
+            modals.forEach(modal => {
+                modal.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        const closeButton = modal.querySelector('.modal-close');
+                        if (closeButton) {
+                            closeButton.click();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Enhanced performance monitoring
+        function monitorPerformance() {
+            if ('performance' in window) {
+                window.addEventListener('load', () => {
+                    const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                    console.log(`🚀 Page loaded in ${loadTime}ms`);
+                    
+                    if (loadTime > 3000) {
+                        console.warn('⚠️ Page load time is slow. Consider optimizing assets.');
+                    }
+                });
+            }
+        }
+
+        // Enhanced error boundary
+        function setupErrorBoundary() {
+            window.addEventListener('error', (event) => {
+                console.error('❌ Global error caught:', event.error);
+                showUserFriendlyError(event.error, 'global');
+            });
+            
+            window.addEventListener('unhandledrejection', (event) => {
+                console.error('❌ Unhandled promise rejection:', event.reason);
+                showUserFriendlyError(event.reason, 'promise');
+            });
+        }
+
+        // Initialize enhanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Enhance accessibility
+                enhanceAccessibility();
                 
-                if (data.type === 'transactionUpdated') {
-                    updateTransaction(data.transaction.id, {
-                        status: data.transaction.status,
-                        source: data.transaction.source
+                // Setup error boundary
+                setupErrorBoundary();
+                
+                // Monitor performance
+                monitorPerformance();
+                
+                // Add smooth scrolling to all internal links
+                const internalLinks = document.querySelectorAll('a[href^="#"]');
+                internalLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
                     });
-                }
-            };
-            
-            eventSource.onerror = function(error) {
-                console.error('EventSource error:', error);
-                eventSource.close();
-            };
-        }
+                });
+                
+                console.log('✅ Enhanced features initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Error initializing enhanced features:', error);
+            }
+        });
 
-        function setupWorkflowEventListeners() {
-            // Provider selection change
+        // Enhanced provider selection with visual feedback
+        function enhanceProviderSelection() {
             const providerSelect = document.getElementById('providerSelect');
             if (providerSelect) {
                 providerSelect.addEventListener('change', function() {
-                    console.log('🔍 Provider selection changed to:', this.value);
-                    // Update the global workflow variable instead of local selectedProvider
-                    window.selectedProviderForWorkflow = this.value;
-                    updateTermsDisplay();
-                    console.log('✅ Provider selection updated and terms display refreshed');
-                });
-                console.log('✅ Provider select event listener added');
-            } else {
-                console.warn('⚠️ Provider select not found for event listener');
-            }
-            
-            // Terms checkbox change
-            const termsCheckbox = document.getElementById('termsCheckbox');
-            if (termsCheckbox) {
-                termsCheckbox.addEventListener('change', function() {
-                    console.log('🔍 Checkbox changed, checked:', this.checked);
-                    const submitBtn = document.getElementById('submitTermsBtn');
-                    if (submitBtn) {
-                        submitBtn.disabled = !this.checked;
-                        console.log('✅ Submit button disabled state:', submitBtn.disabled);
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        // Add visual feedback
+                        this.style.borderColor = '#10b981';
+                        this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                        
+                        // Update terms display and enable submit button
+                        updateTermsDisplay();
+                        updateSubmitButtonState();
+                        
+                        // Remove feedback after animation
+                        setTimeout(() => {
+                            this.style.borderColor = '';
+                            this.style.boxShadow = '';
+                        }, 1000);
                     } else {
-                        console.warn('⚠️ Submit button not found for checkbox change');
+                        // Hide terms section and disable submit button if no provider selected
+                        const termsSection = document.getElementById('termsSection');
+                        if (termsSection) {
+                            termsSection.style.display = 'none';
+                        }
+                        updateSubmitButtonState();
                     }
                 });
-                console.log('✅ Checkbox event listener added');
-            } else {
-                console.warn('⚠️ Terms checkbox not found for event listener');
             }
         }
 
-        // Initialize page
-        window.addEventListener('load', async () => {
-            // dev: page loaded initializing
-            // ModalManager is already initialized and has hidden all modals
+        // Function to update submit button state based on form completion
+        function updateSubmitButtonState() {
+            const providerSelect = document.getElementById('providerSelect');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const submitBtn = document.getElementById('submitTermsBtn');
             
-            // Wait for configs to be loaded
-            let configCheckCount = 0;
-            const maxConfigChecks = 50; // 5 seconds max wait
-            
-            const waitForConfigs = async () => {
-                if (window.PROVIDER_CONFIG && window.APP_CONFIG) {
-                    console.log('✅ Configs loaded, initializing page...');
-                    
-                    // Initialize provider selection (no default selected)
-                    window.selectedProviderForWorkflow = null;
-                    // Don't call updateTermsDisplay yet - wait for user selection
-                    
-                    // Set up event listeners for the workflow
-                    setupWorkflowEventListeners();
-                    
-                    // Ensure main content is visible
-                    const mainContent = document.querySelector('.main-content');
-                    if (mainContent) {
-                        console.log('🔧 Main content found and should be visible via CSS');
-                        // dev: main content visibility confirmed
-                    } else {
-                        console.error('Main content not found!');
+            if (providerSelect && termsCheckbox && submitBtn) {
+                const hasProvider = providerSelect.value && providerSelect.value !== '';
+                const hasAcceptedTerms = termsCheckbox.checked;
+                
+                // Enable submit button only if provider is selected AND terms are accepted
+                submitBtn.disabled = !(hasProvider && hasAcceptedTerms);
+                
+                console.log('🔍 Submit button state updated:', {
+                    hasProvider,
+                    hasAcceptedTerms,
+                    buttonEnabled: !submitBtn.disabled
+                });
+            }
+        }
+
+        // Enhanced form submission with better UX
+        function enhanceFormSubmission() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    if (!validateForm(this)) {
+                        e.preventDefault();
+                        return false;
                     }
                     
-                    try {
-                        const response = await fetch(`${window.APP_CONFIG.API_BASE}/health`);
-                        const health = await response.json();
-                        // dev: backend health check
-                    } catch (error) {
-                        console.error('Backend not available:', error);
+                    // Show loading state
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        setLoadingState(submitButton, true);
                     }
-                } else {
-                    configCheckCount++;
-                    if (configCheckCount < maxConfigChecks) {
-                        console.log(`⏳ Waiting for configs to load... (${configCheckCount}/${maxConfigChecks})`);
-                        setTimeout(waitForConfigs, 100);
-                    } else {
-                        console.error('❌ Configs failed to load after 5 seconds');
-                        alert('Configuration failed to load. Please refresh the page.');
-                    }
-                }
-            };
+                });
+            });
             
-            waitForConfigs();
+            // Add event listener for terms checkbox
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', function() {
+                    updateSubmitButtonState();
+                    console.log('🔍 Terms checkbox changed:', this.checked);
+                });
+            }
+        }
+
+        // Initialize enhanced form features
+        document.addEventListener('DOMContentLoaded', function() {
+            enhanceProviderSelection();
+            enhanceFormSubmission();
+            
+            // Initialize form state
+            updateSubmitButtonState();
+            
+            // Initialize Add Another Provider button state
+            updateAddAnotherProviderButton();
         });
 
         // ========================================
@@ -2355,6 +3278,342 @@
                 preAuthMessage.style.display = 'block';
             }
         }
+
+        // Debug functions for troubleshooting
+        window.debugModals = () => {
+            console.log('🔍 Modal Debug Information:');
+            console.log('ModalManager available:', !!window.modalManager);
+            if (window.modalManager) {
+                window.modalManager.debug();
+            }
+            
+            // Check all modal elements
+            const modals = document.querySelectorAll('.workflow-modal');
+            console.log('Found workflow modals:', modals.length);
+            modals.forEach(modal => {
+                const isHidden = modal.classList.contains('hidden');
+                const computedStyle = window.getComputedStyle(modal);
+                console.log(`Modal ${modal.id}:`, {
+                    hidden: isHidden,
+                    display: computedStyle.display,
+                    visibility: computedStyle.visibility,
+                    opacity: computedStyle.opacity,
+                    zIndex: computedStyle.zIndex
+                });
+            });
+        };
+
+        // Debug function specifically for the terms modal workflow
+        window.debugTermsWorkflow = () => {
+            console.log('🔍 Terms Workflow Debug:');
+            
+            const providerSelect = document.getElementById('providerSelect');
+            const termsSection = document.getElementById('termsSection');
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const submitBtn = document.getElementById('submitTermsBtn');
+            
+            console.log('Provider Select:', {
+                element: !!providerSelect,
+                value: providerSelect?.value,
+                options: providerSelect?.options?.length
+            });
+            
+            console.log('Terms Section:', {
+                element: !!termsSection,
+                display: termsSection?.style.display,
+                visible: termsSection?.style.display !== 'none'
+            });
+            
+            console.log('Terms Checkbox:', {
+                element: !!termsCheckbox,
+                checked: termsCheckbox?.checked,
+                required: termsCheckbox?.required
+            });
+            
+            console.log('Submit Button:', {
+                element: !!submitBtn,
+                disabled: submitBtn?.disabled,
+                text: submitBtn?.textContent
+            });
+            
+            // Test the workflow
+            console.log('🔍 Testing workflow logic...');
+            updateTermsDisplay();
+            updateSubmitButtonState();
+        };
+
+        // Debug function for connected providers
+        window.debugConnectedProviders = () => {
+            console.log('🔍 Connected Providers Debug:');
+            console.log('  • Connected providers:', connectedProviders);
+            console.log('  • Total available providers:', Object.keys(window.PROVIDER_CONFIG || {}).length);
+            console.log('  • Available to connect:', Object.keys(window.PROVIDER_CONFIG || {}).filter(
+                providerKey => !connectedProviders.includes(providerKey)
+            ));
+            
+            // Also show in UI for easy debugging
+            const statusDiv = document.createElement('div');
+            statusDiv.style.cssText = 'position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; z-index: 10000;';
+            statusDiv.innerHTML = `
+                <strong>🔍 Debug Info:</strong><br>
+                Connected: ${connectedProviders.join(', ') || 'None'}<br>
+                Available: ${Object.keys(window.PROVIDER_CONFIG || {}).filter(p => !connectedProviders.includes(p)).join(', ') || 'None'}
+            `;
+            document.body.appendChild(statusDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.parentNode.removeChild(statusDiv);
+                }
+            }, 5000);
+        };
+
+        // Debug function for the transaction system
+        window.debugTransactionSystem = () => {
+            console.log('🔍 Transaction System Debug:');
+            
+            const claimsTableBody = document.getElementById('claimsTableBody');
+            const providerClaimsSection = document.getElementById('providerClaimsSection');
+            
+            console.log('Claims Table Body:', {
+                element: !!claimsTableBody,
+                rowCount: claimsTableBody?.children?.length || 0
+            });
+            
+            console.log('Provider Claims Section:', {
+                element: !!providerClaimsSection,
+                hidden: providerClaimsSection?.classList?.contains('hidden'),
+                display: providerClaimsSection?.style?.display
+            });
+            
+            // Test adding a sample transaction
+            console.log('🧪 Testing transaction system...');
+            const testTransaction = {
+                id: 'TEST-001',
+                provider: 'Test Provider',
+                dateOfService: '2025-08-19',
+                patientResponsibility: 50.00,
+                status: 'Approved',
+                source: 'Test System'
+            };
+            
+            addTransaction(testTransaction);
+            console.log('✅ Test transaction added. Check the claims table!');
+        };
+
+        // Initialize enhanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Enhance accessibility
+                enhanceAccessibility();
+                
+                // Setup error boundary
+                setupErrorBoundary();
+                
+                // Monitor performance
+                monitorPerformance();
+                
+                // Add smooth scrolling to all internal links
+                const internalLinks = document.querySelectorAll('a[href^="#"]');
+                internalLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+                
+                console.log('✅ Enhanced features initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Error initializing enhanced features:', error);
+            }
+        });
+
+        // Test functions for modal system
+        window.testModalSystem = () => {
+            console.log('🧪 Testing Modal System...');
+            
+            // Test 1: Check if ModalManager is available
+            if (!window.modalManager) {
+                console.error('❌ ModalManager not available');
+                return false;
+            }
+            console.log('✅ ModalManager available');
+            
+            // Test 2: Check if modals exist
+            const modals = document.querySelectorAll('.workflow-modal');
+            if (modals.length === 0) {
+                console.error('❌ No workflow modals found');
+                return false;
+            }
+            console.log(`✅ Found ${modals.length} workflow modals`);
+            
+            // Test 3: Test showing a modal
+            try {
+                window.modalManager.show('termsModal');
+                console.log('✅ Modal show test passed');
+                
+                // Test 4: Test hiding a modal
+                setTimeout(() => {
+                    window.modalManager.hide('termsModal');
+                    console.log('✅ Modal hide test passed');
+                    console.log('🎉 Modal system test complete!');
+                }, 1000);
+                
+                return true;
+            } catch (error) {
+                console.error('❌ Modal test failed:', error);
+                return false;
+            }
+        };
+
+        // Debug functions for troubleshooting
+
+        // Function to add transactions to the claims table
+        function addTransaction(transaction) {
+            try {
+                console.log('🔍 Adding transaction:', transaction);
+                
+                const claimsTableBody = document.getElementById('claimsTableBody');
+                if (!claimsTableBody) {
+                    console.error('❌ Claims table body not found');
+                    return;
+                }
+                
+                // Create new table row
+                const newRow = document.createElement('tr');
+                
+                // Format the date if it exists
+                const formattedDate = transaction.dateOfService || transaction.date || 'N/A';
+                
+                // Format the amount with proper currency formatting
+                const formattedAmount = transaction.patientResponsibility 
+                    ? `$${parseFloat(transaction.patientResponsibility).toFixed(2)}`
+                    : transaction.amount 
+                        ? `$${parseFloat(transaction.amount).toFixed(2)}`
+                        : 'N/A';
+                
+                // Create table cells
+                newRow.innerHTML = `
+                    <td>${transaction.provider || 'Unknown Provider'}</td>
+                    <td>${formattedDate}</td>
+                    <td>${formattedAmount}</td>
+                    <td>
+                        <span class="status-${transaction.status?.toLowerCase() || 'pending'}">
+                            ${transaction.status || 'Pending'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-secondary" onclick="showComingSoon('View Details')">
+                            View
+                        </button>
+                    </td>
+                `;
+                
+                // Add the new row to the table
+                claimsTableBody.appendChild(newRow);
+                
+                console.log('✅ Transaction added successfully:', transaction.id || 'Unknown ID');
+                
+                // Update the claims count if there's a notification badge
+                updateClaimsCount();
+                
+            } catch (error) {
+                console.error('❌ Error adding transaction:', error);
+            }
+        }
+
+        // Function to update the "Add Another Provider" button state
+        function updateAddAnotherProviderButton() {
+            try {
+                const addAnotherProviderBtn = document.getElementById('addAnotherProviderBtn');
+                if (!addAnotherProviderBtn) {
+                    return;
+                }
+                
+                // Check how many providers are available to connect
+                const availableProviders = Object.keys(window.PROVIDER_CONFIG || {}).filter(
+                    providerKey => !connectedProviders.includes(providerKey)
+                );
+                
+                if (availableProviders.length === 0) {
+                    // All providers connected
+                    addAnotherProviderBtn.disabled = true;
+                    addAnotherProviderBtn.textContent = '✅ All Providers Connected';
+                    addAnotherProviderBtn.title = 'All available providers are already connected';
+                } else if (availableProviders.length === 1) {
+                    // One provider left
+                    addAnotherProviderBtn.textContent = `➕ Add 1 More Provider`;
+                    addAnotherProviderBtn.disabled = false;
+                    addAnotherProviderBtn.title = `Connect ${availableProviders.length} remaining provider`;
+                } else {
+                    // Multiple providers left
+                    addAnotherProviderBtn.textContent = `➕ Add Another Provider (${availableProviders.length} available)`;
+                    addAnotherProviderBtn.disabled = false;
+                    addAnotherProviderBtn.title = `Connect ${availableProviders.length} remaining providers`;
+                }
+                
+                console.log('✅ Add Another Provider button updated:', {
+                    availableProviders,
+                    connectedProviders,
+                    buttonText: addAnotherProviderBtn.textContent
+                });
+                
+            } catch (error) {
+                console.warn('⚠️ Could not update Add Another Provider button:', error);
+            }
+        }
+
+        // Function to update the claims count in the notification badge
+        function updateClaimsCount() {
+            try {
+                const claimsTableBody = document.getElementById('claimsTableBody');
+                const notificationBadge = document.querySelector('.tasks-section .notification-badge');
+                
+                if (claimsTableBody && notificationBadge) {
+                    const claimCount = claimsTableBody.children.length;
+                    notificationBadge.textContent = claimCount;
+                    
+                    // Update the task text based on count
+                    const taskText = document.querySelector('.task-item .task-text');
+                    if (taskText) {
+                        if (claimCount === 0) {
+                            taskText.textContent = 'No claims to review';
+                        } else if (claimCount === 1) {
+                            taskText.textContent = '1 claim needs review';
+                        } else {
+                            taskText.textContent = `${claimCount} claims need review`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not update claims count:', error);
+            }
+        }
+
+        // Function to clear all transactions from the claims table
+        function clearTransactions() {
+            try {
+                const claimsTableBody = document.getElementById('claimsTableBody');
+                if (claimsTableBody) {
+                    claimsTableBody.innerHTML = '';
+                    updateClaimsCount();
+                    console.log('✅ All transactions cleared');
+                }
+            } catch (error) {
+                console.error('❌ Error clearing transactions:', error);
+            }
+        }
+
+        // Enhanced provider selection with visual feedback
     </script>
 </body>
 </html>
