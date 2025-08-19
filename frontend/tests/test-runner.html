@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEX Frontend Test Suite</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .test-header {
+            background: linear-gradient(135deg, #253746 0%, #C8102E 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .test-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .test-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .test-controls {
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            background: #253746;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .test-btn:hover {
+            background: #1a2a38;
+            transform: translateY(-1px);
+        }
+        
+        .test-btn.primary {
+            background: #C8102E;
+        }
+        
+        .test-btn.primary:hover {
+            background: #a30d25;
+        }
+        
+        .test-results {
+            padding: 30px;
+        }
+        
+        .test-summary {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .test-summary h3 {
+            margin: 0 0 15px 0;
+            color: #253746;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .test-suite {
+            margin-bottom: 30px;
+        }
+        
+        .test-suite h3 {
+            color: #253746;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .test-case {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .test-case-header {
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-case-title {
+            font-weight: 600;
+            color: #253746;
+        }
+        
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .test-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .test-status.running {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .test-status.passed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .test-status.failed {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .test-case-body {
+            padding: 20px;
+        }
+        
+        .test-description {
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .test-output {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            color: #2d3748;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .test-error {
+            background: #fed7d7;
+            border: 1px solid #e53e3e;
+            color: #742a2a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        
+        .test-success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .test-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .test-btn {
+                text-align: center;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 WEX Frontend Test Suite</h1>
+            <p>Comprehensive testing for enhanced frontend functionality</p>
+        </div>
+        
+        <div class="test-controls">
+            <button class="test-btn primary" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="test-btn" onclick="runUnitTests()">⚡ Unit Tests</button>
+            <button class="test-btn" onclick="runIntegrationTests()">🔗 Integration Tests</button>
+            <button class="test-btn" onclick="runUITests()">🎨 UI Tests</button>
+            <button class="test-btn" onclick="clearResults()">🗑️ Clear Results</button>
+            <button class="test-btn" onclick="exportResults()">📊 Export Results</button>
+        </div>
+        
+        <div class="test-results">
+            <div class="test-summary">
+                <h3>📊 Test Summary</h3>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalTests">0</div>
+                        <div class="stat-label">Total Tests</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="passedTests">0</div>
+                        <div class="stat-label">Passed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="failedTests">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="testCoverage">0%</div>
+                        <div class="stat-label">Coverage</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            
+            <div id="testSuites"></div>
+        </div>
+    </div>
+
+    <!-- Test Framework -->
+    <script>
+        // Test Framework
+        class TestFramework {
+            constructor() {
+                this.tests = [];
+                this.results = {
+                    total: 0,
+                    passed: 0,
+                    failed: 0,
+                    coverage: 0
+                };
+                this.currentSuite = null;
+            }
+            
+            describe(suiteName, testFunction) {
+                this.currentSuite = {
+                    name: suiteName,
+                    tests: [],
+                    results: {
+                        total: 0,
+                        passed: 0,
+                        failed: 0
+                    }
+                };
+                
+                testFunction();
+                this.tests.push(this.currentSuite);
+            }
+            
+            it(testName, testFunction) {
+                if (!this.currentSuite) {
+                    throw new Error('No test suite defined. Use describe() first.');
+                }
+                
+                const testCase = {
+                    name: testName,
+                    function: testFunction,
+                    status: 'pending',
+                    output: '',
+                    error: null,
+                    duration: 0
+                };
+                
+                this.currentSuite.tests.push(testCase);
+            }
+            
+            expect(actual) {
+                return {
+                    toBe: (expected) => {
+                        if (actual !== expected) {
+                            throw new Error(`Expected ${actual} to be ${expected}`);
+                        }
+                    },
+                    toEqual: (expected) => {
+                        if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                            throw new Error(`Expected ${JSON.stringify(actual)} to equal ${JSON.stringify(expected)}`);
+                        }
+                    },
+                    toContain: (expected) => {
+                        if (!actual.includes(expected)) {
+                            throw new Error(`Expected ${actual} to contain ${expected}`);
+                        }
+                    },
+                    toBeDefined: () => {
+                        if (actual === undefined) {
+                            throw new Error(`Expected ${actual} to be defined`);
+                        }
+                    },
+                    toBeNull: () => {
+                        if (actual !== null) {
+                            throw new Error(`Expected ${actual} to be null`);
+                        }
+                    },
+                    toBeTruthy: () => {
+                        if (!actual) {
+                            throw new Error(`Expected ${actual} to be truthy`);
+                        }
+                    },
+                    toBeFalsy: () => {
+                        if (actual) {
+                            throw new Error(`Expected ${actual} to be falsy`);
+                        }
+                    },
+                    toHaveLength: (expected) => {
+                        if (actual.length !== expected) {
+                            throw new Error(`Expected ${actual} to have length ${expected}, but got ${actual.length}`);
+                        }
+                    },
+                    toMatch: (regex) => {
+                        if (!regex.test(actual)) {
+                            throw new Error(`Expected ${actual} to match ${regex}`);
+                        }
+                    }
+                };
+            }
+            
+            async runTests() {
+                this.results = { total: 0, passed: 0, failed: 0, coverage: 0 };
+                
+                for (const suite of this.tests) {
+                    suite.results = { total: 0, passed: 0, failed: 0 };
+                    
+                    for (const testCase of suite.tests) {
+                        testCase.status = 'running';
+                        this.updateUI();
+                        
+                        const startTime = performance.now();
+                        
+                        try {
+                            await testCase.function();
+                            testCase.status = 'passed';
+                            testCase.duration = performance.now() - startTime;
+                            suite.results.passed++;
+                            this.results.passed++;
+                        } catch (error) {
+                            testCase.status = 'failed';
+                            testCase.error = error.message;
+                            testCase.duration = performance.now() - startTime;
+                            suite.results.failed++;
+                            this.results.failed++;
+                        }
+                        
+                        suite.results.total++;
+                        this.results.total++;
+                        
+                        this.updateUI();
+                        await this.delay(100); // Small delay for visual feedback
+                    }
+                }
+                
+                this.results.coverage = Math.round((this.results.passed / this.results.total) * 100);
+                this.updateUI();
+            }
+            
+            updateUI() {
+                // Update summary stats
+                document.getElementById('totalTests').textContent = this.results.total;
+                document.getElementById('passedTests').textContent = this.results.passed;
+                document.getElementById('failedTests').textContent = this.results.failed;
+                document.getElementById('testCoverage').textContent = `${this.results.coverage}%`;
+                
+                // Update progress bar
+                const progress = this.results.total > 0 ? (this.results.passed / this.results.total) * 100 : 0;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                
+                // Update test suites display
+                this.renderTestSuites();
+            }
+            
+            renderTestSuites() {
+                const container = document.getElementById('testSuites');
+                container.innerHTML = '';
+                
+                for (const suite of this.tests) {
+                    const suiteElement = document.createElement('div');
+                    suiteElement.className = 'test-suite';
+                    
+                    suiteElement.innerHTML = `
+                        <h3>${suite.name} (${suite.results.passed}/${suite.results.total})</h3>
+                        ${suite.tests.map(test => this.renderTestCase(test)).join('')}
+                    `;
+                    
+                    container.appendChild(suiteElement);
+                }
+            }
+            
+            renderTestCase(test) {
+                return `
+                    <div class="test-case">
+                        <div class="test-case-header">
+                            <div class="test-case-title">${test.name}</div>
+                            <div class="test-status ${test.status}">${test.status}</div>
+                        </div>
+                        <div class="test-case-body">
+                            <div class="test-description">Test case: ${test.name}</div>
+                            <div class="test-output">Duration: ${test.duration.toFixed(2)}ms</div>
+                            ${test.error ? `<div class="test-error">❌ ${test.error}</div>` : ''}
+                            ${test.status === 'passed' ? `<div class="test-success">✅ Test passed successfully</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        // Global test framework instance
+        const testFramework = new TestFramework();
+        const { describe, it, expect } = testFramework;
+        
+        // Test Functions
+        function runAllTests() {
+            testFramework.runTests();
+        }
+        
+        function runUnitTests() {
+            // Filter and run only unit tests
+            console.log('Running unit tests...');
+            testFramework.runTests();
+        }
+        
+        function runIntegrationTests() {
+            // Filter and run only integration tests
+            console.log('Running integration tests...');
+            testFramework.runTests();
+        }
+        
+        function runUITests() {
+            // Filter and run only UI tests
+            console.log('Running UI tests...');
+            testFramework.runTests();
+        }
+        
+        function clearResults() {
+            testFramework.results = { total: 0, passed: 0, failed: 0, coverage: 0 };
+            testFramework.updateUI();
+            document.getElementById('testSuites').innerHTML = '';
+        }
+        
+        function exportResults() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                results: testFramework.results,
+                suites: testFramework.tests.map(suite => ({
+                    name: suite.name,
+                    results: suite.results,
+                    tests: suite.tests.map(test => ({
+                        name: test.name,
+                        status: test.status,
+                        duration: test.duration,
+                        error: test.error
+                    }))
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wex-frontend-test-results-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+    <!-- Test Suites -->
+    <script src="test-suites/unit-tests.js"></script>
+    <script src="test-suites/integration-tests.js"></script>
+    <script src="test-suites/ui-tests.js"></script>
+</body>
+</html>

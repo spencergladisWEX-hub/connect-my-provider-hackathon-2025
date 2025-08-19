@@ -1,0 +1,26 @@
+{
+  "unit": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "errors": []
+  },
+  "integration": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "errors": []
+  },
+  "ui": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "errors": []
+  },
+  "summary": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "coverage": 0
+  }
+}
