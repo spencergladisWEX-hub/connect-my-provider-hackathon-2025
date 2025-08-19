@@ -1,0 +1,491 @@
+/* ========================================
+   WEX BENEFITS PORTAL - COMPONENTS CSS
+   ========================================
+   
+   This file contains component styles:
+   1. ALERTS & NOTIFICATIONS
+   2. CARDS & SECTIONS
+   3. ACTION BUTTONS & INTERACTIVE
+   4. TABLES & DATA DISPLAY
+   5. FORMS & INPUTS
+   ======================================== */
+
+/* ========================================
+   1. ALERTS & NOTIFICATIONS
+   ======================================== */
+.alerts-section {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.alert-warning {
+    background: #fed7d7;
+    color: #742a2a;
+    border-left: 4px solid #e53e3e;
+}
+
+.alert-info {
+    background: #bee3f8;
+    color: #2a4365;
+    border-left: 4px solid #3182ce;
+}
+
+.alert-text {
+    flex: 1;
+}
+
+.alert-link {
+    color: #3182ce;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.alert-link:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   2. CARDS & SECTIONS
+   ======================================== */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    color: #253746;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+/* Provider Claims Section */
+.provider-claims-section {
+    margin-bottom: 25px;
+}
+
+.claims-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.claims-table th {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    color: #253746;
+    font-weight: 600;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid rgba(226, 232, 240, 0.8);
+}
+
+.claims-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    color: #4a5568;
+}
+
+.claims-table tr:hover {
+    background: rgba(248, 250, 252, 0.8);
+}
+
+/* HSA Planner Section */
+.hsa-planner-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+}
+
+.goal-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.goal-tag {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.goal-tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.goal-tag:hover::before {
+    left: 100%;
+}
+
+.goal-tag.primary {
+    background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+    color: #22543d;
+    box-shadow: 0 2px 8px rgba(198, 246, 213, 0.4);
+}
+
+.goal-tag.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(198, 246, 213, 0.6);
+}
+
+.goal-tag.secondary {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+    color: #4a5568;
+    box-shadow: 0 2px 8px rgba(226, 232, 240, 0.4);
+}
+
+.goal-tag.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(226, 232, 240, 0.6);
+}
+
+.goal-amount {
+    margin-bottom: 20px;
+}
+
+.amount-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #253746;
+    background: linear-gradient(135deg, #253746 0%, #C8102E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.goal-status {
+    margin-bottom: 20px;
+}
+
+.status-text {
+    color: #C8102E;
+    font-weight: 600;
+    background: rgba(200, 16, 46, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.goal-message {
+    color: #4a5568;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.expenses-text {
+    color: #718096;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.goal-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.progress-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 4px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+    background: conic-gradient(#C8102E 0deg 144deg, #e2e8f0 144deg 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tasks Section */
+.tasks-section {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.task-icon {
+    font-size: 1.2rem;
+    color: #e53e3e;
+}
+
+.task-text {
+    flex: 1;
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.help-icon {
+    cursor: pointer;
+    color: #718096;
+    font-size: 1.1rem;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.help-icon:hover {
+    background: rgba(113, 128, 150, 0.1);
+    color: #4a5568;
+}
+
+/* ========================================
+   3. ACTION BUTTONS & INTERACTIVE
+   ======================================== */
+.action-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.action-btn:hover::before {
+    left: 100%;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #C8102E 0%, #e53e3e 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(200, 16, 46, 0.3);
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(113, 128, 150, 0.3);
+}
+
+.action-btn.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(113, 128, 150, 0.4);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #C8102E 0%, #e53e3e 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(200, 16, 46, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(200, 16, 46, 0.4);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(113, 128, 150, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(113, 128, 150, 0.4);
+}
+
+/* ========================================
+   4. FORMS & INPUTS
+   ======================================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #253746;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #4a5568;
+    background: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #C8102E;
+    box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+}
+
+.form-select:hover {
+    border-color: #cbd5e0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: #4a5568;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background: #C8102E;
+    border-color: #C8102E;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form-help {
+    color: #718096;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+/* ========================================
+   5. ADDITIONAL PROVIDER SECTION
+   ======================================== */
+.add-provider-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.button-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.help-text-container {
+    text-align: center;
+}

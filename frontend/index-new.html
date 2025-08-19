@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEX BENEFITS - Consumer Portal</title>
+    
+    <!-- External CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body>
+    <div class="app">
+        <!-- Header Navigation -->
+        <header class="main-header">
+            <nav class="nav-container">
+                <div class="logo">WEX BENEFITS</div>
+                <div class="nav-center">
+                    <a href="#" class="nav-link active">Dashboard</a>
+                    <a href="#" class="nav-link">Claims</a>
+                    <a href="#" class="nav-link">Providers</a>
+                    <a href="#" class="nav-link">Documents</a>
+                </div>
+                <div class="nav-right">
+                    <div class="user-menu">
+                        <span>👤</span>
+                        <span>John Appleseed</span>
+                    </div>
+                    <div class="cart-icon">
+                        <span>🛒</span>
+                        <span class="notification-badge">2</span>
+                    </div>
+                    <a href="#" class="logout-link">Logout</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Alerts Section -->
+        <section class="alerts-section">
+            <div class="alert alert-warning">
+                <span class="alert-text">⚠️ Your HSA contribution limit is approaching. Consider adjusting your contributions to maximize tax benefits.</span>
+                <a href="#" class="alert-link">Learn More</a>
+            </div>
+            <div class="alert alert-info">
+                <span class="alert-text">ℹ️ New feature available: Connect your healthcare providers for automatic claim verification.</span>
+                <a href="#" class="alert-link">Try It Now</a>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Provider Claims Section -->
+                    <div class="card provider-claims-section">
+                        <h2>Provider Claims <span id="claimsCount">0</span></h2>
+                        <p>Connect your healthcare providers to automatically verify and approve claims.</p>
+                        
+                        <!-- Connect Provider Button -->
+                        <button class="action-btn primary" id="connectProviderBtn">
+                            🔗 Connect My Provider
+                        </button>
+                        
+                        <!-- Claims Table -->
+                        <table class="claims-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Provider</th>
+                                    <th>Date of Service</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="claimsTableBody">
+                                <!-- Claims will be populated here -->
+                            </tbody>
+                        </table>
+                        
+                        <!-- Add Another Provider Button -->
+                        <div class="add-provider-section">
+                            <button class="action-btn secondary" id="addAnotherProviderBtn">
+                                ➕ Add Another Provider
+                            </button>
+                            <small class="form-help">
+                                Connect additional healthcare providers to consolidate all your claims in one place
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div class="card tasks-section">
+                        <h2>Tasks <span class="notification-badge">1</span></h2>
+                        <div class="task-item">
+                            <span class="task-icon">⚠️</span>
+                            <span class="task-text">2 receipt(s) needed to approve your debit card transaction(s) or claim(s)</span>
+                            <span class="help-icon">❓</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- HSA Planner Section -->
+                    <div class="card hsa-planner-section">
+                        <h2>My HSA Planner</h2>
+                        <div class="goal-tags">
+                            <span class="goal-tag primary">2025 Goal</span>
+                            <span class="goal-tag secondary">Long Term Goal</span>
+                        </div>
+                        <div class="goal-amount">
+                            <span class="amount-text">$1,905.00 of $4,792.00</span>
+                        </div>
+                        <div class="goal-status">
+                            <span class="status-text">Goal Status: Off Track</span>
+                        </div>
+                        <p class="goal-message">To meet your goal, you need to contribute a bit more each week. You can do it!</p>
+                        <p class="expenses-text">Estimated out of pocket expenses: $4,791.97</p>
+                        <div class="goal-actions">
+                            <button class="btn-secondary">Update My Goal</button>
+                            <div class="progress-info">
+                                <span>40% to your goal</span>
+                                <div class="progress-circle">
+                                    <div class="progress-fill" style="width: 40%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Connect My Provider Workflow Modals -->
+        
+        <!-- Step 1: Terms and Conditions Modal -->
+        <div id="termsModal" class="workflow-modal hidden" role="dialog" aria-labelledby="termsModalTitle" aria-describedby="termsModalDescription">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="termsModalTitle">Connect My Provider</h3>
+                    <button class="modal-close" aria-label="Close modal">×</button>
+                </div>
+                <div class="modal-body" id="termsModalDescription">
+                    <div class="form-group">
+                        <label for="providerSelect">Select Provider:</label>
+                        <select id="providerSelect" class="form-select" aria-describedby="providerSelectHelp">
+                            <option value="">Select My Provider</option>
+                            <option value="trellis">Trellis Healthcare</option>
+                            <option value="epic">Epic Systems</option>
+                            <option value="cerner">Cerner Corporation</option>
+                        </select>
+                        <small class="form-help" id="providerSelectHelp">Selected provider will determine the terms and conditions you agree to.</small>
+                    </div>
+                    <div class="form-group" id="termsSection" style="display: none; min-height: 60px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <span class="checkmark"></span>
+                            I agree to <a href="#" id="termsLink">Terms and Conditions</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="button-container">
+                        <button class="btn-secondary">Close</button>
+                        <button class="btn-primary" id="submitTermsBtn" disabled>Submit</button>
+                    </div>
+                    <div class="help-text-container">
+                        <small class="form-help" id="submitReadyHelp" style="display: block; color: #6b7280;">
+                            Please select a provider to continue
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Authentication Modal -->
+        <div id="authModal" class="workflow-modal hidden" role="dialog" aria-labelledby="authModalTitle" aria-describedby="authModalDescription">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="authModalTitle">Connecting to Provider</h3>
+                    <button class="modal-close" aria-label="Close modal">×</button>
+                </div>
+                <div class="modal-body" id="authModalDescription">
+                    <div class="form-group">
+                        <label for="authForm">Provider Authentication</label>
+                        <form id="authForm">
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" class="form-select" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" class="form-select" required>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="button-container">
+                        <button class="btn-secondary">Cancel</button>
+                        <button class="btn-primary" type="submit" form="authForm">Connect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Progress Modal -->
+        <div id="progressModal" class="workflow-modal hidden" role="dialog" aria-labelledby="progressModalTitle" aria-describedby="progressModalDescription">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="progressModalTitle">Processing Connection</h3>
+                    <button class="modal-close" aria-label="Close modal">×</button>
+                </div>
+                <div class="modal-body" id="progressModalDescription">
+                    <div class="form-group text-center">
+                        <div style="font-size: 3rem; margin: 20px 0;">⏳</div>
+                        <p>Connecting to your provider...</p>
+                        <p>This may take a few moments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Success Modal -->
+        <div id="successModal" class="workflow-modal hidden" role="dialog" aria-labelledby="successModalTitle" aria-describedby="successModalDescription">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="successModalTitle">Connection Successful!</h3>
+                    <button class="modal-close" aria-label="Close modal">×</button>
+                </div>
+                <div class="modal-body" id="successModalDescription">
+                    <div class="form-group text-center">
+                        <div style="font-size: 3rem; margin: 20px 0; color: #10b981;">✅</div>
+                        <p>Your provider has been successfully connected!</p>
+                        <p>You can now view and manage your claims automatically.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="button-container">
+                        <button class="btn-primary">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript Files -->
+    <script type="module" src="assets/js/main.js"></script>
+    
+    <!-- Configuration (loaded before main.js) -->
+    <script src="config/providers.js"></script>
+    <script src="config/app.js"></script>
+</body>
+</html>
