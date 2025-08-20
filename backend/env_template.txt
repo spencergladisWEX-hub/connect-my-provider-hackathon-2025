@@ -1,0 +1,12 @@
+# Epic FHIR OAuth Configuration
+# Replace with your actual Epic on FHIR Client ID
+EPIC_CLIENT_ID=your-client-id-here
+
+# Redirect URI for OAuth callback
+EPIC_REDIRECT_URI=http://localhost:3000/auth/callback
+
+# Flask secret key (change in production)
+SECRET_KEY=your-secret-key-here
+
+# Environment
+ENVIRONMENT=development
