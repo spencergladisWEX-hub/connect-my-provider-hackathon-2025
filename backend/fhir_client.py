@@ -36,6 +36,51 @@ class EpicFHIRClient:
             return [entry['resource'] for entry in response['entry']]
         return []
     
+    def get_claims(self, patient_id: str) -> List[Dict]:
+        """Get Claim resources for patient (fallback for EOB)"""
+        url = f"{self.base_url}/Claim"
+        params = {'patient': patient_id}
+        response = self._make_request(url, params)
+        
+        if 'entry' in response:
+            return [entry['resource'] for entry in response['entry']]
+        return []
+    
+    def get_eob_data(self, patient_id: str) -> Dict:
+        """Get EOB data with fallback strategy"""
+        print(f"🔍 Attempting to fetch EOB data for patient: {patient_id}")
+        
+        # Try ExplanationOfBenefit first (primary)
+        print("📊 Trying ExplanationOfBenefit API...")
+        eobs = self.get_explanation_of_benefits(patient_id)
+        
+        if eobs and len(eobs) > 0:
+            print(f"✅ Successfully fetched {len(eobs)} EOB records")
+            return {
+                'source': 'ExplanationOfBenefit',
+                'data': eobs,
+                'count': len(eobs)
+            }
+        
+        # Fallback to Claim API
+        print("📊 ExplanationOfBenefit empty, trying Claim API...")
+        claims = self.get_claims(patient_id)
+        
+        if claims and len(claims) > 0:
+            print(f"✅ Successfully fetched {len(claims)} Claim records")
+            return {
+                'source': 'Claim',
+                'data': claims,
+                'count': len(claims)
+            }
+        
+        print("❌ No EOB or Claim data found")
+        return {
+            'source': 'none',
+            'data': [],
+            'count': 0
+        }
+    
     def get_coverage(self, patient_id: str) -> List[Dict]:
         """Get coverage information"""
         url = f"{self.base_url}/Coverage"

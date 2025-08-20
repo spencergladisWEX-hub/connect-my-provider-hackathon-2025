@@ -11,7 +11,8 @@ EPIC_CONFIG = {
     'fhir_base_url': 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
     'client_id': os.getenv('EPIC_CLIENT_ID', 'your-client-id-here'),
     'redirect_uri': os.getenv('EPIC_REDIRECT_URI', 'http://localhost:3000/auth/callback'),
-    'scopes': 'openid patient/*.read coverage/*.read explanationofbenefit/*.read observation/*.read procedure/*.read medicationrequest/*.read condition/*.read organization/*.read practitioner/*.read location/*.read appointment/*.read'
+    # FOCUSED SCOPES: Essential APIs for EOB and expense tracking
+    'scopes': 'openid patient/*.read explanationofbenefit/*.read claim/*.read'
 }
 
 # Test patient IDs from Epic sandbox

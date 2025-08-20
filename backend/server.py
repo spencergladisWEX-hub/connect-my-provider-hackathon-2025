@@ -9,7 +9,7 @@ import os
 from config import EPIC_CONFIG, TEST_PATIENTS, TEST_USERS
 from oauth_handler import EpicOAuthHandler
 from fhir_client import EpicFHIRClient
-from transformers import transform_eobs_to_expenses, transform_patient_data
+from transformers import transform_any_eob_data_to_expenses, transform_patient_data
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -106,7 +106,7 @@ def auth_callback():
 
 @app.route('/api/expenses', methods=['GET'])
 def get_expenses():
-    """Generate expense tracker from FHIR data"""
+    """Generate expense tracker from FHIR data - FOCUSED ON EOB APIs"""
     try:
         # Check if user is authenticated
         access_token = session.get('access_token')
@@ -122,44 +122,102 @@ def get_expenses():
             session.clear()
             return jsonify({'error': 'Token expired'}), 401
         
-        print(f"🔍 Fetching expenses for patient: {patient_id}")
+        print(f"🔍 Fetching EOB data for patient: {patient_id}")
         
         # Initialize FHIR client
         fhir_client = EpicFHIRClient(EPIC_CONFIG['fhir_base_url'], access_token)
         
-        # Fetch FHIR data
+        # Fetch patient data first
         patient = fhir_client.get_patient(patient_id)
         if 'error' in patient:
             print(f"❌ Failed to fetch patient: {patient['error']}")
             return jsonify({'error': 'Failed to fetch patient data'}), 500
         
-        eobs = fhir_client.get_explanation_of_benefits(patient_id)
-        coverage = fhir_client.get_coverage(patient_id)
-        observations = fhir_client.get_observations(patient_id)
-        procedures = fhir_client.get_procedures(patient_id)
-        medications = fhir_client.get_medication_requests(patient_id)
-        conditions = fhir_client.get_conditions(patient_id)
+        # FOCUSED APPROACH: Get EOB data with fallback strategy
+        eob_data = fhir_client.get_eob_data(patient_id)
         
-        # Transform data
-        expenses = transform_eobs_to_expenses(eobs, patient)
+        if eob_data['count'] == 0:
+            print("❌ No EOB or Claim data found")
+            return jsonify({
+                'error': 'No EOB data available',
+                'patient': transform_patient_data(patient),
+                'expenses': [],
+                'source': 'none'
+            }), 404
+        
+        # Transform EOB data to expenses
+        expenses = transform_any_eob_data_to_expenses(eob_data, patient)
         patient_info = transform_patient_data(patient)
         
-        print(f"✅ Successfully fetched {len(expenses)} expenses")
+        print(f"✅ Successfully processed {len(expenses)} expenses from {eob_data['source']}")
         
         return jsonify({
             'patient': patient_info,
             'expenses': expenses,
-            'coverage': coverage,
-            'observations': observations,
-            'procedures': procedures,
-            'medications': medications,
-            'conditions': conditions,
-            'fhir_patient_id': patient_id
+            'source': eob_data['source'],
+            'count': eob_data['count'],
+            'fhir_patient_id': patient_id,
+            'message': f'Successfully fetched {len(expenses)} expenses from {eob_data["source"]}'
         })
         
     except Exception as e:
         print(f"❌ Error fetching expenses: {e}")
         return jsonify({'error': 'Failed to fetch expenses'}), 500
+
+@app.route('/api/test-eob', methods=['GET'])
+def test_eob_apis():
+    """Test EOB APIs specifically for debugging"""
+    try:
+        # Check if user is authenticated
+        access_token = session.get('access_token')
+        patient_id = session.get('patient_id')
+        
+        if not access_token or not patient_id:
+            print("❌ User not authenticated")
+            return jsonify({'error': 'Not authenticated'}), 401
+        
+        print(f"🧪 Testing EOB APIs for patient: {patient_id}")
+        
+        # Initialize FHIR client
+        fhir_client = EpicFHIRClient(EPIC_CONFIG['fhir_base_url'], access_token)
+        
+        # Test ExplanationOfBenefit API
+        print("📊 Testing ExplanationOfBenefit API...")
+        eobs = fhir_client.get_explanation_of_benefits(patient_id)
+        eob_count = len(eobs) if eobs else 0
+        
+        # Test Claim API
+        print("📊 Testing Claim API...")
+        claims = fhir_client.get_claims(patient_id)
+        claim_count = len(claims) if claims else 0
+        
+        # Test combined approach
+        print("📊 Testing combined EOB approach...")
+        eob_data = fhir_client.get_eob_data(patient_id)
+        
+        return jsonify({
+            'patient_id': patient_id,
+            'explanation_of_benefit': {
+                'count': eob_count,
+                'available': eob_count > 0,
+                'sample_data': eobs[0] if eobs else None
+            },
+            'claim': {
+                'count': claim_count,
+                'available': claim_count > 0,
+                'sample_data': claims[0] if claims else None
+            },
+            'combined_result': {
+                'source': eob_data['source'],
+                'count': eob_data['count'],
+                'success': eob_data['count'] > 0
+            },
+            'recommendation': 'Use ExplanationOfBenefit if available, fallback to Claim'
+        })
+        
+    except Exception as e:
+        print(f"❌ Error testing EOB APIs: {e}")
+        return jsonify({'error': 'Failed to test EOB APIs'}), 500
 
 @app.route('/api/test-patients', methods=['GET'])
 def get_test_patients():

@@ -27,6 +27,44 @@ def transform_eobs_to_expenses(eobs: List[Dict], patient: Dict) -> List[Dict]:
     
     return expenses
 
+def transform_claims_to_expenses(claims: List[Dict], patient: Dict) -> List[Dict]:
+    """Transform FHIR Claim resources to expense tracker format (fallback)"""
+    expenses = []
+    
+    for claim in claims:
+        if claim.get('resourceType') != 'Claim':
+            continue
+            
+        # Extract expense data from Claim
+        expense = {
+            'id': claim.get('id', 'unknown'),
+            'date': extract_claim_service_date(claim),
+            'provider': extract_claim_provider_name(claim),
+            'service': extract_claim_service_description(claim),
+            'amount': extract_claim_amount(claim),
+            'status': determine_claim_status(claim),
+            'category': categorize_claim_expense(claim),
+            'fhir_data': claim,  # Keep original FHIR data
+            'patient_name': extract_patient_name(patient),
+            'currency': extract_claim_currency(claim)
+        }
+        
+        expenses.append(expense)
+    
+    return expenses
+
+def transform_any_eob_data_to_expenses(eob_data: Dict, patient: Dict) -> List[Dict]:
+    """Transform any EOB data (EOB or Claim) to expenses"""
+    source = eob_data.get('source', 'none')
+    data = eob_data.get('data', [])
+    
+    if source == 'ExplanationOfBenefit':
+        return transform_eobs_to_expenses(data, patient)
+    elif source == 'Claim':
+        return transform_claims_to_expenses(data, patient)
+    else:
+        return []
+
 def extract_service_date(eob: Dict) -> str:
     """Extract service date from EOB"""
     # Try billablePeriod first
@@ -204,3 +242,116 @@ def extract_email(patient: Dict) -> Optional[str]:
             if telecom.get('system') == 'email':
                 return telecom.get('value')
     return None
+
+# Claim-specific extraction functions
+def extract_claim_service_date(claim: Dict) -> str:
+    """Extract service date from Claim"""
+    # Try billablePeriod first
+    if 'billablePeriod' in claim and 'start' in claim['billablePeriod']:
+        return claim['billablePeriod']['start']
+    
+    # Try items servicedDate
+    if 'item' in claim and len(claim['item']) > 0:
+        item = claim['item'][0]
+        if 'servicedDate' in item:
+            return item['servicedDate']
+    
+    return datetime.now().strftime('%Y-%m-%d')
+
+def extract_claim_provider_name(claim: Dict) -> str:
+    """Extract provider name from Claim"""
+    if 'provider' in claim and 'display' in claim['provider']:
+        return claim['provider']['display']
+    
+    if 'organization' in claim and 'display' in claim['organization']:
+        return claim['organization']['display']
+    
+    return 'Unknown Provider'
+
+def extract_claim_service_description(claim: Dict) -> str:
+    """Extract service description from Claim"""
+    if 'item' in claim and len(claim['item']) > 0:
+        item = claim['item'][0]
+        
+        # Try productOrService text first
+        if 'productOrService' in item and 'text' in item['productOrService']:
+            return item['productOrService']['text']
+        
+        # Try coding display
+        if 'productOrService' in item and 'coding' in item['productOrService']:
+            coding = item['productOrService']['coding'][0]
+            if 'display' in coding:
+                return coding['display']
+    
+    return 'Unknown Service'
+
+def extract_claim_amount(claim: Dict) -> float:
+    """Extract amount from Claim"""
+    # Check total section first
+    if 'total' in claim:
+        for total in claim['total']:
+            if 'amount' in total:
+                return float(total['amount']['value'])
+    
+    # Check item amounts
+    if 'item' in claim and len(claim['item']) > 0:
+        item = claim['item'][0]
+        if 'net' in item and 'value' in item['net']:
+            return float(item['net']['value'])
+    
+    return 0.0
+
+def determine_claim_status(claim: Dict) -> str:
+    """Determine claim status"""
+    status = claim.get('status', 'unknown')
+    
+    status_mapping = {
+        'active': 'Submitted',
+        'cancelled': 'Cancelled',
+        'draft': 'Draft',
+        'entered-in-error': 'Error'
+    }
+    
+    return status_mapping.get(status, 'Submitted')
+
+def categorize_claim_expense(claim: Dict) -> str:
+    """Categorize claim expense"""
+    # Check claim type
+    if 'type' in claim and 'coding' in claim['type']:
+        coding = claim['type']['coding'][0]
+        code = coding.get('code', '')
+        
+        if code == 'oral':
+            return 'Dental'
+        elif code == 'vision':
+            return 'Vision'
+        elif code == 'medical':
+            return 'Medical'
+    
+    # Check service description
+    service_desc = extract_claim_service_description(claim).lower()
+    
+    if any(word in service_desc for word in ['dental', 'tooth', 'prophylaxis']):
+        return 'Dental'
+    elif any(word in service_desc for word in ['vision', 'eye', 'glasses']):
+        return 'Vision'
+    elif any(word in service_desc for word in ['medication', 'prescription']):
+        return 'Prescription'
+    else:
+        return 'Medical'
+
+def extract_claim_currency(claim: Dict) -> str:
+    """Extract currency from Claim"""
+    # Check total section
+    if 'total' in claim and len(claim['total']) > 0:
+        total = claim['total'][0]
+        if 'amount' in total and 'currency' in total['amount']:
+            return total['amount']['currency']
+    
+    # Check item amounts
+    if 'item' in claim and len(claim['item']) > 0:
+        item = claim['item'][0]
+        if 'net' in item and 'currency' in item['net']:
+            return item['net']['currency']
+    
+    return 'USD'
