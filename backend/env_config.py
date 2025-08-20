@@ -10,10 +10,10 @@ EPIC_CONFIG = {
     'authorize_url': 'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize',
     'token_url': 'https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token',
     'fhir_base_url': 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
-    'client_id': os.getenv('EPIC_CLIENT_ID', '1c28b6d4-8195-4524-b780-2c9efa49f4db'),
-    'redirect_uri': os.getenv('EPIC_REDIRECT_URI', 'http://localhost:3000/auth/callback'),
+    'client_id': os.getenv('EPIC_CLIENT_ID', '4c5fe68b-3ef5-487c-a0e1-3515d37e51fd'),
+    'redirect_uri': os.getenv('EPIC_REDIRECT_URI', 'http://localhost:4000/auth/epic/callback'),
     # FOCUSED SCOPES: Essential APIs for EOB and expense tracking
-    'scopes': 'openid patient/*.read explanationofbenefit/*.read claim/*.read'
+    'scopes': 'openid patient/*.read explanationofbenefit/*.read'
 }
 
 # Test patient IDs from Epic sandbox
@@ -41,7 +41,7 @@ TEST_USERS = {
 
 # Demo configuration
 DEMO_CONFIG = {
-    'use_mock_oauth': True,  # Set to True to use mock OAuth for testing
+    'use_mock_oauth': False,  # Set to False to use real OAuth with Epic
     'mock_patient_id': 'erXuFYUfucBZaryVksYEcMg3',
     'mock_provider_name': 'Trellis Healthcare'
 }

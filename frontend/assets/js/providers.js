@@ -293,16 +293,8 @@ export class ProviderManager {
                 return;
             }
             
-            // Show authentication modal
-            this.showAuthModal(providerConfig);
-            
-            // Initiate real OAuth flow for Epic provider
-            if (providerKey === 'epic') {
-                await this.initiateEpicOAuth();
-            } else {
-                // For other providers, use mock authentication for now
-                await this.simulateAuthentication(providerKey);
-            }
+            // Show authentication modal with new OAuth flow
+            this.showOAuthAuthModal(providerKey, providerConfig);
             
         } catch (error) {
             console.error('❌ Error in handleAuthSubmit:', error);
@@ -366,15 +358,19 @@ export class ProviderManager {
     }
     
     /**
-     * Show authentication modal
+     * Show OAuth authentication modal
+     * @param {string} providerKey - The provider key
      * @param {Object} providerConfig - The provider configuration
      */
-    showAuthModal(providerConfig) {
+    showOAuthAuthModal(providerKey, providerConfig) {
         try {
             // Hide terms modal
             if (window.modalManager) {
                 window.modalManager.hide('termsModal');
             }
+            
+            // Update provider information in the auth modal
+            this.updateAuthModalProviderInfo(providerKey, providerConfig);
             
             // Show authentication modal
             setTimeout(() => {
@@ -384,10 +380,36 @@ export class ProviderManager {
             }, 300);
             
             if (this.debugMode) {
-                console.log('🎭 Authentication modal shown for:', providerConfig.name);
+                console.log('🎭 OAuth authentication modal shown for:', providerConfig.name);
             }
         } catch (error) {
-            console.error('❌ Error showing authentication modal:', error);
+            console.error('❌ Error showing OAuth authentication modal:', error);
+        }
+    }
+    
+    /**
+     * Update provider information in the auth modal
+     * @param {string} providerKey - The provider key
+     * @param {Object} providerConfig - The provider configuration
+     */
+    updateAuthModalProviderInfo(providerKey, providerConfig) {
+        try {
+            const providerDisplayName = document.getElementById('providerDisplayName');
+            const providerLogo = document.getElementById('providerLogo');
+            
+            if (providerDisplayName) {
+                providerDisplayName.textContent = providerConfig.name;
+            }
+            
+            if (providerLogo && providerConfig.logo) {
+                providerLogo.src = providerConfig.logo;
+            }
+            
+            if (this.debugMode) {
+                console.log('✅ Auth modal provider info updated for:', providerKey);
+            }
+        } catch (error) {
+            console.error('❌ Error updating auth modal provider info:', error);
         }
     }
     

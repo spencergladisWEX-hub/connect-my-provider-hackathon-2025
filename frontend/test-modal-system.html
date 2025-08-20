@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal System Test - WEX Benefits</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #C8102E;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s ease;
+        }
+        .test-button:hover {
+            background: #a30d25;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Modal System Test</h1>
+        <p>This page tests the WEX Benefits Portal modal system to ensure it's working correctly.</p>
+        
+        <div id="status" class="status info">
+            Initializing systems...
+        </div>
+        
+        <div class="test-buttons">
+            <button class="test-button" onclick="testModalManager()">Test ModalManager</button>
+            <button class="test-button" onclick="testModals()">Test Modals</button>
+            <button class="test-button" onclick="testOAuthFlow()">Test OAuth Flow</button>
+            <button class="test-button" onclick="clearLog()">Clear Log</button>
+        </div>
+        
+        <div class="log" id="log"></div>
+        
+        <!-- Test Modals -->
+        <div id="testModal" class="workflow-modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Test Modal</h3>
+                    <button class="modal-close" onclick="closeTestModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>This is a test modal to verify the modal system is working correctly.</p>
+                    <p>✅ Modal system is functioning!</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="test-button" onclick="closeTestModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load configuration and systems -->
+    <script type="module" src="./config.js"></script>
+    
+    <script>
+        // Test functions
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span style="color: #666;">[${timestamp}]</span> ${message}`;
+            logElement.appendChild(logEntry);
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+        }
+        
+        function testModalManager() {
+            log('🧪 Testing ModalManager...');
+            
+            if (window.modalManager) {
+                log('✅ ModalManager found:', window.modalManager);
+                log('✅ Available modals:', Array.from(window.modalManager.getAllModals().keys()));
+                updateStatus('ModalManager is working correctly!', 'success');
+            } else {
+                log('❌ ModalManager not found');
+                updateStatus('ModalManager not available', 'error');
+            }
+        }
+        
+        function testModals() {
+            log('🧪 Testing modals...');
+            
+            if (window.modalManager) {
+                try {
+                    window.modalManager.show('testModal');
+                    log('✅ Test modal shown successfully');
+                    updateStatus('Modals are working correctly!', 'success');
+                } catch (error) {
+                    log('❌ Error showing modal:', error);
+                    updateStatus('Error showing modal', 'error');
+                }
+            } else {
+                log('❌ ModalManager not available');
+                updateStatus('ModalManager not available', 'error');
+            }
+        }
+        
+        function testOAuthFlow() {
+            log('🧪 Testing OAuth flow...');
+            
+            if (window.providerManager) {
+                log('✅ ProviderManager found:', window.providerManager);
+                updateStatus('OAuth system is working correctly!', 'success');
+            } else {
+                log('❌ ProviderManager not found');
+                updateStatus('ProviderManager not available', 'error');
+            }
+        }
+        
+        function closeTestModal() {
+            if (window.modalManager) {
+                window.modalManager.hide('testModal');
+                log('✅ Test modal closed');
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            log('🧹 Log cleared');
+        }
+        
+        // Monitor system initialization
+        let initCheckInterval = setInterval(() => {
+            if (window.modalManager) {
+                clearInterval(initCheckInterval);
+                log('🚀 Systems initialized successfully!');
+                updateStatus('All systems are running correctly!', 'success');
+                
+                // Auto-test the modal manager
+                setTimeout(() => {
+                    testModalManager();
+                }, 1000);
+            }
+        }, 100);
+        
+        // Timeout after 10 seconds
+        setTimeout(() => {
+            if (initCheckInterval) {
+                clearInterval(initCheckInterval);
+                log('⏰ System initialization timeout');
+                updateStatus('System initialization timed out', 'error');
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

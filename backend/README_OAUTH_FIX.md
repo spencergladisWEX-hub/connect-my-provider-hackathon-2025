@@ -8,7 +8,7 @@ Fixed the OAuth2 error that was preventing provider authentication in the demo.
 ### 1. **New Configuration System**
 - Created `env_config.py` with proper Epic FHIR OAuth configuration
 - Added demo configuration options for switching between mock and real OAuth
-- Included the correct client ID from the error URL: `1c28b6d4-8195-4524-b780-2c9efa49f4db`
+- Included the correct client ID from the error URL: `4c5fe68b-3ef5-487c-a0e1-3515d37e51fd`
 
 ### 2. **Mock OAuth Implementation**
 - Added `DEMO_CONFIG['use_mock_oauth'] = True` for demo purposes
@@ -43,7 +43,7 @@ To switch to real Epic OAuth:
 ### **Environment Variables (Optional)**
 Create a `.env` file in the `backend/` directory:
 ```bash
-EPIC_CLIENT_ID=1c28b6d4-8195-4524-b780-2c9efa49f4db
+EPIC_CLIENT_ID=4c5fe68b-3ef5-487c-a0e1-3515d37e51fd
 EPIC_REDIRECT_URI=http://localhost:3000/auth/callback
 SECRET_KEY=your-secret-key-here
 ENVIRONMENT=development

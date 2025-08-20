@@ -95,9 +95,24 @@ curl -X POST http://localhost:4000/link-account \
 
 ## 🔮 **Future Enhancements**
 
-- **Real Epic FHIR Integration** - OAuth2 authentication, live EOB data
+- **✅ Real Epic FHIR Integration** - OAuth2 authentication, live EOB data **[NOW AVAILABLE!]**
 - **Payment Processing** - Direct-to-provider payments, real-time balances
 - **AI/ML Features** - Appointment predictions, HSA optimization
+
+## 🔐 **Real OAuth 2.0 Integration**
+
+**NEW!** The application now supports real OAuth 2.0 authentication with Epic's FHIR API:
+
+- **Real Credentials**: Enter actual Epic sandbox credentials
+- **OAuth 2.0 Flow**: Complete OAuth authorization flow with Epic
+- **FHIR Access**: Authenticated access to real FHIR resources
+- **Production Ready**: Demonstrates enterprise-grade OAuth integration
+
+**Test with Epic Sandbox:**
+- Username: `fhircamila`
+- Password: `epicepic1`
+
+See [Real OAuth Documentation](frontend/README-REAL-OAUTH.md) for complete testing instructions.
 
 ## 📚 **Documentation**
 

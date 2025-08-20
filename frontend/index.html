@@ -2252,13 +2252,45 @@
         .success-icon {
             font-size: 4rem;
             margin-bottom: 20px;
-            animation: successBounce 0.6s ease-out;
+            animation: successEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes successBounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        @keyframes successEntrance {
+            0% { 
+                transform: scale(0) rotate(-180deg); 
+                opacity: 0;
+            }
+            50% { 
+                transform: scale(1.1) rotate(-90deg); 
+                opacity: 0.8;
+            }
+            75% { 
+                transform: scale(0.95) rotate(0deg); 
+                opacity: 0.9;
+            }
+            100% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 1;
+            }
+        }
+
+        .success-content h4 {
+            animation: slideInUp 0.8s ease-out 0.3s both;
+        }
+
+        .success-content p {
+            animation: slideInUp 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .success-content h4 {
@@ -2466,7 +2498,159 @@
         }
         
         .epic-auth-iframe.loading {
-            opacity: 0;
+            opacity: 0.3;
+        }
+        
+        /* ========================================
+           OAUTH AUTHENTICATION MODAL STYLES
+           ======================================== */
+        
+        .oauth-auth-container {
+            text-align: center;
+        }
+        
+        .provider-info {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        
+        .provider-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .provider-info h4 {
+            margin: 0 0 12px 0;
+            color: #253746;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .auth-security-indicator {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .oauth-flow-info {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .oauth-flow-info h5 {
+            color: #253746;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .oauth-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .oauth-steps-preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .oauth-step-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(209, 213, 219, 0.5);
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .step-text {
+            color: #374151;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .oauth-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .oauth-start-btn,
+        .oauth-demo-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .oauth-start-btn {
+            background: linear-gradient(135deg, #C8102E 0%, #a30d25 100%);
+            color: white;
+        }
+        
+        .oauth-start-btn:hover {
+            background: linear-gradient(135deg, #a30d25 0%, #C8102E 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+        }
+        
+        .oauth-demo-btn {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+        
+        .oauth-demo-btn:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+        }
+        
+        .oauth-status {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(209, 213, 219, 0.5);
+        }
+        
+        .oauth-status p {
+            margin: 10px 0 0 0;
+            color: #374151;
+            font-weight: 500;
         }
         
         .epic-auth-iframe.loaded {
@@ -2836,7 +3020,6 @@
                     <div class="button-container">
                         <button class="btn-secondary" onclick="modalManager.hide('termsModal')">Close</button>
                         <button class="btn-primary" id="submitTermsBtn" onclick="submitTerms()" disabled>Submit</button>
-                        <button class="btn-secondary" onclick="testIframeDirectly()" style="margin-left: 10px; background: #6b7280;">🧪 Test Iframe</button>
                     </div>
                     <div class="help-text-container">
                         <small class="form-help" id="submitReadyHelp" style="display: block; color: #6b7280;">
@@ -2847,52 +3030,62 @@
             </div>
         </div>
 
-        <!-- Step 2: Embedded Authentication Modal -->
+        <!-- Step 2: OAuth Authentication Modal -->
         <div id="authModal" class="workflow-modal hidden">
-            <div class="modal-content embedded-auth-modal">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h3>Connect My Provider</h3>
                     <button class="modal-close" onclick="modalManager.hide('authModal')">×</button>
                 </div>
-                <div class="auth-header">
-                    <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjYsMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
-                    <h4 id="providerDisplayName">Epic Systems</h4>
-                    <div class="auth-security-indicator">
-                        Secure Connection
-                    </div>
-                </div>
                 <div class="modal-body">
-                    <div class="embedded-auth-container">
-                        <div class="auth-loading" id="authLoading">
-                            <div class="progress-spinner"></div>
-                            <h4>Loading Epic Authentication...</h4>
-                            <p>Connecting to Epic's secure authentication portal</p>
-                        </div>
-                        <div class="iframe-error hidden" id="iframeError">
-                            <h4>Connection Error</h4>
-                            <p>Unable to load Epic's authentication page. Please try again.</p>
-                            <button onclick="retryIframeLoad()">Retry</button>
-                            <button onclick="testIframeDirectly()" style="margin-left: 10px; background: #3182ce;">Test Iframe</button>
-                        </div>
-                        <iframe 
-                            id="epicAuthFrame" 
-                            src="" 
-                            class="epic-auth-iframe loading"
-                            allow="camera; microphone; geolocation; encrypted-media">
-                        </iframe>
-                        
-                        <!-- Fallback content when iframe is not accessible -->
-                        <div id="iframeFallback" class="hidden" style="text-align: center; padding: 40px;">
-                            <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                                <h4 style="color: #0369a1; margin: 0 0 15px 0;">🔄 OAuth Authentication in Progress</h4>
-                                <p style="color: #0c4a6e; margin: 0 0 15px 0;">Since the iframe content cannot be accessed directly, we're using a secure fallback method.</p>
-                                <div style="background: #e0f2fe; border-radius: 6px; padding: 15px; margin: 15px 0;">
-                                    <p style="margin: 0; color: #0c4a6e; font-size: 14px;">
-                                        <strong>Demo Mode:</strong> Simulating successful authentication with Trellis Healthcare...
-                                    </p>
-                                </div>
-                                <div class="loading-spinner" style="margin: 20px auto;"></div>
+                    <div class="oauth-auth-container">
+                        <div class="provider-info">
+                            <img id="providerLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeX0iOCIgZmlsbD0iIzAwQzdCMiIvPgo8cGF0aCBkPSJNMTIgMjBMMTggMjYsMjggMTQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=" alt="Provider Logo" class="provider-logo">
+                            <h4 id="providerDisplayName">Select a Provider</h4>
+                            <div class="auth-security-indicator">
+                                🔒 Secure OAuth 2.0 Connection
                             </div>
+                        </div>
+                        
+                        <div class="oauth-flow-info">
+                            <h5>Real OAuth 2.0 Authentication</h5>
+                            <p class="oauth-description">
+                                This demonstrates real OAuth 2.0 integration with FHIR APIs. 
+                                Click the button below to initiate OAuth authentication with Epic.
+                                Epic will open a new window for you to authenticate in their system.
+                            </p>
+                            <div class="oauth-steps-preview">
+                                <div class="oauth-step-preview">
+                                    <span class="step-number">1</span>
+                                    <span class="step-text">Initiate OAuth</span>
+                                </div>
+                                <div class="oauth-step-preview">
+                                    <span class="step-number">2</span>
+                                    <span class="step-text">Epic Authentication Window</span>
+                                </div>
+                                <div class="oauth-step-preview">
+                                    <span class="step-number">3</span>
+                                    <span class="step-text">Token Exchange</span>
+                                </div>
+                                <div class="oauth-step-preview">
+                                    <span class="step-number">4</span>
+                                    <span class="step-text">FHIR Data Access</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="oauth-actions">
+                            <button class="btn-primary oauth-start-btn" onclick="startRealOAuthFlow()">
+                                🔐 Start Epic OAuth Authentication
+                            </button>
+                            <button class="btn-secondary oauth-demo-btn" onclick="simulateOAuthFlow()">
+                                🧪 Demo Mode (Skip OAuth)
+                            </button>
+                        </div>
+                        
+                        <div class="oauth-status" id="oauthStatus" style="display: none;">
+                            <div class="progress-spinner"></div>
+                            <p id="oauthStatusText">Authenticating with Epic...</p>
                         </div>
                     </div>
                 </div>
@@ -2910,25 +3103,40 @@
                         <div class="progress-spinner"></div>
                         <h4>FHIR OAuth Integration in Progress...</h4>
                         <div id="oauthSteps" style="text-align: left; margin-top: 20px;">
-                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
-                                <span style="color: #6b7280;">⏳ Step 1: Authorization Request</span>
+                            <div class="oauth-step" data-step="1" style="margin-bottom: 12px; padding: 12px; border-radius: 8px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border: 1px solid rgba(209, 213, 219, 0.5); transition: all 0.3s ease;">
+                                <span class="step-icon">⏳</span>
+                                <span class="step-text">Epic OAuth Authorization</span>
+                                <span class="step-status">In Progress</span>
                             </div>
-                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
-                                <span style="color: #6b7280;">⏳ Step 2: User Consent & Redirect</span>
+                            <div class="oauth-step" data-step="2" style="margin-bottom: 12px; padding: 12px; border-radius: 8px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border: 1px solid rgba(209, 213, 219, 0.5); transition: all 0.3s ease;">
+                                <span class="step-icon">⏳</span>
+                                <span class="step-text">User Authentication</span>
+                                <span class="step-status">Pending</span>
                             </div>
-                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
-                                <span style="color: #6b7280;">⏳ Step 3: Token Exchange</span>
+                            <div class="oauth-step" data-step="3" style="margin-bottom: 12px; padding: 12px; border-radius: 8px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border: 1px solid rgba(209, 213, 219, 0.5); transition: all 0.3s ease;">
+                                <span class="step-icon">⏳</span>
+                                <span class="step-text">Token Exchange</span>
+                                <span class="step-status">Pending</span>
                             </div>
-                            <div class="oauth-step" style="margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f3f4f6;">
-                                <span style="color: #6b7280;">⏳ Step 4: FHIR Resource Access</span>
+                            <div class="oauth-step" data-step="4" style="margin-bottom: 12px; padding: 12px; border-radius: 8px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border: 1px solid rgba(209, 213, 219, 0.5); transition: all 0.3s ease;">
+                                <span class="step-icon">⏳</span>
+                                <span class="step-text">FHIR Data Retrieval</span>
+                                <span class="step-status">Pending</span>
                             </div>
                         </div>
                         <p style="margin-top: 20px; font-size: 0.9em; color: #6b7280;">
-                            <strong>Real Epic FHIR OAuth:</strong> This shows the actual OAuth flow with Epic
+                            <strong>Real Epic FHIR OAuth:</strong> Authenticating with Epic's FHIR API using OAuth 2.0
                         </p>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- OAuth Callback Handler (Hidden) -->
+        <div id="oauthCallbackHandler" style="display: none;">
+            <h3>Processing OAuth Callback...</h3>
+            <div class="progress-spinner"></div>
+            <p>Completing authentication with Epic...</p>
         </div>
 
         <!-- Step 4: Success Confirmation Modal -->
@@ -2977,102 +3185,12 @@
            - Use devHelpers for debugging if issues arise
            ======================================== */
         
-        // Modal Management System - Prevents visibility issues
-        class ModalManager {
-            constructor() {
-                this.modals = new Map();
-                this.activeModal = null;
-                this.init();
-            }
-
-            init() {
-                // Only register workflow modals, not portal elements
-                const modalElements = document.querySelectorAll('.workflow-modal');
-                modalElements.forEach(modal => {
-                    this.modals.set(modal.id, modal);
-                    this.hide(modal.id);
-                });
-                console.log('🔧 ModalManager: Registered', modalElements.length, 'workflow modals');
-            }
-
-            show(modalId) {
-                // Hide any currently active modal first
-                if (this.activeModal) {
-                    this.hide(this.activeModal);
-                }
-
-                const modal = this.modals.get(modalId);
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    this.activeModal = modalId;
-                    console.log('🔧 ModalManager: Showing modal', modalId);
-                    
-                    // Ensure main content is not interfered with
-                    this.protectMainContent();
-                } else {
-                    console.error(`ModalManager: Workflow modal ${modalId} not found`);
-                }
-            }
-
-            hide(modalId) {
-                const modal = this.modals.get(modalId);
-                if (modal) {
-                    modal.classList.add('hidden');
-                    if (this.activeModal === modalId) {
-                        this.activeModal = null;
-                    }
-                    console.log('🔧 ModalManager: Hiding modal', modalId);
-                    
-                    // Restore main content visibility
-                    this.restoreMainContent();
-                }
-            }
-
-            hideAll() {
-                this.modals.forEach((modal, id) => {
-                    this.hide(id);
-                });
-                console.log('🔧 ModalManager: All modals hidden');
-            }
-
-            protectMainContent() {
-                // Ensure main content is visible but behind modal
-                // CSS already handles this with z-index: 1
-            }
-
-            restoreMainContent() {
-                // Restore main content to normal state
-                // CSS already handles this with z-index: 1
-            }
-
-            // Debug method for development
-            debug() {
-                console.log('🔧 ModalManager Debug:');
-                console.log('  Active modal:', this.activeModal);
-                console.log('  Total modals:', this.modals.size);
-                this.modals.forEach((modal, id) => {
-                    const isHidden = modal.classList.contains('hidden');
-                    const computedStyle = window.getComputedStyle(modal);
-                    console.log(`  Modal ${id}:`, {
-                        hidden: isHidden,
-                        display: computedStyle.display,
-                        visibility: computedStyle.visibility,
-                        opacity: computedStyle.opacity,
-                        zIndex: computedStyle.zIndex
-                    });
-                });
-            }
-        }
-
-        // Initialize modal manager
-        const modalManager = new ModalManager();
-        
-        // Make modalManager globally accessible for debugging
-        window.modalManager = modalManager;
+        // Use the ES6 ModalManager from modalManager.js
+        // The inline ModalManager has been removed to prevent conflicts
         
         // Debug: Log modal manager status
-        console.log('🔧 ModalManager initialized:', modalManager);
-        console.log('🔧 Available modals:', Array.from(modalManager.modals.keys()));
+        console.log('🔧 ModalManager from modalManager.js:', window.modalManager);
+        console.log('🔧 Available modals:', window.modalManager ? Array.from(window.modalManager.getAllModals().keys()) : 'Not available');
         
         // Alias global configs loaded from config.js
         const { PROVIDER_CONFIG, APP_CONFIG } = window;
@@ -3563,9 +3681,9 @@
                     console.log('✅ Closing terms modal');
                     modalManager.hide('termsModal');
                     
-                    // 🚀 SHOW AUTH MODAL WITH EMBEDDED IFRAME
-                    console.log('🔐 Loading Epic FHIR OAuth in embedded iframe');
-                    showEmbeddedAuthModal();
+                    // 🚀 SHOW AUTH MODAL WITH OAUTH FLOW
+                    console.log('🔐 Showing OAuth authentication modal');
+                    showOAuthAuthModal(selectedProviderValue, providerConfig);
                     
                 } else {
                     console.log('⚠️ Checkbox not checked, showing alert');
@@ -3581,248 +3699,225 @@
         }
 
         // ========================================
-        // EMBEDDED IFRAME OAUTH FUNCTIONS
+        // OAUTH AUTHENTICATION FUNCTIONS
         // ========================================
         
-        function showEmbeddedAuthModal() {
-            console.log('🔐 Showing embedded auth modal');
-            
-            // Show the auth modal
-            modalManager.show('authModal');
-            
-            // Start loading the Epic OAuth URL in the iframe
-            loadEpicOAuthInIframe();
-        }
-        
-        async function loadEpicOAuthInIframe() {
-            const iframe = document.getElementById('epicAuthFrame');
-            const loading = document.getElementById('authLoading');
-            const errorDiv = document.getElementById('iframeError');
-            
-            console.log('🔍 Debug: iframe element:', iframe);
-            console.log('🔍 Debug: loading element:', loading);
-            console.log('🔍 Debug: errorDiv element:', errorDiv);
-            
-            if (!iframe || !loading) {
-                console.error('❌ Iframe or loading elements not found');
-                return;
-            }
-            
+        function showOAuthAuthModal(providerKey, providerConfig) {
             try {
-                console.log('🔄 Loading Epic OAuth URL in iframe...');
+                console.log('🔐 Showing OAuth auth modal for provider:', providerKey);
                 
-                // Show loading state
-                loading.classList.remove('hidden');
-                errorDiv.classList.add('hidden');
-                iframe.classList.add('loading');
+                // Update provider information in the auth modal
+                const providerDisplayName = document.getElementById('providerDisplayName');
+                const providerLogo = document.getElementById('providerLogo');
                 
-                // Get the OAuth URL from the backend
-                const response = await fetch('http://localhost:4000/auth/epic?iframe=true', {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'iframe'
-                    }
-                });
+                if (providerDisplayName) {
+                    providerDisplayName.textContent = providerConfig.name;
+                }
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    
-                    if (data.status === 'success' && data.oauth_url) {
-                        console.log('✅ Got OAuth URL:', data.oauth_url);
-                        
-                        // Load the OAuth URL in the iframe
-                        console.log('🔍 Debug: Setting iframe src to:', data.oauth_url);
-                        iframe.src = data.oauth_url;
-                        
-                        // Set up iframe load handlers
-                        setupIframeHandlers(iframe, loading, errorDiv);
-                        
-                        // Add timeout to detect if iframe fails to load
-                        setTimeout(() => {
-                            if (iframe.classList.contains('loading')) {
-                                console.error('❌ Iframe load timeout');
-                                // Instead of showing error, use fallback since we know iframe content won't be accessible
-                                showIframeFallback(iframe, loading, errorDiv);
-                            }
-                        }, 3000); // 3 second timeout - iframe loads quickly but content won't be accessible
-                    } else {
-                        console.error('❌ Invalid response format:', data);
-                        showIframeError(loading, errorDiv, 'Invalid response from OAuth server');
-                    }
+                if (providerLogo && providerConfig.logo) {
+                    providerLogo.src = providerConfig.logo;
+                }
+                
+                // Show the auth modal
+                if (window.modalManager) {
+                    window.modalManager.show('authModal');
                 } else {
-                    console.error('❌ HTTP error:', response.status, response.statusText);
-                    showIframeError(loading, errorDiv, 'Failed to get OAuth URL');
+                    console.error('❌ ModalManager not available');
+                    alert('Modal system not available. Please refresh the page.');
                 }
                 
             } catch (error) {
-                console.error('❌ Error loading Epic OAuth in iframe:', error);
-                showIframeError(loading, errorDiv, 'Failed to load authentication page');
+                console.error('❌ Error showing OAuth auth modal:', error);
+                alert('Failed to show authentication modal. Please try again.');
             }
         }
         
-        function setupIframeHandlers(iframe, loading, errorDiv) {
-            // Handle iframe load success
-            iframe.onload = function() {
-                console.log('✅ Iframe loaded successfully');
-                console.log('🔍 Debug: iframe src:', iframe.src);
-                console.log('🔍 Debug: iframe contentWindow:', iframe.contentWindow);
-                console.log('🔍 Debug: iframe contentDocument:', iframe.contentDocument);
-                console.log('🔍 Debug: iframe dimensions:', iframe.offsetWidth, 'x', iframe.offsetHeight);
-                
-                // Check if content is actually accessible
-                try {
-                    if (iframe.contentDocument && iframe.contentDocument.body) {
-                        console.log('✅ Iframe content is accessible');
-                        loading.classList.add('hidden');
-                        iframe.classList.remove('loading');
-                        iframe.classList.add('loaded');
-                    } else {
-                        console.warn('⚠️ Iframe loaded but content not accessible, using fallback...');
-                        // Immediately show fallback since content is not accessible
-                        showIframeFallback(iframe, loading, errorDiv);
-                    }
-                } catch (error) {
-                    console.error('❌ Error accessing iframe content:', error);
-                    // Show fallback when cross-origin blocks access
-                    showIframeFallback(iframe, loading, errorDiv);
-                }
-            };
-            
-
-            
-            // Handle iframe load error
-            iframe.onerror = function() {
-                console.error('❌ Iframe failed to load');
-                showIframeError(loading, errorDiv, 'Failed to load authentication page');
-            };
-            
-            // Listen for messages from the iframe (for OAuth callback)
-            window.addEventListener('message', handleIframeMessage, false);
-        }
-        
-        function handleIframeMessage(event) {
-            // Accept messages from Epic's domain or localhost for mock OAuth
-            if (!event.origin.includes('epic.com') && !event.origin.includes('localhost')) {
-                return;
-            }
-            
-            console.log('💬 Received message from iframe:', event.data);
-            
-            // Handle OAuth success/callback
-            if (event.data && event.data.type === 'oauth_success') {
-                console.log('✅ OAuth success received from iframe');
-                handleOAuthSuccess(event.data);
-            } else if (event.data && event.data.type === 'iframe_test_success') {
-                console.log('✅ Iframe test success received:', event.data.message);
-            } else if (event.data && event.data.type === 'oauth_error') {
-                console.error('❌ OAuth error received from iframe:', event.data.error);
-                handleOAuthError(event.data.error);
-            }
-        }
-        
+        // OAuth success handler for the new flow
         function handleOAuthSuccess(data) {
-            console.log('🎉 OAuth authentication successful!');
-            
-            // Hide the auth modal
-            modalManager.hide('authModal');
-            
-            // Show success modal
-            modalManager.show('successModal');
-            
-            // Update the connected provider name
-            const connectedProviderName = document.getElementById('connectedProviderName');
-            if (connectedProviderName) {
-                connectedProviderName.textContent = 'Epic Systems';
-            }
-        }
-        
-        function handleOAuthError(error) {
-            console.error('❌ OAuth authentication failed:', error);
-            
-            const loading = document.getElementById('authLoading');
-            const errorDiv = document.getElementById('iframeError');
-            
-            showIframeError(loading, errorDiv, 'Authentication failed: ' + error);
-        }
-        
-        function showIframeError(loading, errorDiv, message) {
-            loading.classList.add('hidden');
-            errorDiv.classList.remove('hidden');
-            
-            const errorMessage = errorDiv.querySelector('p');
-            if (errorMessage) {
-                errorMessage.textContent = message;
-            }
-        }
-        
-        function showIframeFallback(iframe, loading, errorDiv) {
-            console.log('🔄 Showing iframe fallback...');
-            
-            // Hide the iframe and loading
-            iframe.classList.add('hidden');
-            loading.classList.add('hidden');
-            
-            // Show fallback content
-            const fallbackDiv = document.getElementById('iframeFallback');
-            if (fallbackDiv) {
-                fallbackDiv.classList.remove('hidden');
+            try {
+                console.log('🎉 OAuth authentication successful!', data);
                 
-                // Simulate successful OAuth for demo purposes
-                setTimeout(() => {
-                    console.log('✅ Simulating successful OAuth completion...');
-                    handleOAuthSuccess({
-                        type: 'oauth_success',
-                        patient_id: 'erXuFYUfucBZaryVksYEcMg3',
-                        provider: 'Trellis Healthcare'
-                    });
-                }, 2000);
-            } else {
-                // If no fallback div, just show success
-                console.log('✅ No fallback div found, proceeding with success...');
-                handleOAuthSuccess({
-                    type: 'oauth_success',
-                    patient_id: 'erXuFYUfucBZaryVksYEcMg3',
-                    provider: 'Trellis Healthcare'
-                });
+                // Hide the auth modal
+                if (window.modalManager) {
+                    window.modalManager.hide('authModal');
+                }
+                
+                // Show success modal
+                if (window.modalManager) {
+                    window.modalManager.show('successModal');
+                }
+                
+                // Update the connected provider name
+                const connectedProviderName = document.getElementById('connectedProviderName');
+                if (connectedProviderName) {
+                    const selectedProvider = window.selectedProviderForWorkflow;
+                    const providerConfig = getProviderConfig(selectedProvider);
+                    connectedProviderName.textContent = providerConfig ? providerConfig.name : 'your selected provider';
+                }
+                
+            } catch (error) {
+                console.error('❌ Error handling OAuth success:', error);
             }
         }
         
-        function retryIframeLoad() {
-            console.log('🔄 Retrying iframe load...');
-            const errorDiv = document.getElementById('iframeError');
-            errorDiv.classList.add('hidden');
-            
-            // Retry loading the OAuth URL
-            loadEpicOAuthInIframe();
+
+        
+        function startOAuthFlow() {
+            try {
+                console.log('🔐 Starting OAuth flow...');
+                
+                // Get selected provider
+                const selectedProvider = window.selectedProviderForWorkflow;
+                if (!selectedProvider) {
+                    console.error('❌ No provider selected for workflow');
+                    alert('Please select a provider first.');
+                    return;
+                }
+                
+                // Update UI to show OAuth status
+                const oauthStatus = document.getElementById('oauthStatus');
+                const oauthActions = document.querySelector('.oauth-actions');
+                
+                if (oauthStatus && oauthActions) {
+                    oauthActions.style.display = 'none';
+                    oauthStatus.style.display = 'block';
+                    
+                    const statusText = document.getElementById('oauthStatusText');
+                    if (statusText) {
+                        statusText.textContent = `Initiating OAuth flow with ${getProviderConfig(selectedProvider)?.name || selectedProvider}...`;
+                    }
+                }
+                
+                // For Epic provider, redirect to backend OAuth endpoint
+                if (selectedProvider === 'epic') {
+                    setTimeout(() => {
+                        console.log('🔐 Redirecting to Epic OAuth...');
+                        window.location.href = 'http://localhost:4000/auth/epic';
+                    }, 2000);
+                } else {
+                    // For other providers, simulate OAuth flow
+                    console.log('🧪 Starting simulation for provider:', selectedProvider);
+                    setTimeout(() => {
+                        console.log('🧪 Executing simulateOAuthFlow...');
+                        simulateOAuthFlow();
+                    }, 1500); // Reduced delay for better UX
+                }
+                
+            } catch (error) {
+                console.error('❌ Error starting OAuth flow:', error);
+                alert('Failed to start OAuth flow. Please try again.');
+            }
         }
         
-        function testIframeDirectly() {
-            console.log('🧪 Testing iframe directly...');
-            const iframe = document.getElementById('epicAuthFrame');
-            const loading = document.getElementById('authLoading');
-            const errorDiv = document.getElementById('iframeError');
-            
-            // Hide error, show loading
-            errorDiv.classList.add('hidden');
-            loading.classList.remove('hidden');
-            iframe.classList.add('loading');
-            
-            // Test with the backend test page first
-            iframe.src = 'http://localhost:4000/auth/test-iframe';
-            
-            // Set up handlers
-            setupIframeHandlers(iframe, loading, errorDiv);
-            
-            // After 3 seconds, try the real OAuth page
-            setTimeout(() => {
-                console.log('🧪 Now testing with real OAuth page...');
-                iframe.src = 'http://localhost:4000/auth/mock-oauth-page';
-            }, 3000);
+        function simulateOAuthFlow() {
+            try {
+                console.log('🧪 Simulating OAuth flow...');
+                
+                // Ensure we have the modal manager
+                if (!window.modalManager) {
+                    console.error('❌ ModalManager not available');
+                    alert('Modal system not available. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('🎭 Hiding auth modal...');
+                window.modalManager.hide('authModal');
+                
+                // Small delay to ensure smooth transition
+                setTimeout(() => {
+                    console.log('🎭 Showing progress modal...');
+                    window.modalManager.show('progressModal');
+                    
+                    // Start the OAuth simulation after modal is visible
+                    setTimeout(() => {
+                        console.log('🚀 Starting FHIR connection simulation...');
+                        simulateFHIRConnection();
+                    }, 300);
+                    
+                }, 200);
+                
+            } catch (error) {
+                console.error('❌ Error in OAuth simulation:', error);
+                alert('Failed to simulate OAuth flow. Please try again.');
+            }
         }
         
         // ========================================
         // EXISTING FUNCTIONS
         // ========================================
+        
+
+        
+        async function startRealOAuthFlow() {
+            try {
+                console.log('🔐 Starting real OAuth flow with Epic...');
+                
+                // Show OAuth status
+                const oauthStatus = document.getElementById('oauthStatus');
+                const oauthActions = document.querySelector('.oauth-actions');
+                
+                if (oauthStatus && oauthActions) {
+                    oauthActions.style.display = 'none';
+                    oauthStatus.style.display = 'block';
+                    
+                    const statusText = document.getElementById('oauthStatusText');
+                    if (statusText) {
+                        statusText.textContent = 'Initiating Epic OAuth flow...';
+                    }
+                }
+                
+                // Get the OAuth authorization URL from backend
+                const response = await fetch('http://localhost:4000/auth/epic', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.oauth_url) {
+                    console.log('✅ OAuth URL received:', data.oauth_url);
+                    
+                    // Close auth modal and show progress modal
+                    modalManager.hide('authModal');
+                    modalManager.show('progressModal');
+                    
+                    // Update step 1 to show OAuth initiation complete
+                    updateOAuthStep(1, '✅ Epic OAuth Authorization Complete');
+                    
+                    // Start the real OAuth flow
+                    setTimeout(() => {
+                        console.log('🔐 Redirecting to Epic OAuth...');
+                        // Open Epic OAuth in a new window/tab
+                        window.open(data.oauth_url, '_blank', 'width=800,height=600');
+                        
+                        // Update step 2 to show Epic authentication in progress
+                        updateOAuthStep(2, '🔄 Epic Authentication Window Open');
+                    }, 1000);
+                    
+                } else {
+                    throw new Error('Failed to get OAuth URL from backend');
+                }
+                
+            } catch (error) {
+                console.error('❌ Real OAuth flow failed:', error);
+                alert(`OAuth authentication failed: ${error.message}`);
+                
+                // Reset form display
+                const oauthStatus = document.getElementById('oauthStatus');
+                const oauthActions = document.querySelector('.oauth-actions');
+                
+                if (oauthStatus && oauthActions) {
+                    oauthStatus.style.display = 'none';
+                    oauthActions.style.display = 'block';
+                }
+            }
+        }
         
         function handleAuthSubmit(event) {
             event.preventDefault();
@@ -3859,7 +3954,19 @@
                 
                 console.log('✅ Provider validation passed:', window.selectedProviderForWorkflow);
                 
+                // Ensure progress modal is visible
+                if (window.modalManager) {
+                    const currentModal = window.modalManager.getActiveModal();
+                    console.log('🎭 Current active modal:', currentModal);
+                    
+                    if (currentModal !== 'progressModal') {
+                        console.log('🎭 Ensuring progress modal is visible...');
+                        window.modalManager.show('progressModal');
+                    }
+                }
+                
                 // Reset OAuth steps to ensure clean start
+                console.log('🔄 Resetting OAuth steps...');
                 resetOAuthSteps();
                 console.log('✅ OAuth steps reset');
                 
@@ -3872,7 +3979,9 @@
                 console.log('   - Using PKCE flow for security');
                 
                 // Update visual progress
+                console.log('🎯 Updating step 1 to complete...');
                 updateOAuthStep(1, '✅ Authorization Request Complete');
+                console.log('✅ Step 1 updated');
                 
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
@@ -3883,19 +3992,22 @@
                 console.log('   - State parameter validated for CSRF protection');
                 
                 // Update visual progress
+                console.log('🎯 Updating step 2 to complete...');
                 updateOAuthStep(2, '✅ User Consent & Redirect Complete');
+                console.log('✅ Step 2 updated');
                 
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 // Step 3: Simulate token exchange
                 console.log('🔐 Mock OAuth: Step 3 - Token Exchange');
-                console.log('   - Exchanging authorization code for access token');
-                console.log('   - Validating JWT token signature');
-                console.log('   - Extracting patient context from token');
-                console.log('   - Setting up SMART launch context');
+                console.log('   - User authorized access to FHIR resources');
+                console.log('   - Provider redirecting with authorization code');
+                console.log('   - State parameter validated for CSRF protection');
                 
                 // Update visual progress
+                console.log('🎯 Updating step 3 to complete...');
                 updateOAuthStep(3, '✅ Token Exchange Complete');
+                console.log('✅ Step 3 updated');
                 
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
@@ -3907,15 +4019,26 @@
                 console.log('   - Mapping to internal claim format');
                 
                 // Update visual progress
+                console.log('🎯 Updating step 4 to complete...');
                 updateOAuthStep(4, '✅ FHIR Resource Access Complete');
+                console.log('✅ Step 4 updated');
                 
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 console.log('🔐 Mock OAuth: FHIR OAuth flow simulation complete');
                 
                 // Close progress modal and show success modal
-                modalManager.hide('progressModal');
-                modalManager.show('successModal');
+                console.log('🎭 Transitioning from progress to success modal...');
+                if (window.modalManager) {
+                    window.modalManager.hide('progressModal');
+                    setTimeout(() => {
+                        console.log('🎭 Showing success modal...');
+                        window.modalManager.show('successModal');
+                        console.log('✅ Success modal shown');
+                    }, 300);
+                } else {
+                    console.error('❌ ModalManager not available for transition');
+                }
                 
                 // Simulate additional delay before auto-closing (3 seconds as requested)
                 setTimeout(() => {
@@ -4264,48 +4387,80 @@
 
         // Enhanced OAuth progress step visualization with better UX
         function updateOAuthStep(stepNumber, status) {
-            const oauthSteps = document.getElementById('oauthSteps');
-            if (oauthSteps && oauthSteps.children[stepNumber - 1]) {
-                const stepElement = oauthSteps.children[stepNumber - 1];
-                
-                // Remove existing classes
-                stepElement.classList.remove('active', 'completed');
-                
-                if (status.includes('Complete') || status.includes('✅')) {
-                    stepElement.classList.add('completed');
-                    stepElement.innerHTML = `<span style="color: #059669; font-weight: 600;">✅ ${status}</span>`;
-                    stepElement.style.background = 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';
-                    stepElement.style.border = '1px solid #10b981';
+            try {
+                const oauthSteps = document.getElementById('oauthSteps');
+                if (oauthSteps && oauthSteps.children[stepNumber - 1]) {
+                    const stepElement = oauthSteps.children[stepNumber - 1];
                     
-                    // Announce completion to screen reader
-                    announceToScreenReader(`Step ${stepNumber} completed: ${status}`);
+                    // Remove existing classes
+                    stepElement.classList.remove('active', 'completed');
                     
-                    // Add completion animation
-                    stepElement.style.animation = 'stepComplete 0.6s ease-out';
-                    setTimeout(() => {
-                        stepElement.style.animation = '';
-                    }, 600);
+                    // Safely get current step text
+                    let currentStepText = '';
+                    const currentStepTextElement = stepElement.querySelector('.step-text');
+                    if (currentStepTextElement && currentStepTextElement.textContent) {
+                        currentStepText = currentStepTextElement.textContent;
+                    } else {
+                        // Fallback to default step descriptions
+                        const defaultSteps = [
+                            'Authorization Request',
+                            'User Consent & Redirect', 
+                            'Token Exchange',
+                            'FHIR Resource Access'
+                        ];
+                        currentStepText = defaultSteps[stepNumber - 1] || `Step ${stepNumber}`;
+                    }
                     
-                } else if (status.includes('⏳') || status.includes('active')) {
-                    stepElement.classList.add('active');
-                    stepElement.innerHTML = `<span style="color: #1e40af; font-weight: 600;">⏳ ${status}</span>`;
-                    stepElement.style.background = 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)';
-                    stepElement.style.border = '1px solid #3b82f6';
+                    if (status.includes('Complete') || status.includes('✅')) {
+                        stepElement.classList.add('completed');
+                        
+                        // Update the step content with new structure
+                        stepElement.innerHTML = `
+                            <span class="step-icon">✅</span>
+                            <span class="step-text">${currentStepText}</span>
+                            <span class="step-status">Complete</span>
+                        `;
+                        
+                        // Announce completion to screen reader
+                        announceToScreenReader(`Step ${stepNumber} completed: ${status}`);
+                        
+                        // Add completion animation
+                        stepElement.style.animation = 'stepComplete 0.6s ease-out';
+                        setTimeout(() => {
+                            stepElement.style.animation = '';
+                        }, 600);
+                        
+                    } else if (status.includes('⏳') || status.includes('active')) {
+                        stepElement.classList.add('active');
+                        
+                        // Update the step content with new structure
+                        stepElement.innerHTML = `
+                            <span class="step-icon">⏳</span>
+                            <span class="step-text">${currentStepText}</span>
+                            <span class="step-status">Active</span>
+                        `;
+                        
+                        // Announce active step to screen reader
+                        announceToScreenReader(`Step ${stepNumber} in progress: ${status}`);
+                        
+                    } else {
+                        // Reset to pending state
+                        stepElement.innerHTML = `
+                            <span class="step-icon">⏳</span>
+                            <span class="step-text">${currentStepText}</span>
+                            <span class="step-status">Pending</span>
+                        `;
+                    }
                     
-                    // Announce active step to screen reader
-                    announceToScreenReader(`Step ${stepNumber} in progress: ${status}`);
+                    // Update progress indicator
+                    updateProgressIndicator(stepNumber, oauthSteps.children.length);
                     
+                    console.log(`✅ OAuth step ${stepNumber} updated: ${status}`);
                 } else {
-                    stepElement.innerHTML = `<span style="color: #6b7280;">⏳ ${status}</span>`;
-                    stepElement.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
-                    stepElement.style.border = '1px solid rgba(209, 213, 219, 0.5)';
+                    console.warn(`⚠️ OAuth step ${stepNumber} not found`);
                 }
-                
-                // Add smooth transition
-                stepElement.style.transition = 'all 0.5s ease';
-                
-                // Update progress indicator
-                updateProgressIndicator(stepNumber, oauthSteps.children.length);
+            } catch (error) {
+                console.error(`❌ Error updating OAuth step ${stepNumber}:`, error);
             }
         }
 
@@ -4324,16 +4479,65 @@
         
         // Function to reset OAuth steps to initial state
         function resetOAuthSteps() {
-            const oauthSteps = document.getElementById('oauthSteps');
-            if (oauthSteps) {
-                const steps = oauthSteps.querySelectorAll('.oauth-step');
-                steps.forEach((step, index) => {
-                    step.innerHTML = `<span style="color: #6b7280;">⏳ Step ${index + 1}: ${getOAuthStepDescription(index + 1)}</span>`;
-                    step.style.background = 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)';
-                    step.style.border = '1px solid rgba(209, 213, 219, 0.5)';
-                    step.classList.remove('active', 'completed');
-                });
-                console.log('✅ OAuth steps reset to initial state');
+            try {
+                const oauthSteps = document.getElementById('oauthSteps');
+                if (oauthSteps) {
+                    const steps = oauthSteps.querySelectorAll('.oauth-step');
+                    steps.forEach((step, index) => {
+                        // Safely get step text, with fallback
+                        let stepText = '';
+                        const stepTextElement = step.querySelector('.step-text');
+                        if (stepTextElement && stepTextElement.textContent) {
+                            stepText = stepTextElement.textContent;
+                        } else {
+                            // Fallback to default step descriptions
+                            const defaultSteps = [
+                                'Authorization Request',
+                                'User Consent & Redirect', 
+                                'Token Exchange',
+                                'FHIR Resource Access'
+                            ];
+                            stepText = defaultSteps[index] || `Step ${index + 1}`;
+                        }
+                        
+                        // Reset step to initial state
+                        step.innerHTML = `
+                            <span class="step-icon">⏳</span>
+                            <span class="step-text">${stepText}</span>
+                            <span class="step-status">Pending</span>
+                        `;
+                        step.classList.remove('active', 'completed');
+                    });
+                    console.log('✅ OAuth steps reset to initial state');
+                } else {
+                    console.warn('⚠️ OAuth steps container not found');
+                }
+            } catch (error) {
+                console.error('❌ Error resetting OAuth steps:', error);
+                // Emergency fallback - try to reset without reading text content
+                try {
+                    const oauthSteps = document.getElementById('oauthSteps');
+                    if (oauthSteps) {
+                        const steps = oauthSteps.querySelectorAll('.oauth-step');
+                        steps.forEach((step, index) => {
+                            const defaultSteps = [
+                                'Authorization Request',
+                                'User Consent & Redirect', 
+                                'Token Exchange',
+                                'FHIR Resource Access'
+                            ];
+                            step.innerHTML = `
+                                <span class="step-icon">⏳</span>
+                                <span class="step-text">${defaultSteps[index] || `Step ${index + 1}`}</span>
+                                <span class="step-status">Pending</span>
+                            `;
+                            step.classList.remove('active', 'completed');
+                        });
+                        console.log('✅ OAuth steps reset using emergency fallback');
+                    }
+                } catch (fallbackError) {
+                    console.error('❌ Emergency fallback also failed:', fallbackError);
+                }
             }
         }
         
@@ -5958,6 +6162,88 @@
         }
 
         // Enhanced provider selection with visual feedback
+        
+        // Debug function to help troubleshoot modal flow
+        function debugModalFlow() {
+            try {
+                console.log('🔍 === MODAL FLOW DEBUG ===');
+                console.log('🔍 ModalManager available:', !!window.modalManager);
+                console.log('🔍 ProviderManager available:', !!window.providerManager);
+                console.log('🔍 Selected provider:', window.selectedProviderForWorkflow);
+                
+                if (window.modalManager) {
+                    console.log('🔍 ModalManager methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.modalManager)));
+                    console.log('🔍 Active modal:', window.modalManager.getActiveModal());
+                    console.log('🔍 All modals:', Array.from(window.modalManager.getAllModals().keys()));
+                }
+                
+                // Check modal visibility
+                const modals = ['termsModal', 'authModal', 'progressModal', 'successModal'];
+                modals.forEach(modalId => {
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        const isHidden = modal.classList.contains('hidden');
+                        console.log(`🔍 ${modalId}: ${isHidden ? 'Hidden' : 'Visible'}`);
+                    } else {
+                        console.log(`🔍 ${modalId}: Not found in DOM`);
+                    }
+                });
+                
+                console.log('🔍 === END DEBUG ===');
+            } catch (error) {
+                console.error('❌ Error in debug function:', error);
+            }
+        }
+        
+        // Make debug function globally available
+        window.debugModalFlow = debugModalFlow;
+        
+        // Auto-debug on page load
+        setTimeout(() => {
+            console.log('🔍 Auto-running modal flow debug...');
+            debugModalFlow();
+        }, 2000);
+        
+        // Check for OAuth success on page load
+        if (window.location.search.includes('oauth_success=true')) {
+            handleOAuthSuccess();
+        }
+        
+        // Handle OAuth success redirect from backend
+        function handleOAuthSuccess() {
+            try {
+                console.log('🎉 OAuth success detected!');
+                
+                // Get success parameters from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const patientId = urlParams.get('patient_id');
+                const provider = urlParams.get('provider');
+                
+                console.log('✅ OAuth successful - Patient ID:', patientId, 'Provider:', provider);
+                
+                // Clear the URL parameters
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+                
+                // Show success modal
+                if (window.modalManager) {
+                    window.modalManager.show('successModal');
+                    
+                    // Update progress modal steps if it's visible
+                    updateOAuthStep(3, '✅ Token Exchange Complete');
+                    updateOAuthStep(4, '✅ FHIR Data Access Granted');
+                }
+                
+                // Show success message
+                alert(`🎉 OAuth Authentication Successful!\n\nPatient ID: ${patientId}\nProvider: ${provider}\n\nYou can now access your FHIR health data.`);
+                
+            } catch (error) {
+                console.error('❌ Error handling OAuth success:', error);
+            }
+        }
+        
+
+        
     </script>
 </body>
 </html>

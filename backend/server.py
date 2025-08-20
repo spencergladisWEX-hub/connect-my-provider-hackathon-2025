@@ -40,71 +40,115 @@ def health_check():
 
 @app.route('/auth/epic', methods=['GET'])
 def epic_auth():
-    """Initiate Epic OAuth flow or mock authentication for demo"""
+    """Initiate Epic OAuth flow - returns OAuth URL for frontend to open in new window"""
     try:
-        # Check if this is an iframe request
-        is_iframe_request = request.headers.get('X-Requested-With') == 'iframe' or \
-                           request.args.get('iframe') == 'true'
-        
         if DEMO_CONFIG['use_mock_oauth']:
             # Mock OAuth flow for demo purposes
             print("🎭 Using mock OAuth for demo")
             
-            if is_iframe_request:
-                # For iframe requests, return the OAuth URL
-                return jsonify({
-                    'status': 'success',
-                    'oauth_url': 'http://localhost:4000/auth/mock-oauth-page',
-                    'message': 'Mock OAuth URL generated'
-                })
-            else:
-                # Simulate successful authentication
-                mock_token_info = {
-                    'access_token': 'mock_access_token_demo_2025',
-                    'token_type': 'Bearer',
-                    'expires_in': 3600,
-                    'scope': 'openid patient/*.read explanationofbenefit/*.read claim/*.read',
-                    'patient_id': DEMO_CONFIG['mock_patient_id'],
-                    'id_token': 'mock_id_token_demo_2025'
-                }
-                
-                # Store mock token info in session
-                session['access_token'] = mock_token_info['access_token']
-                session['patient_id'] = mock_token_info['patient_id']
-                session['token_expires'] = time.time() + mock_token_info['expires_in']
-                
-                print(f"✅ Mock OAuth successful - Patient ID: {mock_token_info['patient_id']}")
-                
-                # Return success response for frontend
-                return jsonify({
-                    'status': 'success',
-                    'message': 'Mock authentication successful',
-                    'patient_id': mock_token_info['patient_id'],
-                    'provider': DEMO_CONFIG['mock_provider_name']
-                })
+            mock_token_info = {
+                'access_token': 'mock_access_token_demo_2025',
+                'token_type': 'Bearer',
+                'expires_in': 3600,
+                'scope': 'openid patient/*.read explanationofbenefit/*.read claimofbenefit/*.read',
+                'patient_id': DEMO_CONFIG['mock_patient_id'],
+                'id_token': 'mock_id_token_demo_2025'
+            }
+            
+            # Store mock token info in session
+            session['access_token'] = mock_token_info['access_token']
+            session['patient_id'] = mock_token_info['patient_id']
+            session['token_expires'] = time.time() + mock_token_info['expires_in']
+            
+            print(f"✅ Mock OAuth successful - Patient ID: {mock_token_info['patient_id']}")
+            
+            # Return success response for frontend
+            return jsonify({
+                'status': 'success',
+                'message': 'Mock authentication successful',
+                'patient_id': mock_token_info['patient_id'],
+                'provider': DEMO_CONFIG['mock_provider_name']
+            })
         else:
-            # Real Epic OAuth flow
+            # Real Epic OAuth flow - always return OAuth URL for frontend
             state = oauth_handler.generate_state()
             session['oauth_state'] = state
             
             auth_url = oauth_handler.get_authorization_url(state)
             
             print(f"🔐 Initiating Epic OAuth flow with state: {state}")
+            print(f"🔐 OAuth URL generated: {auth_url}")
             
-            if is_iframe_request:
-                # For iframe requests, return the OAuth URL as JSON
-                return jsonify({
-                    'status': 'success',
-                    'oauth_url': auth_url,
-                    'message': 'OAuth URL generated for iframe'
-                })
-            else:
-                # For direct requests, redirect as before
-                return redirect(auth_url)
+            # Always return OAuth URL as JSON for frontend to handle
+            return jsonify({
+                'status': 'success',
+                'oauth_url': auth_url,
+                'message': 'OAuth URL generated for frontend'
+            })
         
     except Exception as e:
         print(f"❌ OAuth initiation failed: {e}")
         return jsonify({'error': 'OAuth initiation failed'}), 500
+
+
+
+@app.route('/auth/epic/callback', methods=['GET'])
+def epic_oauth_callback():
+    """Handle OAuth callback from Epic"""
+    try:
+        # Get OAuth parameters from callback
+        code = request.args.get('code')
+        state = request.args.get('state')
+        error = request.args.get('error')
+        
+        if error:
+            print(f"❌ OAuth error from Epic: {error}")
+            return jsonify({'error': f'OAuth error: {error}'}), 400
+        
+        if not code or not state:
+            print("❌ Missing OAuth parameters")
+            return jsonify({'error': 'Missing OAuth parameters'}), 400
+        
+        # Validate state parameter
+        stored_state = session.get('oauth_state')
+        if not stored_state or state != stored_state:
+            print("❌ Invalid OAuth state parameter")
+            return jsonify({'error': 'Invalid OAuth state'}), 400
+        
+        print(f"✅ OAuth callback received - Code: {code[:10]}..., State: {state}")
+        
+        # Exchange authorization code for access token
+        token_response = oauth_handler.exchange_code_for_token(code)
+        
+        if 'error' in token_response:
+            print(f"❌ Token exchange failed: {token_response['error']}")
+            return jsonify({'error': 'Token exchange failed'}), 500
+        
+        if not oauth_handler.validate_token_response(token_response):
+            print("❌ Invalid token response from Epic")
+            return jsonify({'error': 'Invalid token response'}), 500
+        
+        # Extract token information
+        token_info = oauth_handler.get_token_info(token_response)
+        
+        # Store token in session
+        session['access_token'] = token_info['access_token']
+        session['patient_id'] = token_info.get('patient_id', DEMO_CONFIG['mock_patient_id'])
+        session['token_expires'] = time.time() + token_info.get('expires_in', 3600)
+        
+        print(f"✅ OAuth successful - Patient ID: {session['patient_id']}")
+        
+        # Redirect user back to frontend with success
+        frontend_url = 'http://localhost:3000'
+        success_url = f"{frontend_url}?oauth_success=true&patient_id={session['patient_id']}&provider=Epic%20FHIR"
+        
+        print(f"✅ OAuth successful - redirecting to frontend: {success_url}")
+        
+        return redirect(success_url)
+        
+    except Exception as e:
+        print(f"❌ OAuth callback handling failed: {e}")
+        return jsonify({'error': 'OAuth callback failed'}), 500
 
 @app.route('/auth/test-iframe', methods=['GET'])
 def test_iframe():

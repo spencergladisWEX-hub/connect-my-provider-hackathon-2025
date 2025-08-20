@@ -55,4 +55,90 @@ window.APP_CONFIG = {
   },
 };
 
+// Initialize ModalManager and other systems
+(async function initializeSystems() {
+  try {
+    console.log('🚀 Initializing WEX Benefits Portal systems...');
+    
+    // Import ModalManager
+    const { ModalManager } = await import('./assets/js/modalManager.js');
+    
+    // Create global instance
+    window.modalManager = new ModalManager();
+    
+    // Enable debug mode for development
+    window.modalManager.enableDebug();
+    
+    console.log('✅ ModalManager initialized successfully');
+    console.log('✅ Available modals:', Array.from(window.modalManager.getAllModals().keys()));
+    
+    // Initialize other systems
+    await initializeOtherSystems();
+    
+  } catch (error) {
+    console.error('❌ Error initializing systems:', error);
+    
+    // Fallback: Create a basic modal manager
+    console.log('🔄 Creating fallback modal manager...');
+    window.modalManager = createFallbackModalManager();
+  }
+})();
+
+// Initialize other systems
+async function initializeOtherSystems() {
+  try {
+    // Import ProviderManager
+    const { ProviderManager } = await import('./assets/js/providers.js');
+    
+    // Create global instance
+    window.providerManager = new ProviderManager();
+    
+    // Enable debug mode for development
+    window.providerManager.enableDebug();
+    
+    console.log('✅ ProviderManager initialized successfully');
+    
+    // Import main app
+    const { default: mainApp } = await import('./assets/js/main.js');
+    
+    console.log('✅ Main application initialized successfully');
+    
+  } catch (error) {
+    console.error('❌ Error initializing other systems:', error);
+  }
+}
+
+// Fallback modal manager for when ES6 modules fail
+function createFallbackModalManager() {
+  console.log('🔄 Creating fallback modal manager...');
+  
+  return {
+    show: function(modalId) {
+      console.log('🔧 Fallback: Showing modal', modalId);
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    },
+    hide: function(modalId) {
+      console.log('🔧 Fallback: Hiding modal', modalId);
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    },
+    hideAll: function() {
+      console.log('🔧 Fallback: Hiding all modals');
+      const modals = document.querySelectorAll('.workflow-modal');
+      modals.forEach(modal => modal.classList.add('hidden'));
+    },
+    getAllModals: function() {
+      return new Map();
+    },
+    enableDebug: function() {
+      console.log('🔍 Fallback debug mode enabled');
+    }
+  };
+}
+
 
