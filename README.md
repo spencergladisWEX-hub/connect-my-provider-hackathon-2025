@@ -146,10 +146,9 @@ curl http://localhost:4000/transaction-status/TX-001
 ## 📁 Project Structure
 
 ```
-SHARE/
+connect-my-provider-hackathon2025/
 ├── start_demo.sh                    # Demo startup script
 ├── README.md                        # This file
-<<<<<<< HEAD
 ├── backend/                         # Flask API server
 │   ├── requirements.txt             # Python dependencies
 │   └── server.py                   # Flask application

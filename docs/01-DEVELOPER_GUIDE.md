@@ -12,7 +12,7 @@
 ```bash
 # Clone and navigate to project
 git clone <repository-url>
-cd SHARE
+cd connect-my-provider-hackathon2025
 
 # Run the demo
 ./start_demo.sh
@@ -22,7 +22,7 @@ cd SHARE
 
 ### Directory Structure
 ```
-SHARE/
+connect-my-provider-hackathon2025/
 ├── wex-fsa-provider-substantiation-backend/
 │   ├── requirements.txt        # Python dependencies
 │   └── src/
