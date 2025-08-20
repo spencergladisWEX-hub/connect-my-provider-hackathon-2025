@@ -1,0 +1,225 @@
+/* ========================================
+   EMBEDDED IFRAME STYLES FOR OAUTH
+   ======================================== */
+
+/* Embedded Auth Modal Styles */
+.embedded-auth-modal .modal-content {
+    max-width: 900px;
+    width: 95%;
+    max-height: 95vh;
+}
+
+.embedded-auth-modal .modal-body {
+    padding: 0;
+    height: 70vh;
+    min-height: 600px;
+}
+
+/* Auth Container */
+.embedded-auth-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+
+/* Loading State */
+.auth-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.auth-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.auth-loading h4 {
+    margin: 20px 0 10px 0;
+    color: #253746;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.auth-loading p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+    text-align: center;
+    max-width: 400px;
+}
+
+/* Epic Auth Iframe */
+.epic-auth-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0 0 20px 20px;
+    background: white;
+    transition: opacity 0.3s ease;
+}
+
+.epic-auth-iframe.loading {
+    opacity: 0;
+}
+
+.epic-auth-iframe.loaded {
+    opacity: 1;
+}
+
+/* Auth Header in Embedded Mode */
+.embedded-auth-modal .auth-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.embedded-auth-modal .provider-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.embedded-auth-modal .auth-header h4 {
+    margin: 0;
+    color: #253746;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Progress Spinner */
+.progress-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(200, 16, 46, 0.1);
+    border-top: 3px solid #C8102E;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design for Embedded Iframe */
+@media (max-width: 768px) {
+    .embedded-auth-modal .modal-content {
+        max-width: 98%;
+        width: 98%;
+        max-height: 98vh;
+        margin: 1vh auto;
+    }
+    
+    .embedded-auth-modal .modal-body {
+        height: 75vh;
+        min-height: 500px;
+    }
+    
+    .embedded-auth-modal .auth-header {
+        padding: 15px 20px;
+    }
+    
+    .embedded-auth-modal .auth-header h4 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .embedded-auth-modal .modal-content {
+        border-radius: 15px;
+    }
+    
+    .embedded-auth-modal .modal-body {
+        height: 80vh;
+        min-height: 450px;
+    }
+    
+    .embedded-auth-modal .auth-header {
+        padding: 12px 18px;
+    }
+    
+    .embedded-auth-container,
+    .epic-auth-iframe {
+        border-radius: 0 0 15px 15px;
+    }
+}
+
+/* Security and Privacy Indicators */
+.auth-security-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.auth-security-indicator::before {
+    content: '🔒';
+    font-size: 0.7rem;
+}
+
+/* Iframe Error State */
+.iframe-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fef2f2;
+    color: #dc2626;
+    z-index: 15;
+}
+
+.iframe-error h4 {
+    margin: 0 0 10px 0;
+    color: #dc2626;
+}
+
+.iframe-error p {
+    margin: 0;
+    text-align: center;
+    max-width: 300px;
+}
+
+.iframe-error button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.iframe-error button:hover {
+    background: #b91c1c;
+}

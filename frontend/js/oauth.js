@@ -74,36 +74,42 @@ class EpicOAuthHandler {
             }
 
             const data = await response.json();
-            console.log('✅ Expense data loaded:', data);
+            console.log('✅ Real expense data loaded:', data);
 
-            this.displayExpenses(data.expenses);
-            this.displayPatientInfo(data.patient);
-            this.displayCoverageInfo(data.coverage);
+            if (data.expenses && data.expenses.length > 0) {
+                this.displayExpenses(data.expenses);
+                this.displayPatientInfo(data.patient);
+                this.displayCoverageInfo(data.coverage);
+            } else {
+                console.log('📝 No expenses found in FHIR data');
+                this.displayNoExpenses();
+            }
 
         } catch (error) {
             console.error('❌ Failed to load expenses:', error);
-            
-            // Fallback to mock data
-            console.log('🔄 Falling back to mock data...');
-            await this.loadMockExpenses();
+            this.showError('Failed to load expense data from FHIR system');
         }
     }
 
     /**
-     * Load mock expense data as fallback
+     * Display no expenses message
      */
-    async loadMockExpenses() {
-        try {
-            const response = await fetch(`${this.backendUrl}/api/mock-expenses`);
-            const data = await response.json();
-            
-            this.displayExpenses(data.expenses);
-            this.displayPatientInfo(data.patient);
-            
-        } catch (error) {
-            console.error('❌ Failed to load mock expenses:', error);
-            this.showError('Failed to load expense data');
+    displayNoExpenses() {
+        const container = document.getElementById('expense-list');
+        if (!container) {
+            console.warn('⚠️ Expense list container not found');
+            return;
         }
+
+        container.innerHTML = `
+            <div class="no-expenses">
+                <p>No expenses found in your FHIR health records</p>
+                <p>Connect your Epic provider to see your healthcare expenses</p>
+                <button class="btn-primary" onclick="window.epicOAuth.initiateAuth()">
+                    Connect Epic Provider
+                </button>
+            </div>
+        `;
     }
 
     /**

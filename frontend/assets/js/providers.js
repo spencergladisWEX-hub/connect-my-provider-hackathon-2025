@@ -19,9 +19,9 @@ export class ProviderManager {
     /**
      * Initialize the provider manager
      */
-    init() {
+    async init() {
         try {
-            this.loadConnectedProviders();
+            await this.loadConnectedProviders();
             this.setupEventListeners();
             this.isInitialized = true;
             
@@ -34,12 +34,35 @@ export class ProviderManager {
     }
     
     /**
-     * Load connected providers from storage
+     * Load connected providers from backend session
      */
-    loadConnectedProviders() {
+    async loadConnectedProviders() {
         try {
+            // Check backend session for connected providers
+            const backendUrl = window.APP_CONFIG?.API_BASE || 'http://localhost:4000';
+            const response = await fetch(`${backendUrl}/api/expenses`, {
+                method: 'HEAD',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                // User is authenticated, check if they have connected providers
+                const dataResponse = await fetch(`${backendUrl}/api/expenses`, {
+                    credentials: 'include'
+                });
+                
+                if (dataResponse.ok) {
+                    const data = await dataResponse.json();
+                    if (data.source && data.source !== 'none') {
+                        // User has connected providers (Epic is connected)
+                        this.connectedProviders = ['epic'];
+                    }
+                }
+            }
+            
+            // Fallback to localStorage for demo purposes
             const stored = localStorage.getItem('connectedProviders');
-            if (stored) {
+            if (stored && this.connectedProviders.length === 0) {
                 this.connectedProviders = JSON.parse(stored);
             }
             
@@ -51,13 +74,17 @@ export class ProviderManager {
             this.connectedProviders = [];
         }
     }
-    
+
     /**
-     * Save connected providers to storage
+     * Save connected providers to backend and localStorage
      */
-    saveConnectedProviders() {
+    async saveConnectedProviders() {
         try {
+            // Save to localStorage for demo purposes
             localStorage.setItem('connectedProviders', JSON.stringify(this.connectedProviders));
+            
+            // For Epic provider, the backend session already handles the connection
+            // For other providers, we could implement backend storage here
             
             if (this.debugMode) {
                 console.log('💾 Saved connected providers:', this.connectedProviders);
@@ -269,12 +296,36 @@ export class ProviderManager {
             // Show authentication modal
             this.showAuthModal(providerConfig);
             
-            // Simulate authentication process
-            await this.simulateAuthentication(providerKey);
+            // Initiate real OAuth flow for Epic provider
+            if (providerKey === 'epic') {
+                await this.initiateEpicOAuth();
+            } else {
+                // For other providers, use mock authentication for now
+                await this.simulateAuthentication(providerKey);
+            }
             
         } catch (error) {
             console.error('❌ Error in handleAuthSubmit:', error);
             alert('An error occurred during authentication. Please try again.');
+        }
+    }
+
+    /**
+     * Initiate Epic OAuth flow
+     */
+    async initiateEpicOAuth() {
+        try {
+            if (this.debugMode) {
+                console.log('🔐 Initiating Epic OAuth flow...');
+            }
+            
+            // Redirect to backend OAuth endpoint
+            const backendUrl = window.APP_CONFIG.API_BASE || 'http://localhost:4000';
+            window.location.href = `${backendUrl}/auth/epic`;
+            
+        } catch (error) {
+            console.error('❌ Epic OAuth initiation failed:', error);
+            alert('Failed to initiate Epic authentication. Please try again.');
         }
     }
     
@@ -360,7 +411,7 @@ export class ProviderManager {
             }
             
             // Add provider to connected list
-            this.addConnectedProvider(providerKey);
+            await this.addConnectedProvider(providerKey);
             
             // Update UI
             this.updateProviderUI(providerKey);
@@ -373,16 +424,22 @@ export class ProviderManager {
             console.error('❌ Error during authentication simulation:', error);
         }
     }
-    
+
     /**
-     * Add provider to connected list
-     * @param {string} providerKey - The provider key to add
+     * Add provider to connected list with backend integration
      */
-    addConnectedProvider(providerKey) {
+    async addConnectedProvider(providerKey) {
         try {
             if (!this.connectedProviders.includes(providerKey)) {
                 this.connectedProviders.push(providerKey);
-                this.saveConnectedProviders();
+                
+                // For Epic provider, the OAuth flow already established the connection
+                // For other providers, we could call a backend API here
+                if (providerKey !== 'epic') {
+                    await this.linkProviderAccount(providerKey);
+                }
+                
+                await this.saveConnectedProviders();
                 
                 if (this.debugMode) {
                     console.log('✅ Provider added to connected list:', providerKey);
@@ -390,6 +447,35 @@ export class ProviderManager {
             }
         } catch (error) {
             console.error('❌ Error adding connected provider:', error);
+        }
+    }
+
+    /**
+     * Link provider account via backend API
+     */
+    async linkProviderAccount(providerKey) {
+        try {
+            const backendUrl = window.APP_CONFIG?.API_BASE || 'http://localhost:4000';
+            const response = await fetch(`${backendUrl}/link-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    provider: providerKey,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Provider account linked:', result);
+            } else {
+                console.warn('⚠️ Provider account linking failed:', response.status);
+            }
+        } catch (error) {
+            console.error('❌ Error linking provider account:', error);
         }
     }
     

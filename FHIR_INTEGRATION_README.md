@@ -158,7 +158,7 @@ Visit: `http://localhost:3000/dashboard.html`
 ### **Environment Variables:**
 ```bash
 # Required for OAuth
-EPIC_CLIENT_ID=your-actual-client-id
+EPIC_CLIENT_ID=1c28b6d4-8195-4524-b780-2c9efa49f4db
 
 # Optional (has defaults)
 EPIC_REDIRECT_URI=http://localhost:3000/auth/callback

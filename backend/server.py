@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Response, session, redirect, url_for
+from flask import Flask, jsonify, request, Response, session, redirect, url_for, make_response
 from flask_cors import CORS
 import json
 import time
@@ -6,7 +6,7 @@ import threading
 import os
 
 # Import our new modules
-from config import EPIC_CONFIG, TEST_PATIENTS, TEST_USERS
+from env_config import EPIC_CONFIG, TEST_PATIENTS, TEST_USERS, DEMO_CONFIG
 from oauth_handler import EpicOAuthHandler
 from fhir_client import EpicFHIRClient
 from transformers import transform_any_eob_data_to_expenses, transform_patient_data
@@ -40,26 +40,321 @@ def health_check():
 
 @app.route('/auth/epic', methods=['GET'])
 def epic_auth():
-    """Initiate Epic OAuth flow"""
+    """Initiate Epic OAuth flow or mock authentication for demo"""
     try:
-        # Generate state for CSRF protection
-        state = oauth_handler.generate_state()
-        session['oauth_state'] = state
+        # Check if this is an iframe request
+        is_iframe_request = request.headers.get('X-Requested-With') == 'iframe' or \
+                           request.args.get('iframe') == 'true'
         
-        # Generate authorization URL
-        auth_url = oauth_handler.get_authorization_url(state)
-        
-        print(f"🔐 Initiating Epic OAuth flow with state: {state}")
-        return redirect(auth_url)
+        if DEMO_CONFIG['use_mock_oauth']:
+            # Mock OAuth flow for demo purposes
+            print("🎭 Using mock OAuth for demo")
+            
+            if is_iframe_request:
+                # For iframe requests, return the OAuth URL
+                return jsonify({
+                    'status': 'success',
+                    'oauth_url': 'http://localhost:4000/auth/mock-oauth-page',
+                    'message': 'Mock OAuth URL generated'
+                })
+            else:
+                # Simulate successful authentication
+                mock_token_info = {
+                    'access_token': 'mock_access_token_demo_2025',
+                    'token_type': 'Bearer',
+                    'expires_in': 3600,
+                    'scope': 'openid patient/*.read explanationofbenefit/*.read claim/*.read',
+                    'patient_id': DEMO_CONFIG['mock_patient_id'],
+                    'id_token': 'mock_id_token_demo_2025'
+                }
+                
+                # Store mock token info in session
+                session['access_token'] = mock_token_info['access_token']
+                session['patient_id'] = mock_token_info['patient_id']
+                session['token_expires'] = time.time() + mock_token_info['expires_in']
+                
+                print(f"✅ Mock OAuth successful - Patient ID: {mock_token_info['patient_id']}")
+                
+                # Return success response for frontend
+                return jsonify({
+                    'status': 'success',
+                    'message': 'Mock authentication successful',
+                    'patient_id': mock_token_info['patient_id'],
+                    'provider': DEMO_CONFIG['mock_provider_name']
+                })
+        else:
+            # Real Epic OAuth flow
+            state = oauth_handler.generate_state()
+            session['oauth_state'] = state
+            
+            auth_url = oauth_handler.get_authorization_url(state)
+            
+            print(f"🔐 Initiating Epic OAuth flow with state: {state}")
+            
+            if is_iframe_request:
+                # For iframe requests, return the OAuth URL as JSON
+                return jsonify({
+                    'status': 'success',
+                    'oauth_url': auth_url,
+                    'message': 'OAuth URL generated for iframe'
+                })
+            else:
+                # For direct requests, redirect as before
+                return redirect(auth_url)
         
     except Exception as e:
         print(f"❌ OAuth initiation failed: {e}")
         return jsonify({'error': 'OAuth initiation failed'}), 500
 
+@app.route('/auth/test-iframe', methods=['GET'])
+def test_iframe():
+    """Simple test page for iframe functionality"""
+    html_content = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Iframe Test</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                background: #f0f0f0;
+                margin: 0;
+            }
+            .test-container {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: center;
+            }
+            .success {
+                color: #16a34a;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="test-container">
+            <h1 class="success">✅ Iframe Test Successful!</h1>
+            <p>If you can see this page, the iframe is working correctly.</p>
+            <p>This confirms that:</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>✅ Iframe can load content</li>
+                <li>✅ Cross-origin restrictions are resolved</li>
+                <li>✅ Content is accessible</li>
+            </ul>
+            <p><strong>Next:</strong> The OAuth page should load in 3 seconds...</p>
+        </div>
+        <script>
+            setTimeout(() => {
+                if (window.parent) {
+                    window.parent.postMessage({
+                        type: 'iframe_test_success',
+                        message: 'Iframe test completed successfully'
+                    }, '*');
+                }
+            }, 1000);
+        </script>
+    </body>
+    </html>
+    '''
+    
+    response = make_response(html_content)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
+    
+    return response
+
+
+
+@app.route('/auth/mock-oauth-page', methods=['GET'])
+def mock_oauth_page():
+    """Mock OAuth page for testing embedded iframe"""
+    html_content = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mock Epic OAuth</title>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                margin: 0;
+                padding: 40px 20px;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .login-container {
+                background: white;
+                border-radius: 12px;
+                padding: 40px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                max-width: 400px;
+                width: 100%;
+            }
+            .epic-logo {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .epic-logo h1 {
+                color: #1f4788;
+                font-size: 2rem;
+                margin: 0;
+                font-weight: 700;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            label {
+                display: block;
+                margin-bottom: 8px;
+                color: #333;
+                font-weight: 500;
+            }
+            input {
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #e1e5e9;
+                border-radius: 8px;
+                font-size: 16px;
+                transition: border-color 0.3s ease;
+            }
+            input:focus {
+                outline: none;
+                border-color: #1f4788;
+            }
+            .btn-login {
+                width: 100%;
+                background: #1f4788;
+                color: white;
+                border: none;
+                padding: 14px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            .btn-login:hover {
+                background: #164070;
+            }
+            .help-text {
+                text-align: center;
+                margin-top: 20px;
+                color: #666;
+                font-size: 14px;
+            }
+            .test-credentials {
+                background: #f8f9fa;
+                border-radius: 6px;
+                padding: 12px;
+                margin-bottom: 20px;
+                font-size: 14px;
+                color: #495057;
+            }
+            .test-credentials strong {
+                color: #1f4788;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="login-container">
+            <div class="epic-logo">
+                <h1>Epic</h1>
+                <p>Secure Authentication</p>
+            </div>
+            
+            <div class="test-credentials">
+                <strong>Test Credentials:</strong><br>
+                Username: fhircamila<br>
+                Password: epicepic1
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="fhircamila" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" value="epicepic1" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+            
+            <div class="help-text">
+                This is a mock authentication page for testing purposes.
+            </div>
+        </div>
+        
+        <script>
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Simulate authentication
+                if (username === 'fhircamila' && password === 'epicepic1') {
+                    // Simulate successful OAuth
+                    setTimeout(() => {
+                        // Post message to parent window (the modal)
+                        if (window.parent) {
+                            window.parent.postMessage({
+                                type: 'oauth_success',
+                                patient_id: 'erXuFYUfucBZaryVksYEcMg3',
+                                provider: 'Epic Systems'
+                            }, '*');
+                        }
+                        
+                        // Also redirect for fallback
+                        window.location.href = 'http://localhost:3000/auth/callback?code=mock_auth_code&state=mock_state';
+                    }, 1000);
+                } else {
+                    alert('Invalid credentials. Please use the test credentials provided.');
+                }
+            });
+        </script>
+    </body>
+    </html>
+    '''
+    
+    # Add CORS headers for iframe embedding
+    response = make_response(html_content)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
+    
+    return response
+
 @app.route('/auth/callback', methods=['GET'])
 def auth_callback():
-    """Handle OAuth callback from Epic"""
+    """Handle OAuth callback from Epic or mock callback for demo"""
     try:
+        if DEMO_CONFIG['use_mock_oauth']:
+            # Mock callback for demo
+            print("🎭 Mock OAuth callback for demo")
+            
+            return jsonify({
+                'status': 'success',
+                'message': 'Mock OAuth callback successful',
+                'patient_id': DEMO_CONFIG['mock_patient_id'],
+                'provider': DEMO_CONFIG['mock_provider_name']
+            })
+        
+        # Real Epic OAuth callback handling
         code = request.args.get('code')
         state = request.args.get('state')
         error = request.args.get('error')
@@ -257,24 +552,41 @@ def get_mock_expenses():
 
 @app.route('/link-account', methods=['POST'])
 def link_account():
-    """Mock provider account linking (legacy endpoint)"""
-    print("Link account request received")
-    
-    # Simulate 2-second processing time
-    time.sleep(2)
-    
-    mock_state['link_status'] = 'linked'
-    mock_state['current_user'] = {
-        'id': 'USER-001',
-        'provider': 'Trellis Healthcare'
-    }
-    
-    return jsonify({
-        'status': 'success',
-        'message': 'Account linked successfully',
-        'linkId': 'LINK-001',
-        'provider': 'Trellis Healthcare'
-    })
+    """Enhanced provider account linking with OAuth integration"""
+    try:
+        data = request.get_json()
+        provider = data.get('provider', DEMO_CONFIG['mock_provider_name'])
+        
+        print(f"🔗 Linking account for provider: {provider}")
+        
+        # Simulate processing time
+        time.sleep(2)
+        
+        # Use mock patient ID from config
+        patient_id = DEMO_CONFIG['mock_patient_id']
+        
+        # Update mock state
+        mock_state['link_status'] = 'connected'
+        mock_state['current_user'] = {
+            'id': 'USER-001',
+            'provider': provider,
+            'patient_id': patient_id,
+            'connected_at': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'oauth_status': 'authenticated' if DEMO_CONFIG['use_mock_oauth'] else 'pending'
+        }
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'Successfully connected to {provider}',
+            'linkId': 'LINK-001',
+            'provider': provider,
+            'patient_id': patient_id,
+            'oauth_status': 'authenticated' if DEMO_CONFIG['use_mock_oauth'] else 'pending'
+        })
+        
+    except Exception as e:
+        print(f"❌ Link account failed: {e}")
+        return jsonify({'error': 'Link account failed'}), 500
 
 @app.route('/transaction-status/<transaction_id>', methods=['GET'])
 def get_transaction_status(transaction_id):

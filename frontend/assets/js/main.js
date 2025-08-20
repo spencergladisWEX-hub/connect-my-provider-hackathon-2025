@@ -41,17 +41,20 @@ class WEXBenefitsApp {
     /**
      * Setup the application after DOM is ready
      */
-    setupApplication() {
+    async setupApplication() {
         try {
             // Initialize managers
             this.modalManager = new ModalManager();
             this.providerManager = new ProviderManager();
             
+            // Wait for provider manager to initialize
+            await this.providerManager.init();
+            
             // Setup event listeners
             this.setupEventListeners();
             
             // Initialize UI
-            this.initializeUI();
+            await this.initializeUI();
             
             // Setup development helpers
             this.setupDevelopmentHelpers();
@@ -168,10 +171,10 @@ class WEXBenefitsApp {
     /**
      * Initialize the user interface
      */
-    initializeUI() {
+    async initializeUI() {
         try {
             // Initialize claims table
-            this.initializeClaimsTable();
+            await this.initializeClaimsTable();
             
             // Initialize provider status
             this.initializeProviderStatus();
@@ -195,7 +198,7 @@ class WEXBenefitsApp {
     /**
      * Initialize claims table
      */
-    initializeClaimsTable() {
+    async initializeClaimsTable() {
         try {
             const claimsTableBody = document.getElementById('claimsTableBody');
             if (!claimsTableBody) return;
@@ -203,13 +206,178 @@ class WEXBenefitsApp {
             // Clear existing content
             claimsTableBody.innerHTML = '';
             
-            // Add sample claim if no providers connected
-            if (!this.providerManager || this.providerManager.getConnectedProviders().length === 0) {
-                this.addSampleClaim();
-            }
+            // Load real claims data from backend
+            await this.loadRealClaimsData();
             
         } catch (error) {
             console.error('❌ Error initializing claims table:', error);
+            // Fallback to sample claim if real data fails
+            this.addSampleClaim();
+        }
+    }
+
+    /**
+     * Load real claims data from backend API
+     */
+    async loadRealClaimsData() {
+        try {
+            const backendUrl = window.APP_CONFIG?.API_BASE || 'http://localhost:4000';
+            const response = await fetch(`${backendUrl}/api/expenses`, {
+                credentials: 'include' // Include cookies for session
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    console.log('🔐 User not authenticated, showing sample data');
+                    this.addSampleClaim();
+                    return;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Real claims data loaded:', data);
+
+            if (data.expenses && data.expenses.length > 0) {
+                this.displayRealClaims(data.expenses);
+            } else {
+                console.log('📝 No real claims found, showing sample data');
+                this.addSampleClaim();
+            }
+
+        } catch (error) {
+            console.error('❌ Failed to load real claims:', error);
+            // Fallback to sample claim
+            this.addSampleClaim();
+        }
+    }
+
+    /**
+     * Display real claims from FHIR EOB data
+     */
+    displayRealClaims(expenses) {
+        try {
+            const claimsTableBody = document.getElementById('claimsTableBody');
+            if (!claimsTableBody) return;
+
+            expenses.forEach(expense => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.id || 'N/A'}</td>
+                    <td>${expense.provider || 'Unknown Provider'}</td>
+                    <td>${expense.date || 'N/A'}</td>
+                    <td>$${expense.amount ? expense.amount.toFixed(2) : '0.00'}</td>
+                    <td><span class="status-badge ${expense.status?.toLowerCase() || 'pending'}">${expense.status || 'Pending'}</span></td>
+                    <td>${expense.service || 'N/A'}</td>
+                    <td>
+                        <button class="action-btn secondary" onclick="window.wexApp.viewTransactionDetails('${expense.id}')">
+                            View Details
+                        </button>
+                    </td>
+                `;
+                
+                claimsTableBody.appendChild(row);
+            });
+
+            console.log(`✅ Displayed ${expenses.length} real claims`);
+
+        } catch (error) {
+            console.error('❌ Error displaying real claims:', error);
+            this.addSampleClaim();
+        }
+    }
+
+    /**
+     * View transaction details using real backend API
+     */
+    async viewTransactionDetails(transactionId) {
+        try {
+            console.log('🔍 Viewing transaction details for:', transactionId);
+            
+            const backendUrl = window.APP_CONFIG?.API_BASE || 'http://localhost:4000';
+            const response = await fetch(`${backendUrl}/transaction-status/${transactionId}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    alert('Transaction not found. It may have been processed or removed.');
+                    return;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const transaction = await response.json();
+            this.showTransactionDetails(transaction);
+
+        } catch (error) {
+            console.error('❌ Error fetching transaction details:', error);
+            alert('Failed to load transaction details. Please try again.');
+        }
+    }
+
+    /**
+     * Show transaction details in a modal
+     */
+    showTransactionDetails(transaction) {
+        try {
+            const detailsHtml = `
+                <div class="transaction-details">
+                    <h3>Transaction Details</h3>
+                    <div class="detail-row">
+                        <strong>Transaction ID:</strong> ${transaction.id}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Provider:</strong> ${transaction.provider}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Date of Service:</strong> ${transaction.dateOfService}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Patient Responsibility:</strong> $${transaction.patientResponsibility?.toFixed(2) || '0.00'}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Status:</strong> <span class="status-badge ${transaction.status?.toLowerCase()}">${transaction.status}</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Source:</strong> ${transaction.source}
+                    </div>
+                    ${transaction.eob ? `
+                        <div class="detail-row">
+                            <strong>EOB ID:</strong> ${transaction.eob.id}
+                        </div>
+                        <div class="detail-row">
+                            <strong>EOB Status:</strong> ${transaction.eob.status}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Create and show modal
+            const modal = document.createElement('div');
+            modal.className = 'workflow-modal';
+            modal.id = 'transactionDetailsModal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Transaction Details</h2>
+                        <button class="modal-close" onclick="this.closest('.workflow-modal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${detailsHtml}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="this.closest('.workflow-modal').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.classList.remove('hidden');
+
+        } catch (error) {
+            console.error('❌ Error showing transaction details:', error);
+            alert('Failed to display transaction details.');
         }
     }
     
@@ -423,13 +591,21 @@ class WEXBenefitsApp {
     }
     
     /**
-     * Focus search (placeholder for future implementation)
+     * Focus search and implement real search functionality
      */
-    focusSearch() {
+    async focusSearch() {
         try {
             const searchInput = document.querySelector('input[type="search"], .search-input');
             if (searchInput) {
                 searchInput.focus();
+                
+                // Add event listener for real-time search
+                if (!searchInput.dataset.searchInitialized) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.performSearch(e.target.value);
+                    });
+                    searchInput.dataset.searchInitialized = 'true';
+                }
             } else {
                 console.log('🔍 Search functionality not yet implemented');
             }
@@ -437,6 +613,129 @@ class WEXBenefitsApp {
         } catch (error) {
             console.error('❌ Error focusing search:', error);
         }
+    }
+
+    /**
+     * Perform real search using backend API
+     */
+    async performSearch(query) {
+        try {
+            if (!query || query.trim().length < 2) {
+                // Clear search results if query is too short
+                this.clearSearchResults();
+                return;
+            }
+
+            console.log('🔍 Performing search for:', query);
+            
+            const backendUrl = window.APP_CONFIG?.API_BASE || 'http://localhost:4000';
+            const response = await fetch(`${backendUrl}/api/expenses?search=${encodeURIComponent(query)}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    console.log('🔐 User not authenticated for search');
+                    return;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            this.displaySearchResults(data.expenses || [], query);
+
+        } catch (error) {
+            console.error('❌ Error performing search:', error);
+            this.showSearchError();
+        }
+    }
+
+    /**
+     * Display search results
+     */
+    displaySearchResults(expenses, query) {
+        try {
+            const searchResultsContainer = document.getElementById('searchResults') || this.createSearchResultsContainer();
+            
+            if (expenses.length === 0) {
+                searchResultsContainer.innerHTML = `
+                    <div class="search-no-results">
+                        <p>No expenses found matching "${query}"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const resultsHtml = expenses.map(expense => `
+                <div class="search-result-item" onclick="window.wexApp.viewTransactionDetails('${expense.id}')">
+                    <div class="result-header">
+                        <span class="result-provider">${expense.provider || 'Unknown Provider'}</span>
+                        <span class="result-amount">$${expense.amount ? expense.amount.toFixed(2) : '0.00'}</span>
+                    </div>
+                    <div class="result-details">
+                        <span class="result-service">${expense.service || 'N/A'}</span>
+                        <span class="result-date">${expense.date || 'N/A'}</span>
+                    </div>
+                    <div class="result-status">
+                        <span class="status-badge ${expense.status?.toLowerCase() || 'pending'}">${expense.status || 'Pending'}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            searchResultsContainer.innerHTML = `
+                <div class="search-results">
+                    <div class="search-results-header">
+                        <h3>Search Results for "${query}"</h3>
+                        <span class="result-count">${expenses.length} result${expenses.length !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="search-results-list">
+                        ${resultsHtml}
+                    </div>
+                </div>
+            `;
+
+        } catch (error) {
+            console.error('❌ Error displaying search results:', error);
+        }
+    }
+
+    /**
+     * Create search results container if it doesn't exist
+     */
+    createSearchResultsContainer() {
+        const container = document.createElement('div');
+        container.id = 'searchResults';
+        container.className = 'search-results-container';
+        
+        // Insert after the main content
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.parentNode.insertBefore(container, mainContent.nextSibling);
+        }
+        
+        return container;
+    }
+
+    /**
+     * Clear search results
+     */
+    clearSearchResults() {
+        const searchResultsContainer = document.getElementById('searchResults');
+        if (searchResultsContainer) {
+            searchResultsContainer.innerHTML = '';
+        }
+    }
+
+    /**
+     * Show search error
+     */
+    showSearchError() {
+        const searchResultsContainer = document.getElementById('searchResults') || this.createSearchResultsContainer();
+        searchResultsContainer.innerHTML = `
+            <div class="search-error">
+                <p>Failed to perform search. Please try again.</p>
+            </div>
+        `;
     }
     
     /**
