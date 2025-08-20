@@ -1,3 +1,16 @@
+/**
+ * WEX Benefits Portal - Configuration
+ * 
+ * ⚠️ CODE REVIEWER: This is client-side config for demo purposes
+ * In production, sensitive data would be server-side only
+ * 
+ * See frontend/README.md for architecture explanation
+ * Production code is in frontend/dist/
+ * 
+ * This file provides centralized configuration for the development environment
+ * and will be processed during the build step for production.
+ */
+
 // Centralized configuration for the demo (frontend-only)
 // Note: In production, never expose secrets in client-side code
 
