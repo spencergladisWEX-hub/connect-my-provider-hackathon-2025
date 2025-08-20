@@ -149,6 +149,7 @@ curl http://localhost:4000/transaction-status/TX-001
 SHARE/
 ├── start_demo.sh                    # Demo startup script
 ├── README.md                        # This file
+<<<<<<< HEAD
 ├── backend/                         # Flask API server
 │   ├── requirements.txt             # Python dependencies
 │   └── server.py                   # Flask application
@@ -328,6 +329,32 @@ Before deploying any UX changes:
 - [ ] **Portal feels live** and interactive
 
 This system will prevent the modal visibility issues you experienced and make future UX development much more reliable!
+=======
+├── wex-fsa-provider-substantiation-backend/
+│   ├── requirements.txt             # Python dependencies
+│   └── src/
+│       └── server.py               # Flask API server
+└── wex-fsa-provider-substantiation-frontend/
+    └── index.html                  # Frontend application
+```
+
+## 🛠️ Development
+
+### Adding New Endpoints
+1. Add route to `src/server.py`
+2. Update mock data as needed
+3. Test with curl or browser
+
+### Modifying UI
+1. Edit `index.html`
+2. Update CSS styles
+3. Modify JavaScript functions
+
+### Changing Mock Data
+1. Update transaction data in `server.py`
+2. Modify FHIR EOB structure
+3. Adjust timing in event endpoints
+>>>>>>> 998ecb7c43914583b28a8c90ebc1792b1b53e67c
 
 ## 🎉 Success!
 
