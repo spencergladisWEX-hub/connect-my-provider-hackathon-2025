@@ -1,5 +1,15 @@
 # WEX Benefits Portal - Frontend
 
+## 🚨 **CRITICAL ARCHITECTURE NOTICE - READ FIRST!**
+
+> **⚠️ THIS IS NOT A MONOLITHIC CODEBASE!**
+> 
+> **Development File**: `index.html` (4,910 lines) - intentionally large for rapid iteration
+> **Production Code**: `dist/` directory - clean, organized, deployment-ready
+> **This is a sophisticated development environment**, not a mess!
+
+---
+
 ## 🏗️ Architecture Overview
 
 This project uses a **development-to-production build workflow**:
@@ -59,6 +69,23 @@ frontend/
 - **`dist/`** = Production code (organized, clean, maintainable)
 - **Read `CSS_CLEANUP_SUMMARY.md`** for architecture details
 - **Review production code in `dist/` directory**
+
+### **🔍 Code Review Checklist**
+
+#### **❌ DO NOT Review**
+- `index.html` (4,910 lines) - This is a development file!
+
+#### **✅ DO Review**
+- `dist/index.html` (259 lines) - Clean, semantic HTML
+- `dist/main.css` (1,482 lines) - Organized CSS
+- `dist/assets/js/` - Modular JavaScript files
+- `dist/DEPLOYMENT.md` - Production deployment guide
+
+#### **📚 Before Reviewing**
+1. Read this README to understand the architecture
+2. Check `CSS_CLEANUP_SUMMARY.md` for technical details
+3. Look at the `dist/` directory structure
+4. Understand this is development-to-production workflow
 
 ## 🎯 Development Philosophy
 
