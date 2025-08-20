@@ -127,6 +127,17 @@ curl http://localhost:4000/transaction-status/TX-001
 SHARE/
 ├── start_demo.sh                    # Demo startup script
 ├── README.md                        # This file
+├── docs/                            # Complete documentation
+│   ├── 00-INDEX.md                 # Documentation index
+│   ├── 01-DEVELOPER_GUIDE.md       # Development guide
+│   ├── 02-API_REFERENCE.md         # API documentation
+│   ├── 03-FHIR_COMPLIANCE.md       # FHIR implementation
+│   ├── 04-SECURITY.md              # Security considerations
+│   ├── 05-TESTING.md               # Testing strategies
+│   ├── QUICK_REFERENCE.md          # Quick commands & URLs
+│   ├── TROUBLESHOOTING.md          # Common issues & solutions
+│   ├── ARCHITECTURE.md             # System architecture
+│   └── DEPLOYMENT.md               # Deployment guide
 ├── wex-fsa-provider-substantiation-backend/
 │   ├── requirements.txt             # Python dependencies
 │   └── src/
@@ -135,22 +146,22 @@ SHARE/
     └── index.html                  # Frontend application
 ```
 
+## 📚 Documentation
+
+For comprehensive information about this project, see the complete documentation in the [`docs/`](docs/) directory:
+
+- **[Developer Guide](docs/01-DEVELOPER_GUIDE.md)** - Setup, development, and contribution guide
+- **[API Reference](docs/02-API_REFERENCE.md)** - Complete API documentation
+- **[Quick Reference](docs/QUICK_REFERENCE.md)** - Commands, URLs, and common tasks
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
 ## 🛠️ Development
 
-### Adding New Endpoints
-1. Add route to `src/server.py`
-2. Update mock data as needed
-3. Test with curl or browser
-
-### Modifying UI
-1. Edit `index.html`
-2. Update CSS styles
-3. Modify JavaScript functions
-
-### Changing Mock Data
-1. Update transaction data in `server.py`
-2. Modify FHIR EOB structure
-3. Adjust timing in event endpoints
+### Quick Development Tasks
+- **Adding endpoints**: See [Developer Guide](docs/01-DEVELOPER_GUIDE.md#adding-new-features)
+- **Modifying UI**: See [Developer Guide](docs/01-DEVELOPER_GUIDE.md#frontend-features)
+- **Testing**: See [Testing Guide](docs/05-TESTING.md)
+- **Security**: See [Security Considerations](docs/04-SECURITY.md)
 
 ## 🎉 Success!
 
