@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEX FSA Expense Tracker - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00c7b2 0%, #0099cc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .patient-details p, .coverage-details p {
+            margin-bottom: 8px;
+            color: #6c757d;
+        }
+
+        .expense-list {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .expense-item {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-header {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .expense-date {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .expense-status {
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .expense-status.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .expense-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .expense-status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .expense-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .expense-provider {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .expense-service {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .expense-category {
+            font-size: 0.8rem;
+            color: #868e96;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expense-amount {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00c7b2;
+            text-align: right;
+        }
+
+        .no-expenses {
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .loading {
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            border-top-color: #00c7b2;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .auth-button {
+            background: linear-gradient(135deg, #00c7b2 0%, #0099cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .expense-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .expense-amount {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 FSA Expense Tracker</h1>
+            <p>Your healthcare expenses from Epic FHIR</p>
+        </div>
+
+        <div class="content">
+            <div id="auth-section" style="display: none;">
+                <div class="card">
+                    <h3>🔐 Authentication Required</h3>
+                    <p>Connect your Epic provider to view your healthcare expenses.</p>
+                    <button class="auth-button" onclick="window.epicOAuth.initiateAuth()">
+                        Connect Epic Provider
+                    </button>
+                </div>
+            </div>
+
+            <div id="error-section" style="display: none;">
+                <div class="error" id="error-message"></div>
+            </div>
+
+            <div id="dashboard-content" style="display: none;">
+                <div class="dashboard-grid">
+                    <div class="sidebar">
+                        <div class="card" id="patient-info">
+                            <h3>👤 Patient Information</h3>
+                            <div class="patient-details">
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+
+                        <div class="card" id="coverage-info">
+                            <h3>🛡️ Insurance Coverage</h3>
+                            <div class="coverage-details">
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expense-list" id="expense-list">
+                        <div class="loading">Loading expenses...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/oauth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Dashboard initialized');
+            
+            try {
+                // Check authentication status
+                const isAuthenticated = await window.epicOAuth.checkAuthStatus();
+                
+                if (isAuthenticated) {
+                    console.log('✅ User authenticated, loading expenses...');
+                    document.getElementById('dashboard-content').style.display = 'block';
+                    await window.epicOAuth.loadExpenseTracker();
+                } else {
+                    console.log('🔐 User not authenticated, showing auth section...');
+                    document.getElementById('auth-section').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('❌ Dashboard initialization failed:', error);
+                document.getElementById('error-section').style.display = 'block';
+                document.getElementById('error-message').textContent = 'Failed to initialize dashboard: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
